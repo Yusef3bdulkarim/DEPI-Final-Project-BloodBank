@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.border
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +33,7 @@ fun RegisterScreen(navController: NavController) {
     var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+
     var selectedBlood by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
 
@@ -40,27 +42,46 @@ fun RegisterScreen(navController: NavController) {
     val textColor = Color(0xFF1A1A1A)
     val primaryColor = Color(0xFF8B0000)
 
+    val textFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = textColor,
+        unfocusedTextColor = textColor,
+        cursorColor = primaryColor,
+        focusedBorderColor = primaryColor,
+        unfocusedBorderColor = Color.Gray
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFE5E5))
+            .background(Color.White)
     ) {
 
         Image(
             painter = painterResource(id = R.drawable.bg_pattern),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            alpha = 0.8f
+            alpha = 0.8f,
+            contentScale = ContentScale.Crop
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.bloodlink),
+            contentDescription = null,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 12.dp)
+                .size(180.dp),
+            contentScale = ContentScale.Fit
         )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 80.dp, start = 20.dp, end = 20.dp)
+                .padding(top = 140.dp, start = 20.dp, end = 20.dp)
         ) {
 
             Text(
-                text = "إنشاء حساب",
+                text = "إنشاء حساب جديد",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = primaryColor,
@@ -70,16 +91,6 @@ fun RegisterScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            @Composable
-            fun fieldColors() = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = textColor,
-                unfocusedTextColor = textColor,
-                cursorColor = primaryColor,
-                focusedBorderColor = primaryColor,
-                unfocusedBorderColor = Color.Gray,
-                focusedLabelColor = primaryColor
-            )
-
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -87,7 +98,7 @@ fun RegisterScreen(navController: NavController) {
                 leadingIcon = { Icon(Icons.Default.Person, null) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = fieldColors()
+                colors = textFieldColors
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -99,7 +110,7 @@ fun RegisterScreen(navController: NavController) {
                 leadingIcon = { Icon(Icons.Default.Email, null) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = fieldColors()
+                colors = textFieldColors
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -111,7 +122,7 @@ fun RegisterScreen(navController: NavController) {
                 leadingIcon = { Icon(Icons.Default.Phone, null) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = fieldColors()
+                colors = textFieldColors
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -126,7 +137,7 @@ fun RegisterScreen(navController: NavController) {
                     else PasswordVisualTransformation(),
                 trailingIcon = {
                     Text(
-                        text = if (passwordVisible) "إخفاء" else "إظهار",
+                        text = if (passwordVisible) "إظهار" else "إخفاء",
                         modifier = Modifier.clickable {
                             passwordVisible = !passwordVisible
                         },
@@ -135,43 +146,76 @@ fun RegisterScreen(navController: NavController) {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = fieldColors()
+                colors = textFieldColors
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
+            val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
+            var selectedBlood by remember { mutableStateOf("") }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White, RoundedCornerShape(12.dp))
+                    .border(1.dp, Color.Gray, RoundedCornerShape(12.dp))
+                    .padding(12.dp)
             ) {
 
-                OutlinedTextField(
-                    value = selectedBlood,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("فصيلة الدم") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor(),
-                    shape = RoundedCornerShape(12.dp),
-                    trailingIcon = {
-                        Icon(Icons.Default.ArrowDropDown, null)
-                    },
-                    colors = fieldColors()
-                )
+                Column {
 
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    bloodTypes.forEach { type ->
-                        DropdownMenuItem(
-                            text = { Text(type) },
-                            onClick = {
-                                selectedBlood = type
-                                expanded = false
-                            }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Image(
+                            painter = painterResource(id = R.drawable.drop),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp)
                         )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            text = "فصيلة الدم",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+
+                        bloodTypes.forEach { type ->
+
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        color = if (selectedBlood == type)
+                                            Color(0xFF8B0000)
+                                        else Color.LightGray,
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .clickable {
+                                        selectedBlood = type
+                                    }
+                                    .padding(horizontal = 8.dp, vertical = 6.dp)
+                            ) {
+                                Text(
+                                    text = type,
+                                    fontSize = 12.sp,
+                                    color = if (selectedBlood == type)
+                                        Color.White
+                                    else Color.Black
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -183,9 +227,7 @@ fun RegisterScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = primaryColor
-                ),
+                colors = ButtonDefaults.buttonColors(primaryColor),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text("إنشاء حساب", color = Color.White)
@@ -207,15 +249,5 @@ fun RegisterScreen(navController: NavController) {
                 )
             }
         }
-
-        Image(
-            painter = painterResource(id = R.drawable.bloodlink),
-            contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp)
-                .size(180.dp),
-            contentScale = ContentScale.Fit
-        )
     }
 }

@@ -36,51 +36,63 @@ fun LoginScreen(navController: NavController) {
     val textColor = Color(0xFF1A1A1A)
     val primaryColor = Color(0xFF8B0000)
 
+    val textFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = textColor,
+        unfocusedTextColor = textColor,
+        cursorColor = primaryColor,
+        focusedBorderColor = primaryColor,
+        unfocusedBorderColor = Color.Gray
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFE5E5))
+            .background(Color.White)
     ) {
 
         Image(
             painter = painterResource(id = R.drawable.bg_pattern),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            alpha = 0.8f
+            alpha = 0.8f,
+            contentScale = ContentScale.Crop
         )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 80.dp, start = 20.dp, end = 20.dp)
+                .offset(y = (-40).dp)
+                .padding( start = 20.dp, end = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.bloodlink),
+                contentDescription = null,
+                modifier = Modifier.size(180.dp),
+                contentScale = ContentScale.Fit
+            )
 
             Text(
                 text = "تسجيل الدخول",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.ExtraBold,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
                 color = primaryColor,
-                modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.man),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-            }
+            Image(
+                painter = painterResource(id = R.drawable.man),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(160.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
             OutlinedTextField(
                 value = email,
@@ -89,14 +101,7 @@ fun LoginScreen(navController: NavController) {
                 leadingIcon = { Icon(Icons.Default.Email, null) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = textColor,
-                    unfocusedTextColor = textColor,
-                    cursorColor = primaryColor,
-                    focusedBorderColor = primaryColor,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = primaryColor
-                )
+                colors = textFieldColors
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -120,20 +125,13 @@ fun LoginScreen(navController: NavController) {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = textColor,
-                    unfocusedTextColor = textColor,
-                    cursorColor = primaryColor,
-                    focusedBorderColor = primaryColor,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = primaryColor
-                )
+                colors = textFieldColors
             )
 
             Text(
                 text = "هل نسيت كلمة المرور؟",
-                fontSize = 16.sp,
                 color = textColor,
+                fontSize = 14.sp,
                 modifier = Modifier
                     .align(Alignment.End)
                     .clickable { }
@@ -146,19 +144,17 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = primaryColor
-                ),
+                colors = ButtonDefaults.buttonColors(primaryColor),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text("تسجيل الدخول", color = Color.White)
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text("ليس لديك حساب؟ ", color = textColor)
                 Text(
@@ -169,16 +165,33 @@ fun LoginScreen(navController: NavController) {
                     }
                 )
             }
-        }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
 
-        Image(
-            painter = painterResource(id = R.drawable.bloodlink),
-            contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp)
-                .size(180.dp),
-            contentScale = ContentScale.Fit
-        )
+                Image(
+                    painter = painterResource(id = R.drawable.google),
+                    contentDescription = "Google",
+                    modifier = Modifier
+                        .size(60.dp)
+                        .background(Color.White, CircleShape)
+                        .padding(10.dp)
+                        .clickable { }
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Image(
+                    painter = painterResource(id = R.drawable.icloud),
+                    contentDescription = "Apple",
+                    modifier = Modifier
+                        .size(60.dp)
+                        .background(Color.White, CircleShape)
+                        .padding(10.dp)
+                        .clickable { }
+                )
+            }
+        }
     }
 }
