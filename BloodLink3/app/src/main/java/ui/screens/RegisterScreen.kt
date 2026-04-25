@@ -2,26 +2,24 @@ package com.example.bloodlink.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.clickable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.bloodlink.R
 
@@ -31,72 +29,78 @@ fun RegisterScreen(navController: NavController) {
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var phone by remember { mutableStateOf("") }
-    val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
     var selectedBlood by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
 
+    val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
+
+    val textColor = Color(0xFF1A1A1A)
+    val primaryColor = Color(0xFF8B0000)
+
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(Color(0xFFFFE5E5))
     ) {
+
         Image(
             painter = painterResource(id = R.drawable.bg_pattern),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            alpha = .8f
+            alpha = 0.8f
         )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 80.dp, start = 20.dp, end = 20.dp)
-        )
-
-        {
-
+        ) {
 
             Text(
                 text = "إنشاء حساب",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = Color(0xFFB00020),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp),
+                color = primaryColor,
+                modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
+            @Composable
+            fun fieldColors() = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = textColor,
+                unfocusedTextColor = textColor,
+                cursorColor = primaryColor,
+                focusedBorderColor = primaryColor,
+                unfocusedBorderColor = Color.Gray,
+                focusedLabelColor = primaryColor
+            )
 
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text("الاسم") },
-                leadingIcon = {
-                    Icon(Icons.Default.Person, contentDescription = null)
-                },
+                leadingIcon = { Icon(Icons.Default.Person, null) },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = fieldColors()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("البريد الإلكتروني") },
-                leadingIcon = {
-                    Icon(Icons.Default.Email, contentDescription = null)
-                },
+                leadingIcon = { Icon(Icons.Default.Email, null) },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = fieldColors()
             )
-
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -104,24 +108,19 @@ fun RegisterScreen(navController: NavController) {
                 value = phone,
                 onValueChange = { phone = it },
                 label = { Text("رقم الهاتف") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Phone,
-                        contentDescription = null
-                    )
-                },
+                leadingIcon = { Icon(Icons.Default.Phone, null) },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = fieldColors()
             )
 
+            Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("كلمة المرور") },
-                leadingIcon = {
-                    Icon(Icons.Default.Lock, contentDescription = null)
-                },
+                leadingIcon = { Icon(Icons.Default.Lock, null) },
                 visualTransformation =
                     if (passwordVisible) VisualTransformation.None
                     else PasswordVisualTransformation(),
@@ -130,21 +129,20 @@ fun RegisterScreen(navController: NavController) {
                         text = if (passwordVisible) "إخفاء" else "إظهار",
                         modifier = Modifier.clickable {
                             passwordVisible = !passwordVisible
-                        }
+                        },
+                        color = primaryColor
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = fieldColors()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
-            var selectedBlood by remember { mutableStateOf("") }
-            var expanded by remember { mutableStateOf(false) }
-
-            Box(
-                modifier = Modifier.fillMaxWidth()
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }
             ) {
 
                 OutlinedTextField(
@@ -154,31 +152,26 @@ fun RegisterScreen(navController: NavController) {
                     label = { Text("فصيلة الدم") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { expanded = !expanded },
-                    shape = RoundedCornerShape(12.dp)
+                        .menuAnchor(),
+                    shape = RoundedCornerShape(12.dp),
+                    trailingIcon = {
+                        Icon(Icons.Default.ArrowDropDown, null)
+                    },
+                    colors = fieldColors()
                 )
 
-                if (expanded) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 60.dp),
-                        elevation = CardDefaults.cardElevation(6.dp)
-                    ) {
-                        Column {
-                            bloodTypes.forEach { type ->
-                                Text(
-                                    text = type,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            selectedBlood = type
-                                            expanded = false
-                                        }
-                                        .padding(16.dp)
-                                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    bloodTypes.forEach { type ->
+                        DropdownMenuItem(
+                            text = { Text(type) },
+                            onClick = {
+                                selectedBlood = type
+                                expanded = false
                             }
-                        }
+                        )
                     }
                 }
             }
@@ -186,14 +179,14 @@ fun RegisterScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
-                onClick = { },
+                onClick = {},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF8B0000)
-                )
+                    containerColor = primaryColor
+                ),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Text("إنشاء حساب", color = Color.White)
             }
@@ -204,17 +197,25 @@ fun RegisterScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("  عندك حساب؟  ")
+                Text("عندك حساب؟ ", color = textColor)
                 Text(
-                    text = "  سجل دخول  ",
-                    color = Color(0xFF8B0000),
+                    text = "سجل دخول",
+                    color = primaryColor,
                     modifier = Modifier.clickable {
                         navController.popBackStack()
                     }
                 )
-
             }
         }
+
+        Image(
+            painter = painterResource(id = R.drawable.bloodlink),
+            contentDescription = null,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp)
+                .size(180.dp),
+            contentScale = ContentScale.Fit
+        )
     }
 }
-
