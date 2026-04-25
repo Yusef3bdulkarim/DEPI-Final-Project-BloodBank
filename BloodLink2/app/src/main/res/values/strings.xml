@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">BloodLink</string>
+    <string name="login_title">تسجيل الدخول</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="forgot_password">هل نسيت كلمة المرور؟</string>
+    <string name="login_button">تسجيل الدخول</string>
+    <string name="or_login_with">أو سجل الدخول عبر</string>
+    <string name="no_account">ليس لديك حساب؟ أنشئ حساباً الآن</string>
+    <string name="register_title">إنشاء حساب جديد</string>
+    <string name="full_name">الاسم الكامل</string>
+    <string name="phone">رقم الهاتف</string>
+    <string name="blood_type">فصيلة الدم</string>
+    <string name="agree_terms">أوافق على الشروط والأحكام وسياسة الخصوصية</string>
+    <string name="register_button">إنشاء حساب</string>
+    <string name="have_account">لديك حساب بالفعل؟ سجل دخولك</string>
+</resources>
