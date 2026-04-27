@@ -4,8 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -44,34 +46,36 @@ fun LoginScreen(navController: NavController) {
         unfocusedBorderColor = Color.Gray
     )
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
 
-        Image(
-            painter = painterResource(id = R.drawable.bg_pattern),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            alpha = 0.8f,
-            contentScale = ContentScale.Crop
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(140.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.bloodlink),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 12.dp)
+                    .size(180.dp),
+                contentScale = ContentScale.Fit
+            )
+        }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .offset(y = (-40).dp)
-                .padding( start = 20.dp, end = 20.dp),
+                .verticalScroll(rememberScrollState())
+                .background(Color.White)
+                .padding(start = 20.dp, end = 20.dp, top = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Image(
-                painter = painterResource(id = R.drawable.bloodlink),
-                contentDescription = null,
-                modifier = Modifier.size(180.dp),
-                contentScale = ContentScale.Fit
-            )
 
             Text(
                 text = "تسجيل الدخول",
@@ -84,7 +88,7 @@ fun LoginScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Image(
-                painter = painterResource(id = R.drawable.man),
+                painter = painterResource(id = R.drawable.avatar),
                 contentDescription = null,
                 modifier = Modifier
                     .size(160.dp)
@@ -133,8 +137,9 @@ fun LoginScreen(navController: NavController) {
                 color = textColor,
                 fontSize = 14.sp,
                 modifier = Modifier
-                    .align(Alignment.End)
-                    .clickable { }
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.End)
+                    .clickable { navController.navigate("forgot_password") }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -165,11 +170,13 @@ fun LoginScreen(navController: NavController) {
                     }
                 )
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-
                 Image(
                     painter = painterResource(id = R.drawable.google),
                     contentDescription = "Google",

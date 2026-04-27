@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.*
 import com.example.bloodlink.ui.screens.LoginScreen
 import com.example.bloodlink.ui.screens.RegisterScreen
+import com.example.bloodlink.ui.screens.ForgotPasswordScreen
+import com.example.bloodlink.ui.screens.VerifyAccountScreen
+
 
 @Composable
 fun AppNav() {
@@ -21,6 +24,13 @@ fun AppNav() {
 
         composable("register") {
             RegisterScreen(navController)
+        }
+        composable("forgot_password") {
+            ForgotPasswordScreen(navController)
+        }
+
+        composable("verify_account") {
+            VerifyAccountScreen(navController)
         }
     }
 }

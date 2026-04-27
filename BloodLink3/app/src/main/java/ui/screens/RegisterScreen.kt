@@ -16,6 +16,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.border
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -33,15 +35,8 @@ fun RegisterScreen(navController: NavController) {
     var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-
-    var selectedBlood by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
-
-    val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
-
     val textColor = Color(0xFF1A1A1A)
     val primaryColor = Color(0xFF8B0000)
-
     val textFieldColors = OutlinedTextFieldDefaults.colors(
         focusedTextColor = textColor,
         unfocusedTextColor = textColor,
@@ -50,34 +45,34 @@ fun RegisterScreen(navController: NavController) {
         unfocusedBorderColor = Color.Gray
     )
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
 
-        Image(
-            painter = painterResource(id = R.drawable.bg_pattern),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            alpha = 0.8f,
-            contentScale = ContentScale.Crop
-        )
-
-        Image(
-            painter = painterResource(id = R.drawable.bloodlink),
-            contentDescription = null,
+        Box(
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 12.dp)
-                .size(180.dp),
-            contentScale = ContentScale.Fit
-        )
+                .fillMaxWidth()
+                .height(140.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.bloodlink),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 12.dp)
+                    .size(180.dp),
+                contentScale = ContentScale.Fit
+            )
+        }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 140.dp, start = 20.dp, end = 20.dp)
+                .verticalScroll(rememberScrollState())
+                .background(Color.White)
+                .padding(start = 20.dp, end = 20.dp, top = 8.dp)
         ) {
 
             Text(
@@ -161,22 +156,14 @@ fun RegisterScreen(navController: NavController) {
                     .border(1.dp, Color.Gray, RoundedCornerShape(12.dp))
                     .padding(12.dp)
             ) {
-
                 Column {
-
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
                             painter = painterResource(id = R.drawable.drop),
                             contentDescription = null,
                             modifier = Modifier.size(30.dp)
                         )
-
                         Spacer(modifier = Modifier.width(8.dp))
-
                         Text(
                             text = "فصيلة الدم",
                             fontWeight = FontWeight.Bold,
@@ -186,14 +173,11 @@ fun RegisterScreen(navController: NavController) {
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-
                         bloodTypes.forEach { type ->
-
                             Box(
                                 modifier = Modifier
                                     .background(
@@ -202,9 +186,7 @@ fun RegisterScreen(navController: NavController) {
                                         else Color.LightGray,
                                         shape = RoundedCornerShape(8.dp)
                                     )
-                                    .clickable {
-                                        selectedBlood = type
-                                    }
+                                    .clickable { selectedBlood = type }
                                     .padding(horizontal = 8.dp, vertical = 6.dp)
                             ) {
                                 Text(
@@ -248,6 +230,8 @@ fun RegisterScreen(navController: NavController) {
                     }
                 )
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
