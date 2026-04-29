@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">My Application</string>
-    <string name="forgot_your_password"><u>Forgot your password?</u></string>
-    <string name="don_t_have_an_account"><u>Don\'t have an account?</u></string>
-    <string name="have_an_account"><u>have an account?</u></string>
-</resources>
