@@ -1,7 +1,15 @@
 package com.example.bloodlink.navigation
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
+import com.example.bloodlink.ui.screens.CompleteProfileScreen
 import com.example.bloodlink.ui.screens.LoginScreen
 import com.example.bloodlink.ui.screens.RegisterScreen
 import com.example.bloodlink.ui.screens.ForgotPasswordScreen
@@ -44,6 +52,14 @@ fun AppNav() {
         // الشاشة الرئيسية الجديدة
         composable("home_screen") {
             HomeScreen(navController)
+        }
+
+        composable("complete_profile") {
+            // بنجيب الـ UID بتاع المستخدم اللي لسه مسجل بجوجل حالاً
+            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+            // بنستدعي الشاشة الحقيقية ونمررلها الـ navController والـ uid
+            CompleteProfileScreen(navController = navController, uid = uid)
         }
     }
 }
