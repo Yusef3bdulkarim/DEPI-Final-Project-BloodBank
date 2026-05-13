@@ -1,3 +1,46 @@
 <resources>
+    <!-- Common (نصوص مشتركة) -->
     <string name="app_name">BloodLink</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="back_to_login">Back to Login</string>
+
+    <!-- Login Screen -->
+    <string name="login_title">Login</string>
+    <string name="forgot_password_question">Forgot Password?</string>
+    <string name="login_button">Login</string>
+    <string name="no_account">Don\'t have an account? </string>
+    <string name="create_account_link">Create Account</string>
+
+    <!-- Register Screen -->
+    <string name="register_title">Create a New Account</string>
+    <string name="name_label">Name</string>
+    <string name="phone_label">Phone Number</string>
+    <string name="blood_type_label">Blood Type</string>
+    <string name="register_button">Create Account</string>
+    <string name="have_account">Already have an account? </string>
+    <string name="login_link">Login</string>
+
+    <!-- Forgot Password Screen -->
+    <string name="forgot_password_title">Forgot Password?</string>
+    <string name="forgot_password_desc">Please enter your email below. We will send a link to reset your password.</string>
+    <string name="send_reset_link_button">Send Password Reset Link</string>
+
+    <!-- Verify Account Screen -->
+    <string name="verify_account_title">Account Verification Required</string>
+    <string name="verify_account_desc">You must verify your account through the link sent to your email.</string>
+    <string name="resend_verification_button">Resend Verification Link</string>
+
+    <string name="error_general_login">An error occurred during login</string>
+
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
+
+    <string name="or_sign_in_with">Or continue with</string>
+
+    <string name="error_empty_fields">Please enter all details</string>
+    <string name="error_saving_data">An error occurred while saving your data</string>
+    <string name="error_creating_account">An error occurred while creating the account</string>
+    <string name="error_google_login">An error occurred during Google sign in</string>
+
 </resources>

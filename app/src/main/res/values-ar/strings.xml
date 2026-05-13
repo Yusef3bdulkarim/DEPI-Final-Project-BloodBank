@@ -1,0 +1,47 @@
+<resources>
+    <!-- Common (نصوص مشتركة) -->
+    <string name="app_name">BloodLink</string>
+    <string name="email_label">البريد الإلكتروني</string>
+    <string name="password_label">كلمة المرور</string>
+    <string name="back_to_login">العودة لتسجيل الدخول</string>
+
+    <!-- Login Screen -->
+    <string name="login_title">تسجيل الدخول</string>
+    <string name="forgot_password_question">هل نسيت كلمة المرور؟</string>
+    <string name="login_button">تسجيل الدخول</string>
+    <string name="no_account">ليس لديك حساب؟ </string>
+    <string name="create_account_link">إنشاء حساب</string>
+
+    <!-- Register Screen -->
+    <string name="register_title">إنشاء حساب جديد</string>
+    <string name="name_label">الاسم</string>
+    <string name="phone_label">رقم الهاتف</string>
+    <string name="blood_type_label">فصيلة الدم</string>
+    <string name="register_button">إنشاء حساب</string>
+    <string name="have_account">عندك حساب؟ </string>
+    <string name="login_link">سجل دخول</string>
+
+    <!-- Forgot Password Screen -->
+    <string name="forgot_password_title">نسيت كلمة المرور؟</string>
+    <string name="forgot_password_desc">يرجى إدخال بريدك الإلكتروني أدناه. سنقوم بإرسال رابط لتغيير كلمة المرور.</string>
+    <string name="send_reset_link_button">إرسال رابط استعادة كلمة المرور</string>
+
+    <!-- Verify Account Screen -->
+    <string name="verify_account_title">يجب تأكيد الحساب</string>
+    <string name="verify_account_desc">يجب عليك تأكيد الحساب من خلال الرابط المرسل إلى بريدك الإلكتروني</string>
+    <string name="resend_verification_button">إرسال رابط التأكيد مرة أخري</string>
+
+    <string name="error_general_login">حدث خطأ أثناء تسجيل الدخول</string>
+
+    <string name="show">إظهار</string>
+    <string name="hide">إخفاء</string>
+
+    <string name="or_sign_in_with">أو سجل الدخول باستخدام</string>
+
+    <string name="error_empty_fields">برجاء إدخال جميع البيانات </string>
+    <string name="error_saving_data">حدث خطأ أثناء حفظ بياناتك</string>
+    <string name="error_creating_account">حدث خطأ أثناء إنشاء الحساب</string>
+    <string name="error_google_login">حدث خطأ أثناء تسجيل الدخول بحساب جوجل</string>
+
+
+</resources>
