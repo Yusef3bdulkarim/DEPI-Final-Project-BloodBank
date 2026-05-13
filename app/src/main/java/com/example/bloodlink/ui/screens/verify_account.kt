@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,7 +45,7 @@ fun VerifyAccountScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(60.dp))
 
             Text(
-                text = "يجب تأكيد الحساب",
+                text = stringResource(id = R.string.verify_account_title),
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
                 color = PrimaryRed
@@ -61,7 +62,7 @@ fun VerifyAccountScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "يجب عليك تأكيد الحساب من خلال الرابط المرسل إلى بريدك الإلكتروني",
+                text = stringResource(id = R.string.verify_account_desc),
                 textAlign = TextAlign.Center,
                 color = TextDark
             )
@@ -69,14 +70,14 @@ fun VerifyAccountScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             BloodLinkButton(
-                text = "إرسال رابط التأكيد مرة أخري",
+                text = stringResource(id = R.string.resend_verification_button),
                 onClick = {}
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             BloodLinkOutlinedButton(
-                text = "العودة لتسجيل الدخول",
+                text = stringResource(id = R.string.back_to_login),
                 onClick = { navController.navigate("login") }
             )
 
@@ -84,3 +85,4 @@ fun VerifyAccountScreen(navController: NavController) {
         }
     }
 }
+

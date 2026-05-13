@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -14,8 +15,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,8 +31,17 @@ import com.example.bloodlink.components.LogoHeader
 import com.example.bloodlink.ui.theme.PrimaryRed
 import com.example.bloodlink.ui.theme.TextDark
 
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.bloodlink.viewmodel.AuthState
+
+import com.example.bloodlink.viewmodel.AuthViewModel
+
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -38,6 +50,7 @@ fun RegisterScreen(navController: NavController) {
     var passwordVisible by remember { mutableStateOf(false) }
     var selectedBlood by remember { mutableStateOf("") }
     val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
+    val authState by viewModel.authState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -54,20 +67,49 @@ fun RegisterScreen(navController: NavController) {
                 .padding(start = 20.dp, end = 20.dp, top = 8.dp)
         ) {
             Text(
-                text = "إنشاء حساب جديد",
+                text = stringResource(id = R.string.register_title),
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = PrimaryRed,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
+            // التعامل مع الحالات المختلفة (تحميل، خطأ، نجاح)
+            Spacer(modifier = Modifier.height(16.dp))
+            when (authState) {
+                is AuthState.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        color = PrimaryRed
+                    )
+                }
+                is AuthState.Error -> {
+                    val errorState = authState as AuthState.Error
+                    val errorMessage = errorState.messageId?.let { stringResource(id = it) } ?: errorState.messageStr ?: ""
+                    Text(
+                        text = errorMessage,
+                        color = Color.Red,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                is AuthState.Success -> {
+                    LaunchedEffect(Unit) {
+                        navController.navigate("home_screen") {
+                            // هنا بنمسح الـ register
+                            popUpTo("register") { inclusive = true }
+                        }
+                    }
+                }
+                else -> {}
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             BloodLinkTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = "الاسم",
+                label = stringResource(id = R.string.name_label),
                 leadingIcon = Icons.Default.Person
             )
 
@@ -76,7 +118,7 @@ fun RegisterScreen(navController: NavController) {
             BloodLinkTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = "البريد الإلكتروني",
+                label = stringResource(id = R.string.email_label),
                 leadingIcon = Icons.Default.Email
             )
 
@@ -85,7 +127,7 @@ fun RegisterScreen(navController: NavController) {
             BloodLinkTextField(
                 value = phone,
                 onValueChange = { phone = it },
-                label = "رقم الهاتف",
+                label = stringResource(id = R.string.phone_label),
                 leadingIcon = Icons.Default.Phone
             )
 
@@ -94,7 +136,7 @@ fun RegisterScreen(navController: NavController) {
             BloodLinkTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = "كلمة المرور",
+                label = stringResource(id = R.string.password_label),
                 leadingIcon = Icons.Default.Lock,
                 isPassword = true,
                 passwordVisible = passwordVisible,
@@ -119,7 +161,7 @@ fun RegisterScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "فصيلة الدم",
+                            text = stringResource(id = R.string.blood_type_label),
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
@@ -157,8 +199,16 @@ fun RegisterScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             BloodLinkButton(
-                text = "إنشاء حساب",
-                onClick = {}
+                text = stringResource(id = R.string.register_button),
+                onClick = {
+                    viewModel.register(
+                        name = name,
+                        email = email,
+                        phone = phone,
+                        pass = password,
+                        bloodType = selectedBlood
+                    )
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -167,15 +217,58 @@ fun RegisterScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("عندك حساب؟ ", color = TextDark)
+                Text(text = stringResource(id = R.string.have_account), color = TextDark)
                 Text(
-                    text = "سجل دخول",
+                    text = stringResource(id = R.string.login_link),
                     color = PrimaryRed,
                     modifier = Modifier.clickable { navController.popBackStack() }
                 )
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // سطر "أو سجل الدخول باستخدام" بين خطين
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
+                Text(
+                    text = stringResource(id = R.string.or_sign_in_with),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    color = Color.Gray,
+                    fontSize = 14.sp
+                )
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+
+            Image(
+                painter = painterResource(id = R.drawable.google),
+                contentDescription = "Google Sign In",
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .align(Alignment.CenterHorizontally)
+                    .clickable {
+                        // هنضيف هنا منطق تسجيل الدخول بجوجل بعدين
+                    }
+            )
+
             Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun RegisterScreenPreview() {
+    // ننشئ NavController وهمي فقط للعرض داخل الـ Preview
+    val navController = rememberNavController()
+
+    // استدعاء الشاشة الخاصة بك
+    RegisterScreen(navController = navController)
+}
+

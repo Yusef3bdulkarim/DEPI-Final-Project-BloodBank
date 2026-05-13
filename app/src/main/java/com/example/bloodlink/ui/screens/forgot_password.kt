@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,6 @@ import com.example.bloodlink.components.BloodLinkTextField
 import com.example.bloodlink.components.LogoHeader
 import com.example.bloodlink.ui.theme.PrimaryRed
 import com.example.bloodlink.ui.theme.TextDark
-
 
 @Composable
 fun ForgotPasswordScreen(navController: NavController) {
@@ -50,7 +50,7 @@ fun ForgotPasswordScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(40.dp))
 
             Text(
-                text = "نسيت كلمة المرور؟",
+                text = stringResource(id = R.string.forgot_password_title),
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
                 color = PrimaryRed
@@ -67,7 +67,7 @@ fun ForgotPasswordScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "يرجى إدخال بريدك الإلكتروني أدناه. سنقوم بإرسال رابط لتغيير كلمة المرور.",
+                text = stringResource(id = R.string.forgot_password_desc),
                 textAlign = TextAlign.Center,
                 color = TextDark
             )
@@ -77,21 +77,21 @@ fun ForgotPasswordScreen(navController: NavController) {
             BloodLinkTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = "البريد الإلكتروني",
+                label = stringResource(id = R.string.email_label),
                 leadingIcon = Icons.Default.Email
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             BloodLinkButton(
-                text = "إرسال رابط استعادة كلمة المرور",
+                text = stringResource(id = R.string.send_reset_link_button),
                 onClick = { navController.navigate("verify_account") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "العودة لتسجيل الدخول",
+                text = stringResource(id = R.string.back_to_login),
                 modifier = Modifier.clickable { navController.popBackStack() },
                 color = TextDark
             )

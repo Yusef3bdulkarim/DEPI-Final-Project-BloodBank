@@ -1,5 +1,6 @@
 package com.example.bloodlink.ui.screens
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,10 +19,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.LocaleListCompat
+import androidx.lifecycle.viewmodel.compose.viewModel // <-- استيراد الـ viewModel
 import androidx.navigation.NavController
 import com.example.bloodlink.R
 import com.example.bloodlink.components.BloodLinkButton
@@ -29,19 +34,52 @@ import com.example.bloodlink.components.BloodLinkTextField
 import com.example.bloodlink.components.LogoHeader
 import com.example.bloodlink.ui.theme.PrimaryRed
 import com.example.bloodlink.ui.theme.TextDark
+import com.example.bloodlink.viewmodel.AuthState // <-- استيراد الـ AuthState
+import com.example.bloodlink.viewmodel.AuthViewModel // <-- استيراد الـ AuthViewModel
+
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = viewModel()
+) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(value = false) }
+
+    // <-- مراقبة حالة الـ Auth
+    val authState by viewModel.authState.collectAsState()
+
+    val currentLocales = AppCompatDelegate.getApplicationLocales()
+    val isArabic = currentLocales.toLanguageTags().contains("ar")
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White),
     ) {
+
+        TextButton(
+            onClick = {
+                // تبديل اللغة
+                val newLang = if (isArabic) "en" else "ar"
+                val appLocale = LocaleListCompat.forLanguageTags(newLang)
+                AppCompatDelegate.setApplicationLocales(appLocale)
+            },
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(top = 30.dp, end = 16.dp, start = 16.dp)
+        ) {
+            Text(
+                text = if (isArabic) "English" else "عربي",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = PrimaryRed
+            )
+        }
+
+
         LogoHeader()
 
         Column(
@@ -53,7 +91,7 @@ fun LoginScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "تسجيل الدخول",
+                text = stringResource(id = R.string.login_title),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = PrimaryRed,
@@ -74,7 +112,7 @@ fun LoginScreen(navController: NavController) {
             BloodLinkTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = "البريد الإلكتروني",
+                label = stringResource(id = R.string.email_label),
                 leadingIcon = Icons.Default.Email
             )
 
@@ -83,7 +121,7 @@ fun LoginScreen(navController: NavController) {
             BloodLinkTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = "كلمة المرور",
+                label = stringResource(id = R.string.password_label),
                 leadingIcon = Icons.Default.Lock,
                 isPassword = true,
                 passwordVisible = passwordVisible,
@@ -91,7 +129,7 @@ fun LoginScreen(navController: NavController) {
             )
 
             Text(
-                text = "هل نسيت كلمة المرور؟",
+                text = stringResource(id = R.string.forgot_password_question),
                 color = TextDark,
                 fontSize = 14.sp,
                 modifier = Modifier
@@ -103,9 +141,38 @@ fun LoginScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             BloodLinkButton(
-                text = "تسجيل الدخول",
-                onClick = {}
+                text = stringResource(id = R.string.login_button),
+                onClick = {
+                    // <-- استدعاء دالة الـ Login و تمرير البيانات
+                    viewModel.login(email, password)
+                }
             )
+
+            // <-- التعامل مع الحالات المختلفة (تحميل، خطأ، نجاح)
+            Spacer(modifier = Modifier.height(16.dp))
+            when (authState) {
+                is AuthState.Loading -> {
+                    CircularProgressIndicator(color = PrimaryRed)
+                }
+                is AuthState.Error -> {
+                    val errorState = authState as AuthState.Error
+                    val errorMessage = errorState.messageId?.let { stringResource(id = it) } ?: errorState.messageStr ?: ""
+
+                    Text(
+                        text = errorMessage,
+                        color = Color.Red,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                is AuthState.Success -> {
+                    LaunchedEffect(Unit) {
+                        navController.navigate("home_screen") {
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
+                }
+                else -> {}
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -113,42 +180,50 @@ fun LoginScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("ليس لديك حساب؟ ", color = TextDark)
+                Text(text = stringResource(id = R.string.no_account), color = TextDark)
                 Text(
-                    text = "إنشاء حساب",
+                    text = stringResource(id = R.string.create_account_link),
                     color = PrimaryRed,
                     modifier = Modifier.clickable {
                         navController.navigate("register")
+                        viewModel.resetState() // <-- تصفير الحالة عشان ميظهرش أي أيرور قديم في الشاشة الجديدة
                     }
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
+            //Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.google),
-                    contentDescription = "Google",
-                    modifier = Modifier
-                        .size(60.dp)
-                        .background(Color.White, CircleShape)
-                        .padding(10.dp)
-                        .clickable { }
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
+                Text(
+                    text = stringResource(id = R.string.or_sign_in_with),
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    color = Color.Gray,
+                    fontSize = 14.sp
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                Image(
-                    painter = painterResource(id = R.drawable.icloud),
-                    contentDescription = "Apple",
-                    modifier = Modifier
-                        .size(60.dp)
-                        .background(Color.White, CircleShape)
-                        .padding(10.dp)
-                        .clickable { }
-                )
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // لوجو جوجل بعد تكبيره
+            Image(
+                painter = painterResource(id = R.drawable.google),
+                contentDescription = "Google Sign In",
+                modifier = Modifier
+                    .size(56.dp) // كبرنا الحجم لـ 56 عشان يكون واضح ومناسب للضغط
+                    .clip(CircleShape)
+                    .clickable {
+                        // هنضيف هنا منطق تسجيل الدخول بجوجل بعدين
+                    }
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
+
+
