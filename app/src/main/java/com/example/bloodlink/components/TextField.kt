@@ -8,11 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.bloodlink.ui.theme.PrimaryRed
 import com.example.bloodlink.ui.theme.TextDark
+import com.example.bloodlink.R
 
 @Composable
 fun BloodLinkTextField(
@@ -48,7 +50,7 @@ fun BloodLinkTextField(
         trailingIcon = {
             if (isPassword && onTogglePassword != null) {
                 Text(
-                    text = if (passwordVisible) "إخفاء" else "إظهار",
+                    text = if (passwordVisible) stringResource(id = R.string.hide) else stringResource(id = R.string.show),
                     modifier = Modifier.clickable { onTogglePassword() },
                     color = PrimaryRed
                 )
