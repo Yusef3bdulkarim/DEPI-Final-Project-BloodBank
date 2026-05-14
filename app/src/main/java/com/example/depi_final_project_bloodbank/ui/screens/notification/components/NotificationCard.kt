@@ -1,6 +1,7 @@
 package com.example.depi_final_project_bloodbank.ui.screens.notification.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -12,17 +13,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.models.NotificationItem
 import com.example.depi_final_project_bloodbank.models.NotificationStatus
 import com.example.depi_final_project_bloodbank.models.NotificationType
 
 @Composable
-fun NotificationCard(notification: NotificationItem) {
+fun NotificationCard(notification: NotificationItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable(
+                onClick = onClick,
+            ),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = MaterialTheme.shapes.small
@@ -32,17 +37,16 @@ fun NotificationCard(notification: NotificationItem) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                Text(
-                    text = notification.timeAgo,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                )
-                Row(verticalAlignment = Alignment.CenterVertically) {
+
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    NotificationIcon(type = notification.type)
                     Column(
-                        horizontalAlignment = Alignment.End,
+                        horizontalAlignment = Alignment.Start,
                         modifier = Modifier
                             .weight(1f)
                             .padding(horizontal = 8.dp)
@@ -67,23 +71,29 @@ fun NotificationCard(notification: NotificationItem) {
                                 color = if (notification.status == NotificationStatus.ONGOING)
                                     MaterialTheme.colorScheme.primary
                                 else
-                                    MaterialTheme.colorScheme.secondary
+                                    MaterialTheme.colorScheme.tertiary
                             )
                         }
                     }
-                    NotificationIcon(type = notification.type)
+
                 }
+                Text(
+                    text = notification.timeAgo,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                )
             }
 
             if (notification.status != NotificationStatus.NONE) {
-                val progress = if (notification.status == NotificationStatus.COMPLETED) 1f else 0.4f
+                val progress = if (notification.status == NotificationStatus.COMPLETED) 1f
+                else 0.5f
                 LinearProgressIndicator(
                     progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(4.dp),
                     color = if (notification.status == NotificationStatus.COMPLETED)
-                        MaterialTheme.colorScheme.secondary
+                        MaterialTheme.colorScheme.tertiary
                     else
                         MaterialTheme.colorScheme.primary,
                     trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
@@ -101,15 +111,17 @@ fun NotificationIcon(type: NotificationType) {
             MaterialTheme.colorScheme.primaryContainer,
             MaterialTheme.colorScheme.primary
         )
+
         NotificationType.DONATION_SUCCESS -> Triple(
             Icons.Default.CheckCircle,
-            MaterialTheme.colorScheme.secondaryContainer,
-            MaterialTheme.colorScheme.secondary
+            Color(0xFFC7F5C8),
+            MaterialTheme.colorScheme.tertiary
         )
+
         NotificationType.REMINDER -> Triple(
             Icons.Default.DateRange,
-            MaterialTheme.colorScheme.errorContainer,
-            MaterialTheme.colorScheme.error
+            Color(0xFFFCE2BD),
+            Color(0xFFFF9800),
         )
     }
 
