@@ -26,11 +26,17 @@ import com.example.bloodlink.components.BloodLinkTextField
 import com.example.bloodlink.components.LogoHeader
 import com.example.bloodlink.ui.theme.PrimaryRed
 import com.example.bloodlink.ui.theme.TextDark
+import com.example.bloodlink.viewmodel.AuthState
+import com.example.bloodlink.viewmodel.AuthViewModel
 
 @Composable
-fun ForgotPasswordScreen(navController: NavController) {
+fun ForgotPasswordScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel() // <-- استدعاء ViewModel
+) {
 
     var email by remember { mutableStateOf("") }
+    val authState by viewModel.authState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -85,10 +91,23 @@ fun ForgotPasswordScreen(navController: NavController) {
 
             BloodLinkButton(
                 text = stringResource(id = R.string.send_reset_link_button),
-                onClick = { navController.navigate("verify_account") }
+                onClick = { viewModel.resetPassword(email) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+            when (authState) {
+                is AuthState.Loading -> CircularProgressIndicator(color = PrimaryRed)
+                is AuthState.Error -> Text(text = (authState as AuthState.Error).messageStr ?: "", color = Color.Red, textAlign = TextAlign.Center)
+                is AuthState.PasswordResetSent -> {
+                    Text(text = stringResource(R.string.resent_email), color = Color(0xFF4CAF50), textAlign = TextAlign.Center)
+                    LaunchedEffect(Unit) {
+                        kotlinx.coroutines.delay(3000) // نستنى 3 ثواني وبعدين نرجعه للـ Login
+                        navController.popBackStack()
+                        viewModel.resetState()
+                    }
+                }
+                else -> {}
+            }
 
             Text(
                 text = stringResource(id = R.string.back_to_login),

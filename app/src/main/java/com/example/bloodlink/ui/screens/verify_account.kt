@@ -7,6 +7,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -23,9 +27,34 @@ import com.example.bloodlink.components.BloodLinkOutlinedButton
 import com.example.bloodlink.components.LogoHeader
 import com.example.bloodlink.ui.theme.PrimaryRed
 import com.example.bloodlink.ui.theme.TextDark
+import com.example.bloodlink.viewmodel.AuthState
+import com.example.bloodlink.viewmodel.AuthViewModel
+import kotlinx.coroutines.delay
 
 @Composable
-fun VerifyAccountScreen(navController: NavController) {
+fun VerifyAccountScreen(
+    navController: NavController,
+    viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel() // <-- استدعاء
+) {
+
+    val authState by viewModel.authState.collectAsState()
+
+    // فحص مستمر في الخلفية (Polling)
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(3000) // استنى 3 ثواني
+            viewModel.checkEmailVerificationStatus() // اسأل فايربيز
+        }
+    }
+
+    // بمجرد ما الحالة تتغير لنجاح، انقله للشاشة الرئيسية
+    if (authState is AuthState.Success) {
+        LaunchedEffect(Unit) {
+            navController.navigate("home_screen") {
+                popUpTo(0) // مسح كل الشاشات القديمة (Login/Register/Verify) من الذاكرة
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -71,14 +100,17 @@ fun VerifyAccountScreen(navController: NavController) {
 
             BloodLinkButton(
                 text = stringResource(id = R.string.resend_verification_button),
-                onClick = {}
+                onClick = { viewModel.resendVerificationEmail() } // <-- استدعاء الدالة
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             BloodLinkOutlinedButton(
                 text = stringResource(id = R.string.back_to_login),
-                onClick = { navController.navigate("login") }
+                onClick = {
+                    com.google.firebase.auth.FirebaseAuth.getInstance().signOut() // نسجل خروجه عشان يدخل من جديد
+                    navController.navigate("login") { popUpTo(0) }
+                }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -86,3 +118,12 @@ fun VerifyAccountScreen(navController: NavController) {
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun VerifyAccountPreview() {
+
+    val navController = androidx.navigation.compose.rememberNavController()
+
+
+    VerifyAccountScreen(navController = navController)
+}
