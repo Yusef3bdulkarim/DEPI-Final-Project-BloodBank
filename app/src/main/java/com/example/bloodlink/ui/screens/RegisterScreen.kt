@@ -52,6 +52,34 @@ fun RegisterScreen(
     val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
     val authState by viewModel.authState.collectAsState()
 
+    // ضيف دول فوق الـ Column الأساسي
+    val context = androidx.compose.ui.platform.LocalContext.current
+
+    // إعدادات جوجل
+    val gso = com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(
+        com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
+    )
+        .requestIdToken(context.getString(R.string.default_web_client_id)) // ده كود بيتعمل تلقائي من فايربيز
+        .requestEmail()
+        .build()
+
+    val googleSignInClient = com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(context, gso)
+
+    // الـ Launcher اللي بيستقبل النتيجة من جوجل
+    val launcher = androidx.activity.compose.rememberLauncherForActivityResult(
+        contract = androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = com.google.android.gms.auth.api.signin.GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(com.google.android.gms.common.api.ApiException::class.java)
+            account?.idToken?.let { idToken ->
+                viewModel.loginWithGoogle(idToken) // نبعت التوكن للـ ViewModel
+            }
+        } catch (e: Exception) {
+            // لو المستخدم قفل شاشة جوجل أو حصل خطأ
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -98,6 +126,21 @@ fun RegisterScreen(
                         navController.navigate("home_screen") {
                             // هنا بنمسح الـ register
                             popUpTo("register") { inclusive = true }
+                        }
+                    }
+                }
+                is AuthState.NeedsProfileCompletion -> {
+                    LaunchedEffect(Unit) {
+                        navController.navigate("complete_profile") {
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
+                }
+                is AuthState.NeedsVerification -> {
+                    LaunchedEffect(Unit) {
+                        navController.navigate("verify_account") {
+                            // بنمسح الشاشة من الذاكرة عشان ميرجعلهاش بالغلط
+                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
                         }
                     }
                 }
@@ -249,11 +292,11 @@ fun RegisterScreen(
                 painter = painterResource(id = R.drawable.google),
                 contentDescription = "Google Sign In",
                 modifier = Modifier
-                    .size(56.dp)
+                    .size(120.dp)
                     .clip(CircleShape)
                     .align(Alignment.CenterHorizontally)
                     .clickable {
-                        // هنضيف هنا منطق تسجيل الدخول بجوجل بعدين
+                        launcher.launch(googleSignInClient.signInIntent)
                     }
             )
 
