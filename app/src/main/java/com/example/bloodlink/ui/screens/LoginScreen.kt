@@ -61,7 +61,7 @@ fun LoginScreen(
     val gso = com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(
         com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
     )
-        .requestIdToken(context.getString(R.string.default_web_client_id))
+        .requestIdToken(stringResource(id = R.string.default_web_client_id))
         .requestEmail()
         .build()
 
