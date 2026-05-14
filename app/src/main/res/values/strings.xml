@@ -42,5 +42,11 @@
     <string name="error_saving_data">An error occurred while saving your data</string>
     <string name="error_creating_account">An error occurred while creating the account</string>
     <string name="error_google_login">An error occurred during Google sign in</string>
+    <string name="complete_profile_title">Complete your Profile</string>
+    <string name="save_and_continue">save and continue</string>
+
+    <string name="error_fetching_data">An error occurred while checking data</string>
+    <string name="resent_email">A password recovery link was sent to your email.</string>
+    <string name="error_invalid_credentials">Invalid email or password</string>
 
 </resources>

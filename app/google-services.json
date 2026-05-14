@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "939854154487",
+    "project_id": "depi-final-project-bloodbank",
+    "storage_bucket": "depi-final-project-bloodbank.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939854154487:android:b456526678d803f2fa61f2",
+        "android_client_info": {
+          "package_name": "com.example.bloodlink"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "939854154487-euor20vtu6ch6o7srt3k0qjsgpp7tnco.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bloodlink",
+            "certificate_hash": "9eed90d4b23b4d73d288dbe476f4a7e587dbf6d3"
+          }
+        },
+        {
+          "client_id": "939854154487-emtqh0gdm45tf5455u7r26pfoekeo657.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4egsxpWH8gdmW2B7IxxhYdMDm3-VmEuE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "939854154487-emtqh0gdm45tf5455u7r26pfoekeo657.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

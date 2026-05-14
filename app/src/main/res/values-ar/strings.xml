@@ -42,6 +42,11 @@
     <string name="error_saving_data">حدث خطأ أثناء حفظ بياناتك</string>
     <string name="error_creating_account">حدث خطأ أثناء إنشاء الحساب</string>
     <string name="error_google_login">حدث خطأ أثناء تسجيل الدخول بحساب جوجل</string>
+    <string name="complete_profile_title">استكمال بيانات الحساب</string>
+    <string name="save_and_continue">حفظ ومتابعة</string>
 
+    <string name="error_fetching_data">حدث خطأ أثناء فحص البيانات</string>
+    <string name="resent_email">تم إرسال رابط استعادة كلمة المرور لبريدك الإلكتروني</string>
+    <string name="error_invalid_credentials">الإيميل أو كلمة المرور غير صحيحة</string>
 
 </resources>
