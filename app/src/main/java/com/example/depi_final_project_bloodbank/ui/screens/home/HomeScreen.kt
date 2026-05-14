@@ -25,39 +25,16 @@ fun HomeScreen() {
     val nextDate = "25/9/2026"
     val lastDate = "12/8/2026"
 
-    Scaffold(
-        topBar = { TopLogoBar() },
-        containerColor = Color.White,
-        bottomBar = { BloodLinkBottomNav() }
-    ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            item {
-                HeaderSection(userName, bloodType)
-            }
-            item {
-                DonationCounterBanner(
-                    daysElapsed = daysElapsed, nextDate = nextDate, lastDate = lastDate
-                )
-            }
-            item { DynamicHealthTipsSection() }
-
-            item {
-                ActionButtonSection()
-            }
-
-            item {
-                SectionTitle(
-                    "URGENT APPEALS",
-                    "Urgent Appeals Near Kafr-ElSheikh"
-                )
-            }
-            item { UrgentAppealsList() }
-        }
-
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+        // الـ Padding هييجي من الـ Scaffold الأم اللي بره
+    ) {
+        item { HeaderSection(userName, bloodType) }
+        item { DonationCounterBanner(daysElapsed, nextDate, lastDate) }
+        item { DynamicHealthTipsSection() }
+        item { ActionButtonSection() }
+        item { SectionTitle("URGENT APPEALS", "Urgent Appeals Near Kafr-ElSheikh") }
+        item { UrgentAppealsList() }
     }
 }
 

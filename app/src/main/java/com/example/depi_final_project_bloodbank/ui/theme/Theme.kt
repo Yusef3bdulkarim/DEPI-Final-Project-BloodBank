@@ -1,58 +1,46 @@
 package com.example.depi_final_project_bloodbank.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+val LightColorScheme = lightColorScheme(
+    // اللون الأساسي للتطبيق: يُستخدم في الأزرار الرئيسية، الهيدر، والأيقونات النشطة (Active)
+    primary = MaroonPrimary,
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
+    // لون النص أو الأيقونات اللي بتتحط "فوق" الـ primary (زي كلمة "تبرع الآن" جوا الزرار)
+    onPrimary = MaroonOnPrimary,
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    // لون خلفية خفيفة للعناصر التفاعلية (زي خلفية كارت التبرع، أو الـ Highlights)
+    primaryContainer = MaroonContainer,
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
+    // اللون الثانوي: يُستخدم في النصوص العميقة (Deep Navy) والعناصر اللي محتاجة تباين عالي
+    secondary = DarkNavy,
+
+    // لون خلفية الشاشة بالكامل (Scaffold background) - درجة رمادي فاتحة جداً تريح العين
+    background = BackgroundLight,
+
+    // لون خلفية الكروت (Cards) والـ Sheets والـ Dialogs - دايماً أبيض صافي في تصميمك
+    surface = Color.White,
+
+    // لون النص الأساسي اللي بيتكتب فوق الـ surface الأبيض (زي أسماء المستشفيات والتفاصيل)
+    onSurface = DarkNavy,
+
+    // لون التنبيهات والأخطاء والحالات العاجلة (Urgent) - الأحمر الصريح
+    error = UrgentRed ,
+
+    // اللون الثالث (Success): يُستخدم لحالات النجاح، الإنجاز، والعناصر الإيجابية (اللون الأخضر)
+    tertiary = SuccessGreen,
+
+    // لون النص أو الأيقونة فوق الأخضر (عشان يبان بوضوح)
     onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
-
 @Composable
-fun DEPIFinalProjectBloodBankTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
-) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
+fun DEPIFinalProjectBloodBankTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = LightColorScheme,
         typography = Typography,
-        content = content
+        content = content,
+        shapes = Shapes
     )
 }
