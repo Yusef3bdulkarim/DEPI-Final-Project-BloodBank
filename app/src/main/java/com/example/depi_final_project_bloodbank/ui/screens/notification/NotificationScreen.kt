@@ -9,8 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Notifications
@@ -23,11 +24,63 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.depi_final_project_bloodbank.models.NotificationItem
+import com.example.depi_final_project_bloodbank.models.NotificationStatus
+import com.example.depi_final_project_bloodbank.models.NotificationType
+import com.example.depi_final_project_bloodbank.ui.screens.notification.components.NotificationCard
 
+val notifications = listOf(
+    NotificationItem(
+        id = "1",
+        type = NotificationType.URGENT_REQUEST,
+        title = "Urgent Blood Donation Request",
+        message = "Al Salam Hospital needs O+ blood type near your location",
+        timeAgo = "Now",
+        status = NotificationStatus.ONGOING
+    ),
+    NotificationItem(
+        id = "2",
+        type = NotificationType.DONATION_SUCCESS,
+        title = "Donation Successful",
+        message = "Thank you for donating at Military Hospital",
+        timeAgo = "2 hours ago",
+        status = NotificationStatus.COMPLETED
+    ),
+    NotificationItem(
+        id = "3",
+        type = NotificationType.REMINDER,
+        title = "Appointment Reminder",
+        message = "You have a donation appointment tomorrow at 10 AM",
+        timeAgo = "5 hours ago",
+        status = NotificationStatus.NONE
+    ),
+    NotificationItem(
+        id = "1",
+        type = NotificationType.URGENT_REQUEST,
+        title = "Urgent Blood Donation Request",
+        message = "Al Salam Hospital needs O+ blood type near your location",
+        timeAgo = "Now",
+        status = NotificationStatus.ONGOING
+    ),
+    NotificationItem(
+        id = "2",
+        type = NotificationType.DONATION_SUCCESS,
+        title = "Donation Successful",
+        message = "Thank you for donating at Military Hospital",
+        timeAgo = "2 hours ago",
+        status = NotificationStatus.COMPLETED
+    ),
+    NotificationItem(
+        id = "3",
+        type = NotificationType.REMINDER,
+        title = "Appointment Reminder",
+        message = "You have a donation appointment tomorrow at 10 AM",
+        timeAgo = "5 hours ago",
+        status = NotificationStatus.NONE
+    )
+)
 @Composable
 fun NotificationScreen(modifier: Modifier = Modifier) {
     Column(
@@ -36,6 +89,11 @@ fun NotificationScreen(modifier: Modifier = Modifier) {
     ) {
         NotificationsTopBar(onBackClick = {})
         NotificationsHeader(count = 5 , onMarkAllRead = {})
+        LazyColumn() {
+            items(notifications){notification ->
+                NotificationCard(notification , onClick = {})
+            }
+        }
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
