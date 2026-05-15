@@ -16,7 +16,7 @@ fun StatCard(
 ) {
 
     Card(
-        modifier = modifier.height(100.dp),
+        modifier = modifier.height(80.dp),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -28,8 +28,7 @@ fun StatCard(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -40,8 +39,6 @@ fun StatCard(
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
-
-            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = label,

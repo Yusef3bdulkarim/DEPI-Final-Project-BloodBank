@@ -6,13 +6,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -79,7 +76,6 @@ fun ProfileHeader(
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
 
         // Name
         Text(
@@ -89,7 +85,6 @@ fun ProfileHeader(
             color = MaterialTheme.colorScheme.onSurface
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
 
         // Location
         Row(
@@ -103,7 +98,6 @@ fun ProfileHeader(
                 modifier = Modifier.size(16.dp)
             )
 
-            Spacer(modifier = Modifier.width(4.dp))
 
             Text(
                 text = location,
