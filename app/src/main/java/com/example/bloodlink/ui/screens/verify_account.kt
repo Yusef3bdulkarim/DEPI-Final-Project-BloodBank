@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,6 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import com.example.bloodlink.R
 import com.example.bloodlink.components.BloodLinkButton
@@ -38,21 +42,36 @@ fun VerifyAccountScreen(
 ) {
 
     val authState by viewModel.authState.collectAsState()
+    val lifecycleOwner = LocalLifecycleOwner.current // عشان نراقب دورة حياة الشاشة
 
-    // فحص مستمر في الخلفية (Polling)
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(3000) // استنى 3 ثواني
-            viewModel.checkEmailVerificationStatus() // اسأل فايربيز
+    // 1. التوجيه الصحيح بناءً على مراقبة State مباشرة
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Success) {
+            navController.navigate("home_screen") {
+                // مسح الشاشة الحالية بدلاً من popUpTo(0) اللي بتسبب مشاكل
+                popUpTo("verify_account") { inclusive = true }
+            }
         }
     }
 
-    // بمجرد ما الحالة تتغير لنجاح، انقله للشاشة الرئيسية
-    if (authState is AuthState.Success) {
-        LaunchedEffect(Unit) {
-            navController.navigate("home_screen") {
-                popUpTo(0) // مسح كل الشاشات القديمة (Login/Register/Verify) من الذاكرة
+    // 2. فحص حالة الإيميل فور رجوع المستخدم للتطبيق (أسرع وأدق حل)
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.checkEmailVerificationStatus()
             }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    // 3. الفحص المستمر في الخلفية (Polling) كخطة بديلة لو فضل في الشاشة
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(10000)
+            viewModel.checkEmailVerificationStatus()
         }
     }
 
