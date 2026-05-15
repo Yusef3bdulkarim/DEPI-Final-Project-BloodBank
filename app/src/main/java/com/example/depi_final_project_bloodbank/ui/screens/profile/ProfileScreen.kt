@@ -1,36 +1,14 @@
 package com.example.depi_final_project_bloodbank.ui.screens.profile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -38,11 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.depi_final_project_bloodbank.R
-import com.example.depi_final_project_bloodbank.ui.screens.profile.components.AppointmentCard
-import com.example.depi_final_project_bloodbank.ui.screens.profile.components.BadgeItem
-import com.example.depi_final_project_bloodbank.ui.screens.profile.components.MenuItem
-import com.example.depi_final_project_bloodbank.ui.screens.profile.components.ProfileHeader
-import com.example.depi_final_project_bloodbank.ui.screens.profile.components.StatCard
+import com.example.depi_final_project_bloodbank.ui.screens.profile.components.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +27,10 @@ fun ProfileScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     var showLogoutDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var showLanguageDialog by remember {
         mutableStateOf(false)
     }
 
@@ -68,9 +46,7 @@ fun ProfileScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-//                        go to notifications screen
-                    }) {
+                    IconButton(onClick = { }) {
                         Image(
                             painter = painterResource(id = R.drawable.notification),
                             contentDescription = "Notifications",
@@ -114,11 +90,13 @@ fun ProfileScreen(
                         value = uiState.totalDonations.toString(),
                         modifier = Modifier.weight(1f)
                     )
+
                     StatCard(
                         label = "Last Donate",
                         value = uiState.lastDonationDate,
                         modifier = Modifier.weight(1f)
                     )
+
                     StatCard(
                         label = "Blood Type",
                         value = uiState.bloodType,
@@ -128,6 +106,7 @@ fun ProfileScreen(
             }
 
             item {
+
                 Column(
                     modifier = Modifier.padding(top = 12.dp)
                 ) {
@@ -146,7 +125,6 @@ fun ProfileScreen(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-
                     }
 
                     LazyRow(
@@ -154,7 +132,10 @@ fun ProfileScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(uiState.badges) { badge ->
-                            BadgeItem(title = badge.title, type = badge.type)
+                            BadgeItem(
+                                title = badge.title,
+                                type = badge.type
+                            )
                         }
                     }
                 }
@@ -167,10 +148,13 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp)
                         .padding(top = 8.dp),
+
                     shape = MaterialTheme.shapes.medium,
+
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surface
                     ),
+
                     elevation = CardDefaults.cardElevation(1.dp)
                 ) {
 
@@ -185,7 +169,9 @@ fun ProfileScreen(
                         MenuItem(
                             title = "Settings",
                             icon = R.drawable.settings,
-                            onClick = { }
+                            onClick = {
+                                showLanguageDialog = true
+                            }
                         )
 
                         MenuItem(
@@ -201,6 +187,7 @@ fun ProfileScreen(
             }
 
             item {
+
                 Spacer(modifier = Modifier.height(8.dp))
 
                 AppointmentCard(
@@ -211,6 +198,8 @@ fun ProfileScreen(
             }
         }
 
+        // Logout Dialog
+
         if (showLogoutDialog) {
 
             AlertDialog(
@@ -219,15 +208,11 @@ fun ProfileScreen(
                 },
 
                 title = {
-                    Text(
-                        text = "Logout"
-                    )
+                    Text("Logout")
                 },
 
                 text = {
-                    Text(
-                        text = "Are you sure you want to logout?"
-                    )
+                    Text("Are you sure you want to logout?")
                 },
 
                 confirmButton = {
@@ -237,7 +222,7 @@ fun ProfileScreen(
 
                             showLogoutDialog = false
 
-                            // Firebase logout هنا
+                            // Firebase Logout Here
                         }
                     ) {
                         Text(
@@ -257,6 +242,51 @@ fun ProfileScreen(
                         Text("Cancel")
                     }
                 }
+            )
+        }
+
+        // Language Dialog
+
+        if (showLanguageDialog) {
+
+            AlertDialog(
+                onDismissRequest = {
+                    showLanguageDialog = false
+                },
+
+                title = {
+                    Text("Choose Language")
+                },
+
+                text = {
+
+                    Column {
+
+                        TextButton(
+                            onClick = {
+
+                                showLanguageDialog = false
+
+                                // Arabic Language Logic
+                            }
+                        ) {
+                            Text("العربية")
+                        }
+
+                        TextButton(
+                            onClick = {
+
+                                showLanguageDialog = false
+
+                                // English Language Logic
+                            }
+                        ) {
+                            Text("English")
+                        }
+                    }
+                },
+
+                confirmButton = {}
             )
         }
     }
