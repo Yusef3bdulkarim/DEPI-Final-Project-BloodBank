@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.depi_final_project_bloodbank.ui.theme.BloodRed
 
 
 @Composable
@@ -35,7 +34,7 @@ fun BloodTypeChip(
                 text = bloodType,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = BloodRed // اللون الأحمر الذي عرفناه سابقاً
+                color = MaterialTheme.colorScheme.primary // اللون الأحمر الذي عرفناه سابقاً
             )
         }
     }

@@ -20,12 +20,12 @@ fun SectionTitle(title: String,location: String) {
             text = title,
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.ExtraBold,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.secondary
         )
         Text(
             text = location,
             style = MaterialTheme.typography.bodySmall,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }

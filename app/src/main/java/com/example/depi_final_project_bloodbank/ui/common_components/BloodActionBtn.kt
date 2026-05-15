@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.depi_final_project_bloodbank.ui.theme.BloodRed
 
 @Composable
 fun BloodActionBtn(
@@ -29,9 +28,9 @@ fun BloodActionBtn(
     isPrimary: Boolean=true,
     icon:(@Composable ()-> Unit)?=null
 ){
-    val containerColor= if(isPrimary) BloodRed else Color.White
-    val contentColor= if (isPrimary) Color.White else BloodRed
-    val border= if (isPrimary)null else BorderStroke(1.dp,BloodRed)
+    val containerColor= if(isPrimary) MaterialTheme.colorScheme.primary else Color.White
+    val contentColor= if (isPrimary) Color.White else MaterialTheme.colorScheme.primary
+    val border= if (isPrimary)null else BorderStroke(1.dp,MaterialTheme.colorScheme.primary)
 
     Button(
         onClick=onClick,

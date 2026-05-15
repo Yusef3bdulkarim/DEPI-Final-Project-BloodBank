@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -25,15 +24,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.depi_final_project_bloodbank.ui.theme.BloodRed
 
 @Composable
 fun TopLogoBar() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .statusBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+
+            .padding(horizontal = 16.dp, vertical = 12.dp ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -45,7 +43,7 @@ fun TopLogoBar() {
             Icon(
                 painter = painterResource(id = android.R.drawable.ic_menu_mylocation),
                 contentDescription = null,
-                tint = BloodRed,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
@@ -53,7 +51,7 @@ fun TopLogoBar() {
                 text = "BloodLink",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color =BloodRed
+                color =MaterialTheme.colorScheme.primary
             )
         }
 

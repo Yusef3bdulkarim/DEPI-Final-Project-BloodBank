@@ -93,13 +93,12 @@ fun DonationCounter(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = "$daysElapesed DAYS",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
                 text = "Elapsed",
-                color = Color.White.copy(alpha = 0.8f),
+                color =  MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.labelMedium
             )
         }

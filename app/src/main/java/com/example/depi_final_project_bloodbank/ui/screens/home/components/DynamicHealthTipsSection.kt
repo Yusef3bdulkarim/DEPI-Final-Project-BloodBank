@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
@@ -28,13 +27,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.example.depi_final_project_bloodbank.ui.theme.BloodRed
 
 @Composable
 fun DynamicHealthTipsSection() {
@@ -63,8 +60,8 @@ fun DynamicHealthTipsSection() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(130.dp),
-                colors = CardDefaults.cardColors(containerColor =  Color.White),
-                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = MaterialTheme.shapes.medium,
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Row(
@@ -83,7 +80,7 @@ fun DynamicHealthTipsSection() {
                         Icon(
                             imageVector = Icons.Default.Favorite,
                             contentDescription = null,
-                            tint = BloodRed,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(40.dp)
                         )
                     }
@@ -93,13 +90,13 @@ fun DynamicHealthTipsSection() {
                             text = tip.title,
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.ExtraBold,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = tip.description,
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.DarkGray,
+                            color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = TextUnit(16f, TextUnitType.Sp)
                         )
                     }
@@ -115,7 +112,7 @@ fun DynamicHealthTipsSection() {
         ) {
             repeat(tips.size) { iteration ->
                 val color =
-                    if (pagerState.currentPage == iteration) BloodRed else Color.LightGray
+                    if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else Color.LightGray
                 Box(
                     modifier = Modifier
                         .padding(2.dp)

@@ -37,7 +37,7 @@ fun HeaderSection(
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
 
@@ -59,14 +59,14 @@ fun HeaderSection(
             Column {
                 Text(
                     "Hello, $name!",
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.Black,
+
+                    color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleLarge,
 
                 )
                 Text(
                     "His blood type",
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

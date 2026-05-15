@@ -29,6 +29,8 @@ fun HomeScreen() {
         modifier = Modifier.fillMaxSize()
         // الـ Padding هييجي من الـ Scaffold الأم اللي بره
     ) {
+        item { TopLogoBar() }
+
         item { HeaderSection(userName, bloodType) }
         item { DonationCounterBanner(daysElapsed, nextDate, lastDate) }
         item { DynamicHealthTipsSection() }
