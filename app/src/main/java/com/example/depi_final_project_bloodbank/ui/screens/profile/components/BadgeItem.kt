@@ -1,12 +1,7 @@
 package com.example.depi_final_project_bloodbank.ui.screens.profile.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +16,7 @@ fun BadgeItem(
     title: String,
     type: String,
 ) {
-    val badge = when (type) {
+    val badgeIcon = when (type) {
         "expert" -> R.drawable.reward
         "life" -> R.drawable.heart
         "star" -> R.drawable.star
@@ -30,23 +25,28 @@ fun BadgeItem(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.width(80.dp)
     ) {
+
         Box(
-            modifier = Modifier
-                .width(60.dp)
-                .height(60.dp),
+            modifier = Modifier.size(64.dp),
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(badge),
-                contentDescription = "Reward",
-                Modifier.size(60.dp)
+                painter = painterResource(badgeIcon),
+                contentDescription = title,
+                if (type == "expert") {
+                    Modifier.size(64.dp)
+                } else {
+                    Modifier.size(58.dp)                }
             )
         }
+
         Spacer(modifier = Modifier.height(8.dp))
+
         Text(
             text = title,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurface
         )
     }
