@@ -54,13 +54,13 @@ fun NotificationCard(notification: NotificationItem, onClick: () -> Unit) {
                         Text(
                             text = notification.title,
                             style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.secondary
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = notification.message,
                             style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         if (notification.status != NotificationStatus.NONE) {

@@ -34,7 +34,7 @@ val Typography = Typography(
         fontFamily = NotoSansArabic,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        lineHeight = 22.sp,
+        lineHeight = 18.sp,
     ),
     // النصوص الصغيرة - الوقت، الحالة
     labelSmall = TextStyle(
