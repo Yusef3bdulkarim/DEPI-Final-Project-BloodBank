@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 val LightColorScheme = lightColorScheme(
     // اللون الأساسي للتطبيق: يُستخدم في الأزرار الرئيسية، الهيدر، والأيقونات النشطة (Active)
     primary = MaroonPrimary,
-
+//    secondary = TextBlack,
     // لون النص أو الأيقونات اللي بتتحط "فوق" الـ primary (زي كلمة "تبرع الآن" جوا الزرار)
     onPrimary = MaroonOnPrimary,
 
@@ -24,7 +24,7 @@ val LightColorScheme = lightColorScheme(
     surface = Color.White,
 
     // لون النص الأساسي اللي بيتكتب فوق الـ surface الأبيض (زي أسماء المستشفيات والتفاصيل)
-    onSurface = DarkNavy,
+    onSurface = TextGray,
 
     // لون التنبيهات والأخطاء والحالات العاجلة (Urgent) - الأحمر الصريح
     error = UrgentRed ,
