@@ -1,5 +1,6 @@
 package com.example.depi_final_project_bloodbank.ui.screens.home.components
 
+import android.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -41,7 +42,7 @@ fun TopLogoBar() {
         ){}
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                painter = painterResource(id = android.R.drawable.ic_menu_mylocation),
+                painter = painterResource(id = R.drawable.ic_menu_mylocation),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp)
