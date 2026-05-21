@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.depi_final_project_bloodbank.ui.screens.home.HomeScreen
+import com.example.depi_final_project_bloodbank.ui.screens.notification.NotificationScreen
 import com.example.depi_final_project_bloodbank.ui.theme.DEPIFinalProjectBloodBankTheme
 
 class MainActivity : ComponentActivity() {
@@ -39,8 +40,8 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Home.route) {
                             HomeScreen() // شاشتك الجميلة اللي في الصورة
                         }
-                        composable(Screen.Appeals.route) {
-                            PlaceholderScreen("Appeals Screen")
+                        composable(Screen.Notifications.route) {
+                            NotificationScreen()
                         }
                         composable(Screen.Centers.route) {
                             PlaceholderScreen("Centers Screen")

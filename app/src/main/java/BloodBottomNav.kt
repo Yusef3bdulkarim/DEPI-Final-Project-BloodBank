@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Bloodtype
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +35,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 // 1. تعريف الشاشات (بعيداً عن أي import لـ BlendMode)
 sealed class Screen(val route: String) {
     object Home : Screen("home")
-    object Appeals : Screen("appeals")
+    object Notifications : Screen("notifications")
     object Centers : Screen("centers")
     object Profile : Screen("profile")
 }
@@ -54,7 +55,7 @@ fun BloodLinkBottomNav(navController: NavController) {
     // تعريف العناصر مع التأكد من نداء الـ Icons صح
     val items = listOf(
         NavigationData("Home", Icons.Outlined.Home, Screen.Home.route),
-        NavigationData("Appeals", Icons.Outlined.Bloodtype, Screen.Appeals.route),
+        NavigationData("Notifications", Icons.Outlined.Notifications, Screen.Notifications.route),
         NavigationData("Centers", Icons.Outlined.Map, Screen.Centers.route),
         NavigationData("Profile", Icons.Outlined.Person, Screen.Profile.route)
     )
