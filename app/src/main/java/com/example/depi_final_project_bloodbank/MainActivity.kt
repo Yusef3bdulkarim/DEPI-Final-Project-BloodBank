@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.depi_final_project_bloodbank.ui.screens.home.HomeScreen
 import com.example.depi_final_project_bloodbank.ui.screens.notification.NotificationScreen
+import com.example.depi_final_project_bloodbank.ui.screens.profile.ProfileScreen
 import com.example.depi_final_project_bloodbank.ui.theme.DEPIFinalProjectBloodBankTheme
 
 class MainActivity : ComponentActivity() {
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
                             PlaceholderScreen("Centers Screen")
                         }
                         composable(Screen.Profile.route) {
-                            PlaceholderScreen("Profile Screen")
+                            ProfileScreen()
                         }
                     }
                 }
