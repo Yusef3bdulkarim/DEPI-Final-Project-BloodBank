@@ -49,20 +49,13 @@ fun HeaderSection(
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
-            Column {
                 Text(
                     "Hello, $name!",
 
                     color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
 
                 )
-                Text(
-                    "His blood type",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
         }
         BloodTypeChip(type)
     }

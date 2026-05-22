@@ -64,14 +64,14 @@ fun UrgentAppealCard(
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
                     text = if (isUrgent) "URGENT: " else "",
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     color =  if (isUrgent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
                 )
 
                 Text(
                     text = bloodType,
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color =  if (isUrgent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
 
@@ -89,7 +89,7 @@ fun UrgentAppealCard(
                 Column {
                     Text(
                         hospitalName,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.secondary,
                         maxLines = 1
                     )
@@ -103,7 +103,7 @@ fun UrgentAppealCard(
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             "$distance away",
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.labelSmall,
                             color = Color.Gray,
                             maxLines = 1
                         )
@@ -115,12 +115,14 @@ fun UrgentAppealCard(
                     ) {
                         Text(
                             "Needs $unitsNeeded units",
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.labelSmall,
                             color =MaterialTheme.colorScheme.onSurface,
                         )
 
                         TextButton(onClick = onClickView, modifier = Modifier.padding(0.dp)) {
-                            Text("View", color = MaterialTheme.colorScheme.primary)
+                            Text("View",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }

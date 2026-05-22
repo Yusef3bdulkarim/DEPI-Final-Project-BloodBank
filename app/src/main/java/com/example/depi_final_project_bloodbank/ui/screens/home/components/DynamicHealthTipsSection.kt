@@ -88,14 +88,14 @@ fun DynamicHealthTipsSection() {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = tip.title,
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = tip.description,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = TextUnit(16f, TextUnitType.Sp)
                         )

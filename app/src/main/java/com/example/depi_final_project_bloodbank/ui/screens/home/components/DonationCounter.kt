@@ -60,10 +60,10 @@ fun DonationCounter(
 
             val gradient = Brush.sweepGradient(
                 colors = listOf(
-                    Color(0xFFFF6B6B),
-                    Color(0xFFFF3B3B),
-                    Color(0xFFB00020),
-                    Color(0xFFFF6B6B)
+                    Color(0xFFFFE0E0), // وردي فاتح جداً
+                    Color(0xFFFFCCCC), // وردي فاتح
+                    Color(0xFFFF9999), // وردي متوسط
+                    Color(0xFFFFE0E0)  // وردي فاتح جداً تاني
                 )
             )
 
@@ -95,8 +95,8 @@ fun DonationCounter(
             )
             Text(
                 text = "Elapsed",
-                color =  MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.labelMedium
+                color =  MaterialTheme.colorScheme.primaryContainer,
+                style = MaterialTheme.typography.labelSmall
             )
         }
     }

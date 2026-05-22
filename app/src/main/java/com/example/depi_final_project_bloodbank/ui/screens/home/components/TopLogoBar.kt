@@ -50,7 +50,7 @@ fun TopLogoBar() {
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = "BloodLink",
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color =MaterialTheme.colorScheme.primary
             )

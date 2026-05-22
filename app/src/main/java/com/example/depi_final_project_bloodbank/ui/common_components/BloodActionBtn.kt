@@ -55,7 +55,7 @@ fun BloodActionBtn(
             }
             Text(
                 text=text.uppercase(),
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
         }

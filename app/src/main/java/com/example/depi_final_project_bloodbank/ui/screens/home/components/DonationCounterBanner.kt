@@ -40,13 +40,13 @@ fun DonationCounterBanner(daysElapsed: Int, nextDate: String, lastDate: String) 
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     "Next date: $nextDate",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodySmall
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    style = MaterialTheme.typography.labelSmall
                 )
                 Text(
                     "Last donation: $lastDate",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodySmall
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
             DonationCounter(daysElapesed = daysElapsed)
