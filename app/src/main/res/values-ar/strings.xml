@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DEPI-Final-Project-BloodBank</string>
+    <string name="title_activity_home_screen">الشاشة الرئيسية</string>
+    <string name="title_activity_home_view_model">HomeViewModel</string>
+
+
+
+    <string name="hospital_name">اسم المستشفى / العيادة</string>
+    <string name="city_area">المدينة / المنطقة</string>
+    <string name="contact_phone">رقم التواصل</string>
+    <string name="error_required">هذه الخانة مطلوبة!</string>
+
+    <string name="error_phone_invalid">يجب أن يتكون رقم الهاتف من 11 أرقام على الأقل (أرقام فقط).</string>
+
+    <string name="location_details">تفاصيل الموقع</string>
+    <string name="urgency_status">حالة الطوارئ</string>
+    <string name="contact_name">اسم جهة الاتصال (اختياري)</string>
+    <string name="cancel_btn">إلغاء</string>
+    <string name="routine_urgency">عادي</string>
+    <string name="urgent_urgency">عاجل</string>
+    <string name="very_urgent_urgency">حرج جداً</string>
+
+    <string name="units_of_blood">وحدات دم</string>
+    <string name="active_now">نشط الآن</string>
+    <string name="just_now">الآن</string>
+    <string name="patient_representative">ممثل المريض</string>
+
+    <string name="create_request_title">إنشاء طلب تبرع</string>
+    <string name="request_details_title">تفاصيل الطلب</string>
+    <string name="blood_type">فصيلة الدم المطلوبة</string>
+    <string name="units_required">عدد الأكياس المطلوبة</string>
+    <string name="hospital_location">موقع المستشفى</string>
+    <string name="request_status">حالة الطلب</string>
+    <string name="post_date">وقت النشر</string>
+    <string name="note">ملاحظة</string>
+    <string name="contact_info">بيانات التواصل</string>
+    <string name="post_request_btn">نشر الطلب</string>
+    <string name="fulfill_request_btn">تلبية الطلب الآن</string>
+    <string name="urgency_instruction"> يرجى تحديد حالة الطوارئ بناءً على تشخيص الطبيب المعالج.</string>
+</resources>
