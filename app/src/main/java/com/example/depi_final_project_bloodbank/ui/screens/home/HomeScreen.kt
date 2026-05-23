@@ -14,7 +14,9 @@ import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLo
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.UrgentAppealsList
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onRequestBloodClick: () -> Unit = {}
+) {
     val userName = "Ahmed"
     val bloodType = "O+"
     val daysElapsed = 44
@@ -25,12 +27,13 @@ fun HomeScreen() {
         modifier = Modifier.fillMaxSize()
         // الـ Padding هييجي من الـ Scaffold الأم اللي بره
     ) {
+
         item { TopLogoBar() }
 
         item { HeaderSection(userName, bloodType) }
         item { DonationCounterBanner(daysElapsed, nextDate, lastDate) }
         item { DynamicHealthTipsSection() }
-        item { ActionButtonSection() }
+        item { ActionButtonSection(onRequestBloodClick = onRequestBloodClick) }
         item { SectionTitle("URGENT APPEALS", "Urgent Appeals Near Kafr-ElSheikh") }
         item { UrgentAppealsList() }
     }

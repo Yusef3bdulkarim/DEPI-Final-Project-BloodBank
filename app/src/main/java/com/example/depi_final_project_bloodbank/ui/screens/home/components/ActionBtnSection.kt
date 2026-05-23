@@ -13,7 +13,9 @@ import com.example.depi_final_project_bloodbank.ui.common_components.BloodAction
 
 
 @Composable
-fun ActionButtonSection() {
+fun ActionButtonSection(
+    onRequestBloodClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -21,7 +23,7 @@ fun ActionButtonSection() {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            BloodActionBtn(text = "REQUEST BLOOD ", isPrimary = false, onClick = {})
+            BloodActionBtn(text = "REQUEST BLOOD ", isPrimary = false, onClick = {onRequestBloodClick()})
         }
         Box(modifier = Modifier.weight(1f)) {
             BloodActionBtn(text = "DONATE NOW", isPrimary = true, onClick = {})
@@ -32,5 +34,5 @@ fun ActionButtonSection() {
 @Preview(showBackground = true)
 @Composable
 private fun ActionButtonSectionPrev() {
-    ActionButtonSection()
+    ActionButtonSection(onRequestBloodClick = {})
 }
