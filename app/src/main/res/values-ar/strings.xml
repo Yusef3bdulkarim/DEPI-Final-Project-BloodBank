@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تبرع بالدم</string>
+    <string name="orders_list">قائمة الطلبات</string>
+    <string name="tab_in_progress">جاري</string>
+    <string name="tab_completed">مكتمل</string>
+    <string name="tab_cancelled">ملغي</string>
+    <string name="request_title">طلب تبرع دم (%s)</string>
+    <string name="urgent_title">طلب عاجل (%s)</string>
+    <string name="view_details">عرض التفاصيل</string>
+    <string name="donate_now">تبرع الآن</string>
+    <string name="delivered">تم التوصيل</string>
+    <string name="processing">قيد المعالجة</string>
+    <string name="searching_donors">جاري البحث عن متبرعين</string>
+    <string name="donation_completed">اكتمل التبرع</string>
+    <string name="search_placeholder">بحث باسم المستشفى أو الفصيلة...</string>
+    <string name="unit_label">وحدة</string>
+    <string name="unit_count">الوحدة: %1$d</string>
+    <string name="no_results_title">لا توجد نتائج</string>
+    <string name="no_results_search_sub">لم نجد نتائج للبحث عن \"%s\". جرب البحث عن فصيلة دم أو اسم مستشفى آخر.</string>
+    <string name="no_results_empty_sub">لا توجد طلبات في هذا القسم حالياً.</string>
+
+    <!-- Bottom Sheet Strings -->
+    <string name="hosp_location_label">موقع المستشفى</string>
+    <string name="hosp_location_placeholder">الخبر، حي العقربية</string>
+    <string name="request_status_label">حالة الطلب</string>
+    <string name="publish_date_label">تاريخ النشر</string>
+    <string name="status_active">نشط الآن</string>
+    <string name="doctor_note_label">ملاحظة الطبيب</string>
+    <string name="doctor_note_placeholder">المريض في حالة حرجة ويحتاج لإجراء عملية جراحية طارئة للقلب صباح الغد. نرجو من المتبرعين التواصل في أقرب وقت ممكن. جزاكم الله خيراً.</string>
+    <string name="contact_info_label">معلومات الاتصال</string>
+    <string name="contact_person_name">أحمد محمد العلي</string>
+    <string name="blood_type_required_label">فصيلة الدم المطلوبة</string>
+
+    <!-- Hospital Names -->
+    <string name="hosp_king_fahd">مستشفى الملك فهد</string>
+    <string name="hosp_king_saud">مجمع الملك سعود الطبي</string>
+    <string name="hosp_al_habib">مستشفى الحبيب</string>
+    <string name="hosp_king_abdulaziz">مدينة الملك عبد العزيز الطبية</string>
+    <string name="hosp_dallah">مستشفى دلة</string>
+    <string name="hosp_care">مستشفى رعاية</string>
+    <string name="hosp_military">المستشفى العسكري</string>
+    <string name="hosp_mouwasat">مستشفى المواساة</string>
+
+    <!-- Times -->
+    <string name="time_30_mins">منذ 30 دقيقة</string>
+    <string name="time_1_hour">منذ ساعة</string>
+    <string name="time_today_10am">اليوم، 10:00 ص</string>
+    <string name="time_yesterday_9pm">أمس، 09:15 م</string>
+    <string name="time_may_22">22 مايو، 2024</string>
+    <string name="time_may_20">20 مايو، 2024</string>
+    <string name="time_may_18">18 مايو، 2024</string>
+    <string name="time_may_15">15 مايو، 2024</string>
+</resources>
