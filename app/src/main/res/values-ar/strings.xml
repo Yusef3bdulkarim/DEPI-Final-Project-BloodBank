@@ -49,4 +49,6 @@
     <string name="resent_email">تم إرسال رابط استعادة كلمة المرور لبريدك الإلكتروني</string>
     <string name="error_invalid_credentials">الإيميل أو كلمة المرور غير صحيحة</string>
 
+    <string name="check_verification_status">لقد قمت بالتفعيل</string>
+
 </resources>

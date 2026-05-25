@@ -49,4 +49,5 @@
     <string name="resent_email">A password recovery link was sent to your email.</string>
     <string name="error_invalid_credentials">Invalid email or password</string>
 
+    <string name="check_verification_status">I have verified</string>
 </resources>

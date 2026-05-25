@@ -67,13 +67,6 @@ fun VerifyAccountScreen(
         }
     }
 
-    // 3. الفحص المستمر في الخلفية (Polling) كخطة بديلة لو فضل في الشاشة
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(10000)
-            viewModel.checkEmailVerificationStatus()
-        }
-    }
 
     Column(
         modifier = Modifier
