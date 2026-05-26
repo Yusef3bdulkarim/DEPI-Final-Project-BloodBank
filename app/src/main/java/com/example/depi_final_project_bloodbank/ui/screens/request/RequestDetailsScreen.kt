@@ -27,7 +27,11 @@ import com.example.depi_final_project_bloodbank.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
+fun RequestDetailsScreen(
+    viewModel: RequestViewModel,
+    onBackClick: () -> Unit,
+    onNavigateToNotifications: () -> Unit
+) {
     val request by viewModel.request.collectAsState()
     val context = LocalContext.current
 
@@ -60,7 +64,9 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
                     Icons.Default.ArrowBack,
                     contentDescription = "Back",
                     tint = colorScheme.onSurface,
-                    modifier = Modifier.size(28.dp).clickable { onBackClick() }
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable { onBackClick() }
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
@@ -69,7 +75,15 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
                     color = colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Icon(Icons.Default.Notifications, contentDescription = "Notifications", tint = colorScheme.onSurface, modifier = Modifier.size(28.dp))
+                IconButton(
+                    onClick = { onNavigateToNotifications() } // 2. حط الأمر هنا!
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Notifications, // أو أيقونة الجرس اللي إنت مستخدمها
+                        contentDescription = "الإشعارات",
+                        tint = colorScheme.onSurface
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -93,9 +107,14 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
                         val urgencyColor = when (request.urgency) {
                             "Very Urgent" -> colorScheme.error
                             "Urgent" -> colorScheme.primary
@@ -103,16 +122,37 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
                         }
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.background(urgencyColor.copy(alpha = 0.1f), shapes.small).padding(horizontal = 8.dp, vertical = 4.dp)
+                            modifier = Modifier
+                                .background(
+                                    urgencyColor.copy(alpha = 0.1f),
+                                    shapes.small
+                                )
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text("*", color = urgencyColor, style = typography.titleMedium)
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text(request.urgency.uppercase(), color = urgencyColor, style = typography.labelSmall)
+                            Text(
+                                request.urgency.uppercase(),
+                                color = urgencyColor,
+                                style = typography.labelSmall
+                            )
                         }
                     }
-                    Text(stringResource(R.string.blood_type), style = typography.bodyLarge, color = Color.Gray)
-                    Text(request.bloodType, color = colorScheme.primary, style = typography.titleLarge.copy(fontSize = 48.sp))
-                    Text("${request.units} " + stringResource(R.string.units_of_blood), style = typography.bodyLarge, color = Color.DarkGray)
+                    Text(
+                        stringResource(R.string.blood_type),
+                        style = typography.bodyLarge,
+                        color = Color.Gray
+                    )
+                    Text(
+                        request.bloodType,
+                        color = colorScheme.primary,
+                        style = typography.titleLarge.copy(fontSize = 48.sp)
+                    )
+                    Text(
+                        "${request.units} " + stringResource(R.string.units_of_blood),
+                        style = typography.bodyLarge,
+                        color = Color.DarkGray
+                    )
                 }
             }
 
@@ -125,15 +165,58 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
                 border = BorderStroke(1.dp, Color(0xFFF0F0F0)),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Box(modifier = Modifier.size(40.dp).background(colorScheme.background, shapes.small), contentAlignment = Alignment.Center) {
-                        Icon(Icons.Default.LocalHospital, contentDescription = null, tint = colorScheme.primary)
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // أيقونة المستشفى (زي ما هي)
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(colorScheme.background, shapes.small),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Default.LocalHospital,
+                            contentDescription = null,
+                            tint = colorScheme.primary
+                        )
                     }
+
                     Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text(stringResource(R.string.hospital_location), style = typography.labelSmall, color = Color.Gray)
-                        Text(request.hospitalName.ifEmpty { stringResource(R.string.hospital_name) }, style = typography.titleMedium, color = colorScheme.onSurface)
-                        Text(request.city.ifEmpty { stringResource(R.string.city_area) }, style = typography.bodyLarge, color = Color.Gray)
+
+                    // عمود النصوص (ضفنا ليه weight عشان يزق أيقونة الموقع لليمين)
+                    Column(
+                        modifier = Modifier.weight(1f) // 👈 التعديل البسيط هنا
+                    ) {
+                        Text(
+                            stringResource(R.string.hospital_location),
+                            style = typography.labelSmall,
+                            color = Color.Gray
+                        )
+                        Text(
+                            request.hospitalName.ifEmpty { stringResource(R.string.hospital_name) },
+                            style = typography.titleMedium,
+                            color = colorScheme.onSurface
+                        )
+                        Text(
+                            request.city.ifEmpty { stringResource(R.string.city_area) },
+                            style = typography.bodyLarge,
+                            color = Color.Gray
+                        )
+                    }
+
+                    // الأيقونة الجديدة اللي هتظهر على اليمين خالص
+                    IconButton(
+                        onClick = {
+                            // ممكن بعدين تحط هنا كود يفتح الـ Intent بتاع Google Maps
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "الموقع",
+                            tint = colorScheme.primary
+                        )
                     }
                 }
             }
@@ -141,7 +224,10 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
             Spacer(modifier = Modifier.height(12.dp))
 
             // --- Status & Date Row ---
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 Card(
                     shape = shapes.medium,
                     colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
@@ -149,12 +235,24 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(stringResource(R.string.request_status), style = typography.labelSmall, color = Color.Gray)
+                        Text(
+                            stringResource(R.string.request_status),
+                            style = typography.labelSmall,
+                            color = Color.Gray
+                        )
                         Spacer(modifier = Modifier.height(4.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(modifier = Modifier.size(8.dp).background(colorScheme.tertiary, CircleShape))
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .background(colorScheme.tertiary, CircleShape)
+                            )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text(stringResource(R.string.active_now), style = typography.titleMedium, color = colorScheme.onSurface)
+                            Text(
+                                stringResource(R.string.active_now),
+                                style = typography.titleMedium,
+                                color = colorScheme.onSurface
+                            )
                         }
                     }
                 }
@@ -165,9 +263,17 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(stringResource(R.string.post_date), style = typography.labelSmall, color = Color.Gray)
+                        Text(
+                            stringResource(R.string.post_date),
+                            style = typography.labelSmall,
+                            color = Color.Gray
+                        )
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text(if (timeAgo == "0 minutes ago") stringResource(R.string.just_now) else timeAgo, style = typography.titleMedium, color = colorScheme.onSurface)
+                        Text(
+                            if (timeAgo == "0 minutes ago") stringResource(R.string.just_now) else timeAgo,
+                            style = typography.titleMedium,
+                            color = colorScheme.onSurface
+                        )
                     }
                 }
             }
@@ -181,30 +287,54 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
                 border = BorderStroke(1.dp, Color(0xFFF0F0F0)),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Box(
-                        modifier = Modifier.size(48.dp).background(colorScheme.secondary, CircleShape),
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(colorScheme.secondary, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Text("AA", color = Color.White, style = typography.titleMedium)
                     }
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(stringResource(R.string.contact_info), style = typography.labelSmall, color = Color.Gray)
-                        Text(request.contactName.ifEmpty { stringResource(R.string.patient_representative) }, style = typography.titleMedium, color = colorScheme.onSurface)
-                        Text(stringResource(R.string.patient_representative), style = typography.labelSmall, color = Color.Gray)
+                        Text(
+                            stringResource(R.string.contact_info),
+                            style = typography.labelSmall,
+                            color = Color.Gray
+                        )
+                        Text(
+                            request.contactName.ifEmpty { stringResource(R.string.patient_representative) },
+                            style = typography.titleMedium,
+                            color = colorScheme.onSurface
+                        )
+                        Text(
+                            stringResource(R.string.patient_representative),
+                            style = typography.labelSmall,
+                            color = Color.Gray
+                        )
                     }
                     Box(
                         modifier = Modifier
                             .size(40.dp)
                             .background(colorScheme.background, CircleShape)
                             .clickable {
-                                val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${request.contactPhone}"))
+                                val intent = Intent(
+                                    Intent.ACTION_DIAL,
+                                    Uri.parse("tel:${request.contactPhone}")
+                                )
                                 context.startActivity(intent)
                             },
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Default.Call, contentDescription = "Call", tint = colorScheme.primary)
+                        Icon(
+                            Icons.Default.Call,
+                            contentDescription = "Call",
+                            tint = colorScheme.primary
+                        )
                     }
                 }
             }
@@ -212,21 +342,34 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
 
             // --- Bottom Buttons ---
-            Row(modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp)) {
                 Button(
                     onClick = { /* سيتم برمجته لاحقاً */ },
                     colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary),
                     shape = shapes.medium,
-                    modifier = Modifier.weight(1f).height(56.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(56.dp)
                 ) {
-                    Icon(Icons.Default.FavoriteBorder, contentDescription = null, tint = colorScheme.onPrimary)
+                    Icon(
+                        Icons.Default.FavoriteBorder,
+                        contentDescription = null,
+                        tint = colorScheme.onPrimary
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.fulfill_request_btn), color = colorScheme.onPrimary, style = typography.titleMedium)
+                    Text(
+                        stringResource(R.string.fulfill_request_btn),
+                        color = colorScheme.onPrimary,
+                        style = typography.titleMedium
+                    )
                 }
                 Spacer(modifier = Modifier.width(12.dp))
                 OutlinedButton(
                     onClick = {
-                        val shareText = "حالة عاجلة: محتاجين متبرع بفصيلة دم ${request.bloodType} في مستشفى ${request.hospitalName} (${request.city}).\nللتواصل: ${request.contactPhone}\n#تطبيق_BloodLink"
+                        val shareText =
+                            "حالة عاجلة: محتاجين متبرع بفصيلة دم ${request.bloodType} في مستشفى ${request.hospitalName} (${request.city}).\nللتواصل: ${request.contactPhone}\n#تطبيق_BloodLink"
                         val sendIntent = Intent().apply {
                             action = Intent.ACTION_SEND
                             putExtra(Intent.EXTRA_TEXT, shareText)
@@ -240,7 +383,11 @@ fun RequestDetailsScreen(viewModel: RequestViewModel, onBackClick: () -> Unit) {
                     modifier = Modifier.size(56.dp),
                     contentPadding = PaddingValues(0.dp)
                 ) {
-                    Icon(Icons.Default.Share, contentDescription = "Share", tint = colorScheme.primary)
+                    Icon(
+                        Icons.Default.Share,
+                        contentDescription = "Share",
+                        tint = colorScheme.primary
+                    )
                 }
             }
         }

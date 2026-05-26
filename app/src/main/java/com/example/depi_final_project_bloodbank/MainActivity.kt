@@ -26,27 +26,25 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            // داخل الـ setContent
             DEPIFinalProjectBloodBankTheme {
-                val navController = rememberNavController() // تعريف الكنترولر
+                val navController = rememberNavController()
+
+                // التعديل السحري: تعريف الـ ViewModel مرة واحدة هنا عشان يكون مشترك (Shared)
+                val sharedRequestViewModel: RequestViewModel = viewModel()
 
                 Scaffold(
                     bottomBar = {
-                        // نداء الـ Nav Bar بتاعك هنا عشان يظهر تحت في كل الشاشات
                         BloodLinkBottomNav(navController = navController)
                     }
                 ) { innerPadding ->
-                    // الـ NavHost هو اللي بيبدل المحتوى اللي في الصورة فوق الـ Bar
                     NavHost(
                         navController = navController,
                         startDestination = Screen.Home.route,
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        // 1. شاشة الهوم (ضفنا أمر الانتقال)
                         composable(Screen.Home.route) {
                             HomeScreen(
                                 onRequestBloodClick = {
-                                    // أول ما الزرار يتداس، هنروح للمسار ده
                                     navController.navigate("create_request")
                                 }
                             )
@@ -64,14 +62,10 @@ class MainActivity : ComponentActivity() {
                             ProfileScreen()
                         }
 
-                        // 2. شاشتك الجديدة العظمة (عرفناها للـ NavHost)
-                        // 2. شاشتك الجديدة العظمة (عرفناها للـ NavHost)
                         // شاشة إنشاء الطلب
                         composable(route = "create_request") {
-                            val requestViewModel: RequestViewModel = viewModel()
-
                             CreateRequestScreen(
-                                viewModel = requestViewModel,
+                                viewModel = sharedRequestViewModel, // باصينا النسخة المشتركة
                                 onNavigateToDetails = {
                                     navController.navigate("RequestDetailsScreen")
                                 },
@@ -81,14 +75,15 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-// شاشة تفاصيل الطلب
+                        // شاشة تفاصيل الطلب
                         composable(route = "RequestDetailsScreen") {
-                            val requestViewModel: RequestViewModel = viewModel()
-
                             RequestDetailsScreen(
-                                viewModel = requestViewModel,
+                                viewModel = sharedRequestViewModel, // باصينا نفس النسخة هنا
                                 onBackClick = {
                                     navController.popBackStack()
+                                },
+                                onNavigateToNotifications = {
+                                    navController.navigate(Screen.Notifications.route)
                                 }
                             )
                         }
