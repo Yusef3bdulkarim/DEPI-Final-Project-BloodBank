@@ -17,7 +17,7 @@ fun UrgentAppealsList() {
             UrgentAppealCard(
                 hospitalName = "Kafr El-Sheikh Gen. Hosp.",
                 distance = "1.2 km",
-                unitsNeeded = 2,
+                units = 2,
                 bloodType = "B-",
                 onClickView = { /* Handle Click */ }
             )
@@ -26,7 +26,7 @@ fun UrgentAppealsList() {
             UrgentAppealCard(
                 hospitalName = "University Hospital",
                 distance = "3.8 km",
-                unitsNeeded = 1,
+                units = 1,
                 isUrgent = false,
                 bloodType = "A+",
                 onClickView = { /* Handle Click */ }

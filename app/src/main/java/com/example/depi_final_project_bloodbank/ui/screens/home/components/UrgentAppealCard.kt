@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 fun UrgentAppealCard(
     hospitalName: String,
     distance: String,
-    unitsNeeded: Int,
+    units: Int,
     bloodType: String,
     isUrgent: Boolean = true,
     onClickView: () -> Unit
@@ -114,7 +114,7 @@ fun UrgentAppealCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Needs $unitsNeeded units",
+                            "Needs $units units",
                             style = MaterialTheme.typography.labelSmall,
                             color =MaterialTheme.colorScheme.onSurface,
                         )

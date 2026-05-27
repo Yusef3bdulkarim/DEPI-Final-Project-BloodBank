@@ -1,18 +1,18 @@
 package com.example.depi_final_project_bloodbank.ui.screens.request
 
 import androidx.lifecycle.ViewModel
-import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
+import com.example.depi_final_project_bloodbank.domain.model.BloodReq
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class RequestViewModel : ViewModel() {
-    private val _request = MutableStateFlow(BloodRequest())
+    private val _request = MutableStateFlow(BloodReq())
     val request = _request.asStateFlow()
 
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
 
-    fun updateRequest(req: BloodRequest) {
+    fun updateRequest(req: BloodReq) {
         _request.value = req
         _error.value = null
     }

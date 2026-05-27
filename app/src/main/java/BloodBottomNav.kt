@@ -36,6 +36,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Notifications : Screen("notifications")
+    object Requests : Screen("requests") // 👈 ضفنا السطر ده هنا بأمان
     object Centers : Screen("centers")
     object Profile : Screen("profile")
 }
@@ -56,6 +57,7 @@ fun BloodLinkBottomNav(navController: NavController) {
     val items = listOf(
         NavigationData("Home", Icons.Outlined.Home, Screen.Home.route),
         NavigationData("Notifications", Icons.Outlined.Notifications, Screen.Notifications.route),
+        NavigationData("Requests", Icons.Outlined.Bloodtype, Screen.Requests.route), // 👈 ضفنا أيقونة قطرة الدم في النص
         NavigationData("Centers", Icons.Outlined.Map, Screen.Centers.route),
         NavigationData("Profile", Icons.Outlined.Person, Screen.Profile.route)
     )

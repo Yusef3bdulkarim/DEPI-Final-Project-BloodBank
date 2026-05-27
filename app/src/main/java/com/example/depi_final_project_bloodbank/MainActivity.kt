@@ -19,6 +19,7 @@ import com.example.depi_final_project_bloodbank.ui.screens.profile.ProfileScreen
 import com.example.depi_final_project_bloodbank.ui.screens.request.CreateRequestScreen
 import com.example.depi_final_project_bloodbank.ui.screens.request.RequestDetailsScreen
 import com.example.depi_final_project_bloodbank.ui.screens.request.RequestViewModel
+import com.example.depi_final_project_bloodbank.ui.screens.orders.RequestsScreen
 import com.example.depi_final_project_bloodbank.ui.theme.DEPIFinalProjectBloodBankTheme
 
 class MainActivity : ComponentActivity() {
@@ -52,6 +53,10 @@ class MainActivity : ComponentActivity() {
 
                         composable(Screen.Notifications.route) {
                             NotificationScreen()
+                        }
+
+                        composable(Screen.Requests.route) {
+                            RequestsScreen()
                         }
 
                         composable(Screen.Centers.route) {
@@ -95,6 +100,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun PlaceholderScreen(x0: String) {
-        TODO("Not yet implemented")
+        // حطينا الـ println دي عشان نشيل تحذير إن الباراميتر x0 مش مستخدم
+        println(x0)
     }
 }
