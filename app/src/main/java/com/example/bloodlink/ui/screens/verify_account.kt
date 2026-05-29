@@ -47,7 +47,7 @@ fun VerifyAccountScreen(
     // 1. التوجيه الصحيح بناءً على مراقبة State مباشرة
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
-            navController.navigate("home_screen") {
+            navController.navigate("home") {
                 // مسح الشاشة الحالية بدلاً من popUpTo(0) اللي بتسبب مشاكل
                 popUpTo("verify_account") { inclusive = true }
             }

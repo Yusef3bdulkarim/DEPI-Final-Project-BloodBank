@@ -194,7 +194,7 @@ fun LoginScreen(
                 }
                 is AuthState.Success -> {
                     LaunchedEffect(Unit) {
-                        navController.navigate("home_screen") {
+                        navController.navigate("home") {
                             popUpTo("login") { inclusive = true }
                         }
                     }
