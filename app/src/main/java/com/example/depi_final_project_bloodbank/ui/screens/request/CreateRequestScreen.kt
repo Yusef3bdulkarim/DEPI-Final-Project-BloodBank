@@ -192,12 +192,41 @@ fun CreateRequestScreen(
                     }
                 }
             }
+            var useCurrentLocation by remember { mutableStateOf(false) }
 
-            Text(
-                stringResource(R.string.location_details),
-                style = typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.location_details),
+                    style = typography.titleMedium,
+                    modifier = Modifier.weight(1f) // عشان يزق الزرار لليمين
+                )
+
+                Text(
+                    text = "Current Location",
+                    style = typography.labelMedium,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+
+                Switch(
+                    checked = useCurrentLocation,
+                    onCheckedChange = { isChecked ->
+                        useCurrentLocation = isChecked
+                        // أمر جلب اللوكيشن هيتحط هنا بعدين
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = colorScheme.primary,
+                        checkedTrackColor = colorScheme.primaryContainer
+                    )
+                )
+            }
+
+// 2. الكارد بتاعك (الخانات مفتوحة دايماً للكتابة)
             Card(
                 shape = shapes.medium,
                 colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
@@ -221,7 +250,9 @@ fun CreateRequestScreen(
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
+
                     OutlinedTextField(
                         value = request.city,
                         onValueChange = { viewModel.updateRequest(request.copy(city = it)) },
