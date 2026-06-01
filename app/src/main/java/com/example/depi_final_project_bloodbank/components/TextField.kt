@@ -12,8 +12,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.bloodlink.ui.theme.PrimaryRed
-import com.example.bloodlink.ui.theme.TextDark
+import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
+import com.example.depi_final_project_bloodbank.ui.theme.TextDark
 import com.example.depi_final_project_bloodbank.R
 
 @Composable

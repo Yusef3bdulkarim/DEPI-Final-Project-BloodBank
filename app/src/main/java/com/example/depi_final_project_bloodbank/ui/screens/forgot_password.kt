@@ -25,8 +25,8 @@ import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.components.BloodLinkButton
 import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
 import com.example.depi_final_project_bloodbank.components.LogoHeader
-import com.example.bloodlink.ui.theme.PrimaryRed
-import com.example.bloodlink.ui.theme.TextDark
+import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
+import com.example.depi_final_project_bloodbank.ui.theme.TextDark
 import com.example.depi_final_project_bloodbank.viewmodel.AuthState
 import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel
 import kotlinx.coroutines.delay

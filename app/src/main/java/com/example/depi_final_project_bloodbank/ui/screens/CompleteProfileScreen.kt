@@ -45,7 +45,7 @@ import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.components.BloodLinkButton
 import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
-import com.example.bloodlink.ui.theme.PrimaryRed
+import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import com.example.depi_final_project_bloodbank.viewmodel.AuthState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue

@@ -31,12 +31,12 @@ import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.components.BloodLinkButton
 import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
 import com.example.depi_final_project_bloodbank.components.LogoHeader
-import com.example.bloodlink.ui.theme.PrimaryRed
-import com.example.bloodlink.ui.theme.TextDark
+import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.depi_final_project_bloodbank.ui.theme.TextDark
 import com.example.depi_final_project_bloodbank.viewmodel.AuthState
 
 import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel
@@ -104,12 +104,13 @@ fun RegisterScreen(
             Text(
                 text = stringResource(id = R.string.register_title),
                 fontSize = 30.sp,
+                lineHeight = 38.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = PrimaryRed,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
-            // التعامل مع الحالات المختلفة (تحميل، خطأ، نجاح)
+
             Spacer(modifier = Modifier.height(16.dp))
             when (authState) {
                 is AuthState.Loading -> {

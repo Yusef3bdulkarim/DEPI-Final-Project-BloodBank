@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import com.example.depi_final_project_bloodbank.navigation.AppNav
-import com.example.bloodlink.ui.theme.BloodLinkTheme
 import com.example.depi_final_project_bloodbank.ui.theme.DEPIFinalProjectBloodBankTheme
 
 
