@@ -41,6 +41,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939854154487:android:e523bec01902dd90fa61f2",
+        "android_client_info": {
+          "package_name": "com.example.depi_final_project_bloodbank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "939854154487-emtqh0gdm45tf5455u7r26pfoekeo657.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4egsxpWH8gdmW2B7IxxhYdMDm3-VmEuE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "939854154487-emtqh0gdm45tf5455u7r26pfoekeo657.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

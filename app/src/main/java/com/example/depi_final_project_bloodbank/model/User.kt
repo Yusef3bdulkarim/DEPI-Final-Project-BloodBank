@@ -1,4 +1,4 @@
-package com.example.bloodlink.model
+package com.example.depi_final_project_bloodbank.model
 
 data class User(
     val uid: String = "",

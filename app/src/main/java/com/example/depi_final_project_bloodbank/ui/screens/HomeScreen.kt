@@ -1,4 +1,4 @@
-package com.example.bloodlink.ui.screens
+package com.example.depi_final_project_bloodbank.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

@@ -1,4 +1,4 @@
-package com.example.bloodlink.ui.screens
+package com.example.depi_final_project_bloodbank.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,20 +19,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.bloodlink.R
-import com.example.bloodlink.components.BloodLinkButton
-import com.example.bloodlink.components.BloodLinkTextField
-import com.example.bloodlink.components.LogoHeader
+import com.example.depi_final_project_bloodbank.R
+import com.example.depi_final_project_bloodbank.components.BloodLinkButton
+import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
+import com.example.depi_final_project_bloodbank.components.LogoHeader
 import com.example.bloodlink.ui.theme.PrimaryRed
 import com.example.bloodlink.ui.theme.TextDark
-import com.example.bloodlink.viewmodel.AuthState
-import com.example.bloodlink.viewmodel.AuthViewModel
+import com.example.depi_final_project_bloodbank.viewmodel.AuthState
+import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun ForgotPasswordScreen(
     navController: NavController,
-    viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel() // <-- استدعاء ViewModel
+    viewModel: AuthViewModel = viewModel() // <-- استدعاء ViewModel
 ) {
 
     var email by remember { mutableStateOf("") }
@@ -101,7 +103,7 @@ fun ForgotPasswordScreen(
                 is AuthState.PasswordResetSent -> {
                     Text(text = stringResource(R.string.resent_email), color = Color(0xFF4CAF50), textAlign = TextAlign.Center)
                     LaunchedEffect(Unit) {
-                        kotlinx.coroutines.delay(3000) // نستنى 3 ثواني وبعدين نرجعه للـ Login
+                        delay(3000) // نستنى 3 ثواني وبعدين نرجعه للـ Login
                         navController.popBackStack()
                         viewModel.resetState()
                     }

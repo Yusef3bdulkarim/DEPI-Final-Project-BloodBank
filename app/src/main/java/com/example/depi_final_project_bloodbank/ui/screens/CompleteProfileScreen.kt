@@ -1,4 +1,4 @@
-package com.example.bloodlink.ui.screens
+package com.example.depi_final_project_bloodbank.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,21 +40,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.bloodlink.components.LogoHeader
-import com.example.bloodlink.viewmodel.AuthViewModel
-import com.example.bloodlink.R
-import com.example.bloodlink.components.BloodLinkButton
-import com.example.bloodlink.components.BloodLinkTextField
+import com.example.depi_final_project_bloodbank.components.LogoHeader
+import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel
+import com.example.depi_final_project_bloodbank.R
+import com.example.depi_final_project_bloodbank.components.BloodLinkButton
+import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
 import com.example.bloodlink.ui.theme.PrimaryRed
-import com.example.bloodlink.viewmodel.AuthState
+import com.example.depi_final_project_bloodbank.viewmodel.AuthState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun CompleteProfileScreen(
     navController: NavController,
     uid: String, // الـ UID اللي جاي من جوجل
-    viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: AuthViewModel = viewModel()
 ) {
     var name by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }

@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.bloodlink.R
+import com.example.depi_final_project_bloodbank.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

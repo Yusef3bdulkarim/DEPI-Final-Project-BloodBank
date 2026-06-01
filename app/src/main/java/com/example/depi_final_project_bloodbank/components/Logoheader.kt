@@ -1,4 +1,4 @@
-package com.example.bloodlink.components
+package com.example.depi_final_project_bloodbank.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.bloodlink.R
+import com.example.depi_final_project_bloodbank.R
 
 @Composable
 fun LogoHeader() {

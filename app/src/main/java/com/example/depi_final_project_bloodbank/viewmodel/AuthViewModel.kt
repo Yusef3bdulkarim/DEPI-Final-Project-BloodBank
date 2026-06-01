@@ -1,13 +1,14 @@
-package com.example.bloodlink.viewmodel
+package com.example.depi_final_project_bloodbank.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.bloodlink.R
-import com.example.bloodlink.model.User
+import com.example.depi_final_project_bloodbank.R
+import com.example.depi_final_project_bloodbank.model.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.OAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
@@ -61,8 +62,8 @@ class AuthViewModel : ViewModel() {
 
                     // هنا نحدد الـ Resource ID بناءً على نوع الخطأ
                     val resId = when (exception) {
-                        is com.google.firebase.auth.FirebaseAuthInvalidUserException,
-                        is com.google.firebase.auth.FirebaseAuthInvalidCredentialsException -> {
+                        is FirebaseAuthInvalidUserException,
+                        is FirebaseAuthInvalidCredentialsException -> {
                             R.string.error_invalid_credentials
                         }
                         else -> {

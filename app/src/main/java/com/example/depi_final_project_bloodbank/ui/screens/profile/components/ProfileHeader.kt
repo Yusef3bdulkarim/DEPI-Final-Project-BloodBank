@@ -24,7 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.bloodlink.R
+import com.example.depi_final_project_bloodbank.R
 @Composable
 fun ProfileHeader(
     name: String,

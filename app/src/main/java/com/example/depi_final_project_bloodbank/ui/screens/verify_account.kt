@@ -1,4 +1,4 @@
-package com.example.bloodlink.ui.screens
+package com.example.depi_final_project_bloodbank.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,21 +24,23 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.bloodlink.R
-import com.example.bloodlink.components.BloodLinkButton
-import com.example.bloodlink.components.BloodLinkOutlinedButton
-import com.example.bloodlink.components.LogoHeader
+import androidx.navigation.compose.rememberNavController
+import com.example.depi_final_project_bloodbank.R
+import com.example.depi_final_project_bloodbank.components.BloodLinkButton
+import com.example.depi_final_project_bloodbank.components.BloodLinkOutlinedButton
+import com.example.depi_final_project_bloodbank.components.LogoHeader
 import com.example.bloodlink.ui.theme.PrimaryRed
 import com.example.bloodlink.ui.theme.TextDark
-import com.example.bloodlink.viewmodel.AuthState
-import com.example.bloodlink.viewmodel.AuthViewModel
-import kotlinx.coroutines.delay
+import com.example.depi_final_project_bloodbank.viewmodel.AuthState
+import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun VerifyAccountScreen(
     navController: NavController,
-    viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel() // <-- استدعاء
+    viewModel: AuthViewModel = viewModel() // <-- استدعاء
 ) {
 
     val authState by viewModel.authState.collectAsState()
@@ -120,7 +122,7 @@ fun VerifyAccountScreen(
             BloodLinkOutlinedButton(
                 text = stringResource(id = R.string.back_to_login),
                 onClick = {
-                    com.google.firebase.auth.FirebaseAuth.getInstance().signOut() // نسجل خروجه عشان يدخل من جديد
+                    FirebaseAuth.getInstance().signOut() // نسجل خروجه عشان يدخل من جديد
                     navController.navigate("login") { popUpTo(0) }
                 }
             )
@@ -134,7 +136,7 @@ fun VerifyAccountScreen(
 @Composable
 fun VerifyAccountPreview() {
 
-    val navController = androidx.navigation.compose.rememberNavController()
+    val navController = rememberNavController()
 
 
     VerifyAccountScreen(navController = navController)

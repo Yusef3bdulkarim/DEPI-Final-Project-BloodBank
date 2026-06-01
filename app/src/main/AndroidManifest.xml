@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BloodLink">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.depi_final_project_bloodbank.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>

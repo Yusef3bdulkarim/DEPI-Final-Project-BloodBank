@@ -1,4 +1,4 @@
-package com.example.bloodlink.components
+package com.example.depi_final_project_bloodbank.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

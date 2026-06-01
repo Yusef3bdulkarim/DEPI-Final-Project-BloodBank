@@ -1,4 +1,4 @@
-package com.example.bloodlink.components
+package com.example.depi_final_project_bloodbank.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +14,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.bloodlink.ui.theme.PrimaryRed
 import com.example.bloodlink.ui.theme.TextDark
-import com.example.bloodlink.R
+import com.example.depi_final_project_bloodbank.R
 
 @Composable
 fun BloodLinkTextField(

@@ -1,4 +1,4 @@
-package com.example.bloodlink.navigation
+package com.example.depi_final_project_bloodbank.navigation
 
 import BloodLinkBottomNav
 import androidx.compose.foundation.layout.padding
@@ -6,8 +6,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.*
-import com.example.bloodlink.ui.screens.* // شاشاتك القديمة
+import com.example.depi_final_project_bloodbank.ui.screens.CompleteProfileScreen
+import com.example.depi_final_project_bloodbank.ui.screens.ForgotPasswordScreen
+import com.example.depi_final_project_bloodbank.ui.screens.LoginScreen
+import com.example.depi_final_project_bloodbank.ui.screens.RegisterScreen
+import com.example.depi_final_project_bloodbank.ui.screens.VerifyAccountScreen
 import com.google.firebase.auth.FirebaseAuth
 
 // لو الـ Imports دي لونها أحمر، اقف عليها ودوس Alt + Enter عشان يجيب مسار التيم الصح
@@ -81,7 +86,7 @@ fun AppNav() {
             }
             composable("create_request") {
                 // 1. بنستدعي الـ ViewModel الخاص بشاشة الطلب
-                val requestViewModel: RequestViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+                val requestViewModel: RequestViewModel = viewModel()
 
                 // 2. بنستدعي الشاشة ونباصي ليها الأحداث المطلوبة
                 CreateRequestScreen(

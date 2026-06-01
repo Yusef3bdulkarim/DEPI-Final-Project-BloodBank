@@ -1,5 +1,7 @@
-package com.example.bloodlink.ui.screens
+package com.example.depi_final_project_bloodbank.ui.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,23 +27,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.bloodlink.R
-import com.example.bloodlink.components.BloodLinkButton
-import com.example.bloodlink.components.BloodLinkTextField
-import com.example.bloodlink.components.LogoHeader
+import com.example.depi_final_project_bloodbank.R
+import com.example.depi_final_project_bloodbank.components.BloodLinkButton
+import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
+import com.example.depi_final_project_bloodbank.components.LogoHeader
 import com.example.bloodlink.ui.theme.PrimaryRed
 import com.example.bloodlink.ui.theme.TextDark
 
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.example.bloodlink.viewmodel.AuthState
+import com.example.depi_final_project_bloodbank.viewmodel.AuthState
 
-import com.example.bloodlink.viewmodel.AuthViewModel
+import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 
 @Composable
 fun RegisterScreen(
     navController: NavController,
-    viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: AuthViewModel = viewModel()
 ) {
 
     var name by remember { mutableStateOf("") }
@@ -53,25 +60,25 @@ fun RegisterScreen(
     val authState by viewModel.authState.collectAsState()
 
     // ضيف دول فوق الـ Column الأساسي
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val context = LocalContext.current
 
     // إعدادات جوجل
-    val gso = com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(
-        com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
+    val gso = GoogleSignInOptions.Builder(
+        GoogleSignInOptions.DEFAULT_SIGN_IN
     )
         .requestIdToken(stringResource(id = R.string.default_web_client_id)) // ده كود بيتعمل تلقائي من فايربيز
         .requestEmail()
         .build()
 
-    val googleSignInClient = com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(context, gso)
+    val googleSignInClient = GoogleSignIn.getClient(context, gso)
 
     // الـ Launcher اللي بيستقبل النتيجة من جوجل
-    val launcher = androidx.activity.compose.rememberLauncherForActivityResult(
-        contract = androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        val task = com.google.android.gms.auth.api.signin.GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
         try {
-            val account = task.getResult(com.google.android.gms.common.api.ApiException::class.java)
+            val account = task.getResult(ApiException::class.java)
             account?.idToken?.let { idToken ->
                 viewModel.loginWithGoogle(idToken) // نبعت التوكن للـ ViewModel
             }
