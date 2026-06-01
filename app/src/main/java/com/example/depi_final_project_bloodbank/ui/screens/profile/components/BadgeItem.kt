@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.R
-
 @Composable
 fun BadgeItem(
     title: String,

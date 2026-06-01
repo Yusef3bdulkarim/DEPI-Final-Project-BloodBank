@@ -30,3 +30,6 @@ val BackgroundLight = Color(0xFFF8F9FA)
 // Status Colors
 val SuccessGreen = Color(0xFF2ECC71)
 val UrgentRed = Color(0xFFB00020)
+
+val PrimaryRed = Color(0xDF600202)
+val TextDark = Color(0xFF1A1A1A)

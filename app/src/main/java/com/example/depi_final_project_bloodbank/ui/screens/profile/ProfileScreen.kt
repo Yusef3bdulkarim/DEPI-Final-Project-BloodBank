@@ -15,13 +15,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLogoBar
 import com.example.depi_final_project_bloodbank.ui.screens.profile.components.*
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
+    navController: NavController,
     viewModel: ProfileViewModel = viewModel()
 ) {
 
@@ -197,13 +200,17 @@ fun ProfileScreen(
                 },
 
                 confirmButton = {
-
                     TextButton(
                         onClick = {
-
                             showLogoutDialog = false
 
-                            // Firebase Logout Here
+                            // 1. تسجيل الخروج من فايربيز
+                            FirebaseAuth.getInstance().signOut()
+
+                            // 2. التوجيه لشاشة تسجيل الدخول ومسح الذاكرة (عشان زرار الرجوع)
+                            navController.navigate("login") {
+                                popUpTo(0)
+                            }
                         }
                     ) {
                         Text(

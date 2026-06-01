@@ -7,7 +7,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.depi_final_project_bloodbank.R
-
 val NotoSansArabic = FontFamily(
     Font(R.font.noto_regular, FontWeight.Normal),
     Font(R.font.noto_bold, FontWeight.Bold),
