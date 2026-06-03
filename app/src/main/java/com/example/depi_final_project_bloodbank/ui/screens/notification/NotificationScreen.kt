@@ -25,61 +25,68 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.depi_final_project_bloodbank.domain.enums.NotificationType
 import com.example.depi_final_project_bloodbank.domain.model.Notification
-import com.example.depi_final_project_bloodbank.domain.model.NotificationStatus
-import com.example.depi_final_project_bloodbank.domain.model.NotificationType
 import com.example.depi_final_project_bloodbank.ui.screens.notification.components.NotificationCard
 
 val notifications = listOf(
+
     Notification(
-        id = "1",
+        id = "notif_1",
+        userId = "user_1",
         type = NotificationType.URGENT_REQUEST,
-        title = "Urgent Blood Donation Request",
-        message = "Al Salam Hospital needs O+ blood type near your location",
-        timeAgo = "Now",
-        status = NotificationStatus.ONGOING
+        title = "Urgent Blood Request",
+        message = "Al Salam Hospital urgently needs O+ blood donors in Sohag.",
+        isRead = false,
+        relatedId = "request_101",
+        createdAt = System.currentTimeMillis()
     ),
+
     Notification(
-        id = "2",
+        id = "notif_2",
+        userId = "user_1",
         type = NotificationType.DONATION_SUCCESS,
-        title = "Donation Successful",
-        message = "Thank you for donating at Military Hospital",
-        timeAgo = "2 hours ago",
-        status = NotificationStatus.COMPLETED
+        title = "Donation Confirmed",
+        message = "Thank you for completing your blood donation.",
+        isRead = true,
+        relatedId = "donation_201",
+        createdAt = System.currentTimeMillis() - 2 * 60 * 60 * 1000
     ),
+
     Notification(
-        id = "3",
+        id = "notif_3",
+        userId = "user_1",
         type = NotificationType.REMINDER,
-        title = "Appointment Reminder",
-        message = "You have a donation appointment tomorrow at 10 AM",
-        timeAgo = "5 hours ago",
-        status = NotificationStatus.NONE
+        title = "Donation Reminder",
+        message = "You are now eligible to donate blood again.",
+        isRead = false,
+        relatedId = "",
+        createdAt = System.currentTimeMillis() - 24 * 60 * 60 * 1000
     ),
+
     Notification(
-        id = "1",
+        id = "notif_4",
+        userId = "user_1",
         type = NotificationType.URGENT_REQUEST,
-        title = "Urgent Blood Donation Request",
-        message = "Al Salam Hospital needs O+ blood type near your location",
-        timeAgo = "Now",
-        status = NotificationStatus.ONGOING
+        title = "New Emergency Request",
+        message = "A+ blood is needed at Sohag University Hospital.",
+        isRead = false,
+        relatedId = "request_102",
+        createdAt = System.currentTimeMillis() - 30 * 60 * 1000
     ),
+
     Notification(
-        id = "2",
+        id = "notif_5",
+        userId = "user_1",
         type = NotificationType.DONATION_SUCCESS,
-        title = "Donation Successful",
-        message = "Thank you for donating at Military Hospital",
-        timeAgo = "2 hours ago",
-        status = NotificationStatus.COMPLETED
-    ),
-    Notification(
-        id = "3",
-        type = NotificationType.REMINDER,
-        title = "Appointment Reminder",
-        message = "You have a donation appointment tomorrow at 10 AM",
-        timeAgo = "5 hours ago",
-        status = NotificationStatus.NONE
+        title = "Request Completed",
+        message = "The blood request you contributed to has been fulfilled.",
+        isRead = true,
+        relatedId = "request_103",
+        createdAt = System.currentTimeMillis() - 3 * 60 * 60 * 1000
     )
 )
+
 @Composable
 fun NotificationScreen(modifier: Modifier = Modifier) {
     Column(
@@ -87,14 +94,30 @@ fun NotificationScreen(modifier: Modifier = Modifier) {
             .fillMaxSize()
     ) {
         NotificationsTopBar(onBackClick = {})
-        NotificationsHeader(count = 5 , onMarkAllRead = {})
+        NotificationsHeader(count = notifications.count { !it.isRead }, onMarkAllRead = {})
         LazyColumn() {
-            items(notifications){notification ->
-                NotificationCard(notification , onClick = {})
+            items(notifications) { notification ->
+                NotificationCard(notification, onClick = {
+                    //لما يدوس علي الاشعار ايه الي حصل
+                    when (notification.type) {
+                        NotificationType.URGENT_REQUEST -> {
+                            // افتح تفاصيل الطلب
+                        }
+
+                        NotificationType.DONATION_SUCCESS -> {
+                            // افتح تفاصيل التبرع
+                        }
+
+                        NotificationType.REMINDER -> {
+                            // افتح صفحة التبرعات أو البروفايل
+                        }
+                    }
+                })
             }
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationsTopBar(onBackClick: () -> Unit) {

@@ -3,6 +3,7 @@ package com.example.depi_final_project_bloodbank.ui.screens.notification.compone
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -15,12 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.depi_final_project_bloodbank.domain.enums.NotificationType
 import com.example.depi_final_project_bloodbank.domain.model.Notification
-import com.example.depi_final_project_bloodbank.domain.model.NotificationStatus
-import com.example.depi_final_project_bloodbank.domain.model.NotificationType
+import com.example.depi_final_project_bloodbank.utils.toTimeAgo
 
 @Composable
 fun NotificationCard(notification: Notification, onClick: () -> Unit) {
+    val lineColor = when (notification.type) {
+        NotificationType.URGENT_REQUEST -> MaterialTheme.colorScheme.primaryContainer
+        NotificationType.DONATION_SUCCESS ->Color(0xFFC7F5C8)
+        NotificationType.REMINDER ->Color(0xFFFCE2BD)
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,76 +34,65 @@ fun NotificationCard(notification: Notification, onClick: () -> Unit) {
             .clickable(
                 onClick = onClick,
             ),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor =
+                MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = MaterialTheme.shapes.small
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                verticalAlignment = Alignment.Top
-            ) {
-
+        Row(
+            modifier = Modifier.height(IntrinsicSize.Min),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Box(
+                modifier = Modifier.fillMaxHeight()
+                    .width(8.dp)
+                    .background(
+                        lineColor,
+                    )
+            ) { }
+            Column() {
                 Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    NotificationIcon(type = notification.type)
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 8.dp)
-                    ) {
-                        Text(
-                            text = notification.title,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = notification.message,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        if (notification.status != NotificationStatus.NONE) {
-                            Text(
-                                text = if (notification.status == NotificationStatus.ONGOING)
-                                    "Status: Ongoing" else "Status: Completed",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = if (notification.status == NotificationStatus.ONGOING)
-                                    MaterialTheme.colorScheme.primary
-                                else
-                                    MaterialTheme.colorScheme.tertiary
-                            )
-                        }
-                    }
-
-                }
-                Text(
-                    text = notification.timeAgo,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                )
-            }
-
-            if (notification.status != NotificationStatus.NONE) {
-                val progress = if (notification.status == NotificationStatus.COMPLETED) 1f
-                else 0.5f
-                LinearProgressIndicator(
-                    progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(4.dp),
-                    color = if (notification.status == NotificationStatus.COMPLETED)
-                        MaterialTheme.colorScheme.tertiary
-                    else
-                        MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-                )
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        NotificationIcon(type = notification.type)
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 8.dp)
+                        ) {
+                            Text(
+                                text = notification.title,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = notification.message,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+
+                    }
+                    Text(
+                        text = notification.createdAt.toTimeAgo(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                    )
+                }
+
             }
         }
     }
