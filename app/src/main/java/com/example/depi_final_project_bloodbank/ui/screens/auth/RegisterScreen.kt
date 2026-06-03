@@ -1,4 +1,4 @@
-package com.example.depi_final_project_bloodbank.ui.screens
+package com.example.depi_final_project_bloodbank.ui.screens.auth
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -37,9 +37,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.depi_final_project_bloodbank.ui.theme.TextDark
-import com.example.depi_final_project_bloodbank.viewmodel.AuthState
+import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState
 
-import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel
+import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException

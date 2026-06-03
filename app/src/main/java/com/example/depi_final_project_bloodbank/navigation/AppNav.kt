@@ -6,13 +6,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.*
-import com.example.depi_final_project_bloodbank.ui.screens.CompleteProfileScreen
-import com.example.depi_final_project_bloodbank.ui.screens.ForgotPasswordScreen
-import com.example.depi_final_project_bloodbank.ui.screens.LoginScreen
-import com.example.depi_final_project_bloodbank.ui.screens.RegisterScreen
-import com.example.depi_final_project_bloodbank.ui.screens.VerifyAccountScreen
+import com.example.depi_final_project_bloodbank.ui.screens.auth.CompleteProfileScreen
+import com.example.depi_final_project_bloodbank.ui.screens.auth.ForgotPasswordScreen
+import com.example.depi_final_project_bloodbank.ui.screens.auth.LoginScreen
+import com.example.depi_final_project_bloodbank.ui.screens.auth.RegisterScreen
+import com.example.depi_final_project_bloodbank.ui.screens.auth.VerifyAccountScreen
 import com.google.firebase.auth.FirebaseAuth
 
 // لو الـ Imports دي لونها أحمر، اقف عليها ودوس Alt + Enter عشان يجيب مسار التيم الصح
@@ -20,7 +19,6 @@ import com.example.depi_final_project_bloodbank.ui.screens.home.HomeScreen
 import com.example.depi_final_project_bloodbank.ui.screens.notification.NotificationScreen
 import com.example.depi_final_project_bloodbank.ui.screens.profile.ProfileScreen
 import com.example.depi_final_project_bloodbank.ui.screens.request.CreateRequestScreen
-import com.example.depi_final_project_bloodbank.ui.screens.request.RequestViewModel
 
 // استورد الـ HomeScreen والـ ProfileScreen بتوع التيم هنا (Alt + Enter)
 
@@ -38,7 +36,7 @@ fun AppNav() {
     val currentRoute = navBackStackEntry?.destination?.route
 
     // 3. قايمة بالشاشات اللي مسموح يظهر فيها الشريط السفلي بتاع التيم
-    val bottomBarScreens = listOf("home", "notifications", "centers", "profile")
+    val bottomBarScreens = listOf("home", "notifications", "requests", "profile")
 
     Scaffold(
         bottomBar = {
@@ -102,6 +100,8 @@ fun AppNav() {
             }
 
             // شاشة تفاصيل الطلب الجديدة
+            /* دي الديتيلز الي بتظهر بعد م الطلب يتعمل انا شيلتها لانها في بتظهر
+            بتظهر في بوتوم شيت من صفحة الاوردرات
             composable("RequestDetailsScreen") {
                 com.example.depi_final_project_bloodbank.ui.screens.request.RequestDetailsScreen(
                     viewModel = sharedRequestViewModel,
@@ -113,7 +113,7 @@ fun AppNav() {
                     }
                 )
             }
-
+            */
             // تقدر تضيف الـ notifications والـ centers بنفس الطريقة بعدين
         }
     }

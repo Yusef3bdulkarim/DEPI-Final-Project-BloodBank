@@ -1,8 +1,8 @@
-package com.example.depi_final_project_bloodbank.viewmodel
+package com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.depi_final_project_bloodbank.R
-import com.example.depi_final_project_bloodbank.model.User
+import com.example.depi_final_project_bloodbank.domain.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -158,7 +158,13 @@ class AuthViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val uid = task.result?.user?.uid ?: ""
-                    val user = User(uid = uid, name = name.trim(), email = email.trim(), phone = phone.trim(), bloodType = bloodType)
+                    val user = User(
+                        uid = uid,
+                        name = name.trim(),
+                        email = email.trim(),
+                        phone = phone.trim(),
+                        bloodType = bloodType
+                    )
 
                     firestore.collection("Users").document(uid).set(user)
                         .addOnSuccessListener {

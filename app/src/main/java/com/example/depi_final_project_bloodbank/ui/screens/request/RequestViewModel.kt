@@ -1,18 +1,18 @@
 package com.example.depi_final_project_bloodbank.ui.screens.request
 
 import androidx.lifecycle.ViewModel
-import com.example.depi_final_project_bloodbank.domain.model.BloodReq
+import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class RequestViewModel : ViewModel() {
-    private val _request = MutableStateFlow(BloodReq())
+    private val _request = MutableStateFlow(BloodRequest())
     val request = _request.asStateFlow()
 
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
 
-    fun updateRequest(req: BloodReq) {
+    fun updateRequest(req: BloodRequest) {
         _request.value = req
         _error.value = null
     }
@@ -34,7 +34,7 @@ class RequestViewModel : ViewModel() {
         }
 
         // 3. لو كله تمام، حدث الوقت وانشر
-        _request.value = current.copy(timestamp = System.currentTimeMillis())
+        _request.value = current.copy(createdAt = System.currentTimeMillis())
         _error.value = null
         return true
     }

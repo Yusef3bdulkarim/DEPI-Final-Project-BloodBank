@@ -1,4 +1,4 @@
-package com.example.depi_final_project_bloodbank.ui.screens
+package com.example.depi_final_project_bloodbank.ui.screens.auth
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,8 +36,8 @@ import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
 import com.example.depi_final_project_bloodbank.components.LogoHeader
 import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import com.example.depi_final_project_bloodbank.ui.theme.TextDark
-import com.example.depi_final_project_bloodbank.viewmodel.AuthState // <-- استيراد الـ AuthState
-import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel // <-- استيراد الـ AuthViewModel
+import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState // <-- استيراد الـ AuthState
+import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthViewModel // <-- استيراد الـ AuthViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException

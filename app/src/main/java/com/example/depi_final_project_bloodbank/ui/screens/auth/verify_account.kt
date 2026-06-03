@@ -1,4 +1,4 @@
-package com.example.depi_final_project_bloodbank.ui.screens
+package com.example.depi_final_project_bloodbank.ui.screens.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,8 +34,8 @@ import com.example.depi_final_project_bloodbank.components.LogoHeader
 import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import com.example.depi_final_project_bloodbank.ui.theme.TextDark
 
-import com.example.depi_final_project_bloodbank.viewmodel.AuthState
-import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel
+import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState
+import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable

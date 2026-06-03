@@ -71,6 +71,7 @@
     <string name="patient_representative">ممثل المريض</string>
     <string name="orders_list">قائمة الطلبات</string>
     <string name="tab_in_progress">جاري</string>
+    <string name="tab_expired">منتهي</string>
     <string name="tab_completed">مكتمل</string>
     <string name="tab_cancelled">ملغي</string>
     <string name="request_title">طلب تبرع دم (%s)</string>

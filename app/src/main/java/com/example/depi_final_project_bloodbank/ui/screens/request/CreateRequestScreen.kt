@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.R
+import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -170,8 +171,8 @@ fun CreateRequestScreen(
                     Box(
                         modifier = Modifier
                             .clickable {
-                                if (request.units > 1) viewModel.updateRequest(
-                                    request.copy(units = request.units - 1)
+                                if (request.unitsNeeded > 1) viewModel.updateRequest(
+                                    request.copy(unitsNeeded = request.unitsNeeded - 1)
                                 )
                             }
                             .background(Color.LightGray, shapes.small)
@@ -180,11 +181,11 @@ fun CreateRequestScreen(
                         Text("-", style = typography.titleLarge, color = Color.White)
                     }
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text(request.units.toString(), style = typography.titleLarge)
+                    Text(request.unitsNeeded.toString(), style = typography.titleLarge)
                     Spacer(modifier = Modifier.width(16.dp))
                     Box(
                         modifier = Modifier
-                            .clickable { viewModel.updateRequest(request.copy(units = request.units + 1)) }
+                            .clickable { viewModel.updateRequest(request.copy(unitsNeeded = request.unitsNeeded + 1)) }
                             .background(colorScheme.primary, shapes.small)
                             .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
@@ -289,8 +290,8 @@ fun CreateRequestScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         FilterChip(
-                            selected = request.urgency == "Routine",
-                            onClick = { viewModel.updateRequest(request.copy(urgency = "Routine")) },
+                            selected = request.priority == RequestPriority.NORMAL,
+                            onClick = { viewModel.updateRequest(request.copy(priority = RequestPriority.NORMAL)) },
                             label = { Text(stringResource(R.string.routine_urgency)) },
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = colorScheme.tertiary,
@@ -299,22 +300,12 @@ fun CreateRequestScreen(
                             shape = shapes.large
                         )
                         FilterChip(
-                            selected = request.urgency == "Urgent",
-                            onClick = { viewModel.updateRequest(request.copy(urgency = "Urgent")) },
+                            selected = request.priority == RequestPriority.URGENT,
+                            onClick = { viewModel.updateRequest(request.copy(priority = RequestPriority.URGENT)) },
                             label = { Text(stringResource(R.string.urgent_urgency)) },
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = colorScheme.primary,
                                 selectedLabelColor = colorScheme.onPrimary
-                            ),
-                            shape = shapes.large
-                        )
-                        FilterChip(
-                            selected = request.urgency == "Very Urgent",
-                            onClick = { viewModel.updateRequest(request.copy(urgency = "Very Urgent")) },
-                            label = { Text(stringResource(R.string.very_urgent_urgency)) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = colorScheme.error,
-                                selectedLabelColor = colorScheme.onError
                             ),
                             shape = shapes.large
                         )
@@ -405,9 +396,10 @@ fun CreateRequestScreen(
 
             Button(
                 onClick = {
-                    if (viewModel.publish()) {
-                        onNavigateToDetails()
-                    }
+                    //انا شيلت يا نصر صفحة الطلب بتاعتك المفروض هنا يرفع الريمويست بقي عالفاير ستور ويعمل الشغل والكلام ده
+                    //if (viewModel.publish()) {
+                       // onNavigateToDetails()
+                   // }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary),
                 shape = shapes.large,

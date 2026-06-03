@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.depi_final_project_bloodbank.R
-import com.example.depi_final_project_bloodbank.domain.model.BloodReq
+import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import com.example.depi_final_project_bloodbank.ui.screens.orders.components.EmptyStateLayout
 import com.example.depi_final_project_bloodbank.ui.screens.orders.components.FilterTabs
 import com.example.depi_final_project_bloodbank.ui.screens.orders.components.OrderCard
@@ -30,7 +30,7 @@ import com.example.depi_final_project_bloodbank.ui.screens.orders.components.Req
 fun RequestsScreen(vm: RequestsViewModel = viewModel()) {
     val state by vm.uiState.collectAsState()
     var isSearchActive by remember { mutableStateOf(false) }
-    var selectedRequest by remember { mutableStateOf<BloodReq?>(null) }
+    var selectedRequest by remember { mutableStateOf<BloodRequest?>(null) }
 
     // 🎯 تم تحويل الشاشة لـ Column صافي زي النوتيفيكيشن بالظبط لتوحيد الارتفاع والحجم ومسح الـ Scaffold الداخلي
     Column(

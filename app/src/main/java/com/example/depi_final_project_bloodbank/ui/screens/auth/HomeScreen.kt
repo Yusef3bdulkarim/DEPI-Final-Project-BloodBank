@@ -1,4 +1,4 @@
-package com.example.depi_final_project_bloodbank.ui.screens
+package com.example.depi_final_project_bloodbank.ui.screens.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

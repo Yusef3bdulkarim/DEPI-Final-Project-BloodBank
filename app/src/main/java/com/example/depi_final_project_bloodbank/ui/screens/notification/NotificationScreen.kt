@@ -2,7 +2,6 @@ package com.example.depi_final_project_bloodbank.ui.screens.notification
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,19 +20,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.depi_final_project_bloodbank.domain.model.NotificationItem
+import com.example.depi_final_project_bloodbank.domain.model.Notification
 import com.example.depi_final_project_bloodbank.domain.model.NotificationStatus
 import com.example.depi_final_project_bloodbank.domain.model.NotificationType
 import com.example.depi_final_project_bloodbank.ui.screens.notification.components.NotificationCard
 
 val notifications = listOf(
-    NotificationItem(
+    Notification(
         id = "1",
         type = NotificationType.URGENT_REQUEST,
         title = "Urgent Blood Donation Request",
@@ -42,7 +39,7 @@ val notifications = listOf(
         timeAgo = "Now",
         status = NotificationStatus.ONGOING
     ),
-    NotificationItem(
+    Notification(
         id = "2",
         type = NotificationType.DONATION_SUCCESS,
         title = "Donation Successful",
@@ -50,7 +47,7 @@ val notifications = listOf(
         timeAgo = "2 hours ago",
         status = NotificationStatus.COMPLETED
     ),
-    NotificationItem(
+    Notification(
         id = "3",
         type = NotificationType.REMINDER,
         title = "Appointment Reminder",
@@ -58,7 +55,7 @@ val notifications = listOf(
         timeAgo = "5 hours ago",
         status = NotificationStatus.NONE
     ),
-    NotificationItem(
+    Notification(
         id = "1",
         type = NotificationType.URGENT_REQUEST,
         title = "Urgent Blood Donation Request",
@@ -66,7 +63,7 @@ val notifications = listOf(
         timeAgo = "Now",
         status = NotificationStatus.ONGOING
     ),
-    NotificationItem(
+    Notification(
         id = "2",
         type = NotificationType.DONATION_SUCCESS,
         title = "Donation Successful",
@@ -74,7 +71,7 @@ val notifications = listOf(
         timeAgo = "2 hours ago",
         status = NotificationStatus.COMPLETED
     ),
-    NotificationItem(
+    Notification(
         id = "3",
         type = NotificationType.REMINDER,
         title = "Appointment Reminder",

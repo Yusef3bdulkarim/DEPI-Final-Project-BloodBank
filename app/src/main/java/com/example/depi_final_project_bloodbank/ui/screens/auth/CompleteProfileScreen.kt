@@ -1,4 +1,4 @@
-package com.example.depi_final_project_bloodbank.ui.screens
+package com.example.depi_final_project_bloodbank.ui.screens.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,12 +41,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.depi_final_project_bloodbank.components.LogoHeader
-import com.example.depi_final_project_bloodbank.viewmodel.AuthViewModel
+import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthViewModel
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.components.BloodLinkButton
 import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
 import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
-import com.example.depi_final_project_bloodbank.viewmodel.AuthState
+import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel

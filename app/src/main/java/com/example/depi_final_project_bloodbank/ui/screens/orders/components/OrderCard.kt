@@ -26,22 +26,27 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import com.example.depi_final_project_bloodbank.R
-import com.example.depi_final_project_bloodbank.domain.model.BloodReq
-import com.example.depi_final_project_bloodbank.domain.model.RequestStatus
+import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
+import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
+import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
+import com.example.depi_final_project_bloodbank.utils.toFormattedDate
 
 @Composable
 fun OrderCard(
-    order: BloodReq,
-    onViewDetailsClicked: (BloodReq) -> Unit,
-    onDonateClicked: (BloodReq) -> Unit
+    order: BloodRequest,
+    onViewDetailsClicked: (BloodRequest) -> Unit,
+    onDonateClicked: (BloodRequest) -> Unit
 ) {
     // 🎯 توظيف الألوان الموحدة من الـ Theme بتاعك بالظبط لتجنب أي إيرور
-    val appUnifiedBlack = MaterialTheme.colorScheme.secondary      // الـ DarkNavy (الأسود الموحد للبرنامج)
-    val hospitalIconGray = MaterialTheme.colorScheme.onSurface     // الـ TextGray (الرمادي الموحد للوجو المستشفى)
-
+    val appUnifiedBlack =
+        MaterialTheme.colorScheme.secondary      // الـ DarkNavy (الأسود الموحد للبرنامج)
+    val hospitalIconGray =
+        MaterialTheme.colorScheme.onSurface     // الـ TextGray (الرمادي الموحد للوجو المستشفى)
     val statusColor = when {
-        order.isUrgent -> MaterialTheme.colorScheme.error
+        order.priority == RequestPriority.URGENT && order.status == RequestStatus.ACTIVE -> MaterialTheme.colorScheme.error
         order.status == RequestStatus.COMPLETED -> MaterialTheme.colorScheme.tertiary
+        order.status == RequestStatus.CANCELLED -> Color.Gray
+        order.status == RequestStatus.EXPIRED -> Color.Gray
         else -> MaterialTheme.colorScheme.primary
     }
 
@@ -65,14 +70,14 @@ fun OrderCard(
                         .size(48.dp)
                         .clip(CircleShape)
                         .background(
-                            if (order.isUrgent) statusColor.copy(alpha = 0.1f)
+                            if (order.priority == RequestPriority.URGENT) statusColor.copy(alpha = 0.1f)
                             else MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = order.bloodType,
-                        color = if (order.isUrgent) statusColor else MaterialTheme.colorScheme.primary,
+                        color = if (order.priority == RequestPriority.URGENT) statusColor else MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -80,10 +85,13 @@ fun OrderCard(
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Text(
-                    text = if (order.isUrgent) stringResource(R.string.urgent_title, order.bloodType)
+                    text = if (order.priority == RequestPriority.URGENT) stringResource(
+                        R.string.urgent_title,
+                        order.bloodType
+                    )
                     else stringResource(R.string.request_title, order.bloodType),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    color = if (order.isUrgent) statusColor else appUnifiedBlack, // 👈 المارون لو عاجل، والأسود الموحد لو عادي
+                    color = if (order.priority == RequestPriority.URGENT) statusColor else appUnifiedBlack, // 👈 المارون لو عاجل، والأسود الموحد لو عادي
                     modifier = Modifier.weight(1f),
                     softWrap = true
                 )
@@ -104,7 +112,7 @@ fun OrderCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = stringResource(order.hospital),
+                    text = order.hospitalName,
                     style = MaterialTheme.typography.bodyMedium,
                     color = appUnifiedBlack // 👈 اسم المستشفى بالأسود الموحد (DarkNavy)
                 )
@@ -124,7 +132,7 @@ fun OrderCard(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = stringResource(order.date),
+                    text = order.createdAt.toFormattedDate(),
                     style = MaterialTheme.typography.labelSmall,
                     color = appUnifiedBlack // 👈 نص الوقت بالأسود الموحد
                 )
@@ -139,7 +147,7 @@ fun OrderCard(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = stringResource(R.string.unit_count, order.units),
+                    text = "${order.unitsReserved}/${order.unitsNeeded} units",
                     style = MaterialTheme.typography.labelSmall,
                     color = appUnifiedBlack // 👈 نص وحدات الدم بالأسود الموحد
                 )
@@ -152,8 +160,12 @@ fun OrderCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
+                val progress =
+                    if (order.unitsNeeded > 0)
+                        order.unitsConfirmed.toFloat() / order.unitsNeeded.toFloat()
+                    else 0f
                 val animatedProgress by animateFloatAsState(
-                    targetValue = order.progress,
+                    targetValue = progress,
                     animationSpec = tween(durationMillis = 1000),
                     label = "ProgressAnimation"
                 )
@@ -171,7 +183,7 @@ fun OrderCard(
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Text(
-                    text = "${(order.progress * 100).toInt()}%",
+                    text = "${(progress * 100).toInt()}%",
                     style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
                     color = statusColor
                 )
@@ -179,7 +191,7 @@ fun OrderCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 5. Action Row (Buttons & Donor Avatars)
+            // 5. Action Row (Buttons)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -202,7 +214,7 @@ fun OrderCard(
                         modifier = Modifier.wrapContentWidth(),
                         contentAlignment = Alignment.CenterEnd
                     ) {
-                        if (order.status == RequestStatus.URGENT) {
+                        if (order.status == RequestStatus.ACTIVE) {
                             Button(
                                 onClick = { onDonateClicked(order) },
                                 colors = ButtonDefaults.buttonColors(
@@ -220,9 +232,12 @@ fun OrderCard(
                             }
                         } else {
                             Text(
-                                text = if (order.status == RequestStatus.COMPLETED)
-                                    stringResource(R.string.delivered)
-                                else stringResource(R.string.processing),
+                                text = when (order.status) {
+                                    RequestStatus.COMPLETED -> stringResource(R.string.delivered)
+                                    RequestStatus.CANCELLED -> "Cancelled"
+                                    RequestStatus.EXPIRED -> "Expired"
+                                    else -> stringResource(R.string.processing)
+                                },
                                 color = statusColor,
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.SemiBold
@@ -230,55 +245,9 @@ fun OrderCard(
                         }
                     }
 
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Box(modifier = Modifier.width(70.dp), contentAlignment = Alignment.CenterEnd) {
-                        DonorsSection(count = order.donorsCount)
-                    }
                 }
             }
         }
     }
 }
 
-@Composable
-fun DonorsSection(count: Int) {
-    val maxImages = 3
-    val displayCount = count.coerceAtMost(maxImages)
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy((-12).dp)
-    ) {
-        repeat(displayCount) { index ->
-            AsyncImage(
-                model = "https://i.pravatar.cc/150?u=$index",
-                contentDescription = null,
-                modifier = Modifier
-                    .size(28.dp)
-                    .zIndex((maxImages - index).toFloat())
-                    .clip(CircleShape)
-                    .border(1.dp, Color.White, CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        }
-        if (count > maxImages) {
-            Surface(
-                modifier = Modifier
-                    .size(28.dp)
-                    .zIndex(0f)
-                    .clip(CircleShape)
-                    .border(1.dp, Color.White, CircleShape),
-                color = MaterialTheme.colorScheme.primaryContainer
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = "+${count - maxImages}",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 10.sp
-                    )
-                }
-            }
-        }
-    }
-}

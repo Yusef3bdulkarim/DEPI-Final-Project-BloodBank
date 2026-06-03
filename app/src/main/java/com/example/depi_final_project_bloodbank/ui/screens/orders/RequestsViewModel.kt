@@ -3,8 +3,9 @@ package com.example.depi_final_project_bloodbank.ui.screens.orders
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.depi_final_project_bloodbank.R
-import com.example.depi_final_project_bloodbank.domain.model.BloodReq
-import com.example.depi_final_project_bloodbank.domain.model.RequestStatus
+import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
+import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
+import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -33,23 +34,110 @@ class RequestsViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.update { it.copy(isRefreshing = true) }
             delay(2000)
-            _uiState.update { 
+            _uiState.update {
                 it.copy(
-                    orders = getDummyData(), 
-                    isRefreshing = false 
-                ) 
+                    orders = getDummyData(),
+                    isRefreshing = false
+                )
             }
         }
     }
 
-    private fun getDummyData(): List<BloodReq> = listOf(
-        BloodReq(id = 1, bloodType = "A+", hospital = R.string.hosp_king_fahd, date = R.string.time_30_mins, units = 3, progress = 0.4f, status = RequestStatus.URGENT, donorsCount = 5, isUrgent = true),
-        BloodReq(id = 2, bloodType = "O-", hospital = R.string.hosp_king_saud, date = R.string.time_1_hour, units = 1, progress = 0.0f, status = RequestStatus.URGENT, donorsCount = 2, isUrgent = true),
-        BloodReq(id = 3, bloodType = "B+", hospital = R.string.hosp_al_habib, date = R.string.time_today_10am, units = 2, progress = 0.5f, status = RequestStatus.IN_PROGRESS, donorsCount = 8, isUrgent = false),
-        BloodReq(id = 4, bloodType = "AB+", hospital = R.string.hosp_king_abdulaziz, date = R.string.time_yesterday_9pm, units = 4, progress = 0.2f, status = RequestStatus.IN_PROGRESS, donorsCount = 3, isUrgent = false),
-        BloodReq(id = 5, bloodType = "O+", hospital = R.string.hosp_dallah, date = R.string.time_may_22, units = 2, progress = 1.0f, status = RequestStatus.COMPLETED, donorsCount = 12, isUrgent = false),
-        BloodReq(id = 6, bloodType = "A-", hospital = R.string.hosp_care, date = R.string.time_may_20, units = 1, progress = 1.0f, status = RequestStatus.COMPLETED, donorsCount = 10, isUrgent = false),
-        BloodReq(id = 7, bloodType = "B-", hospital = R.string.hosp_military, date = R.string.time_may_18, units = 2, progress = 0.0f, status = RequestStatus.CANCELLED, donorsCount = 0, isUrgent = false),
-        BloodReq(id = 8, bloodType = "O-", hospital = R.string.hosp_mouwasat, date = R.string.time_may_15, units = 1, progress = 0.1f, status = RequestStatus.CANCELLED, donorsCount = 1, isUrgent = false)
+    /*
+ * TODO:
+ * Temporary dummy data.
+ * Replace with RequestRepository + Firestore data source.
+ */
+    private fun getDummyData(): List<BloodRequest> = listOf(
+        BloodRequest(
+            id = "req1",
+            createdBy = "user1",
+            bloodType = "A+",
+            unitsNeeded = 3,
+            unitsReserved = 1,
+            unitsConfirmed = 0,
+            hospitalName = "Sohag General Hospital",
+            governorate = "SOHAG",
+            city = "AKHMIM",
+            hospitalLat = 26.5590,
+            hospitalLng = 31.6948,
+            contactName = "Mohamed",
+            contactPhone = "01000000000",
+            status = RequestStatus.ACTIVE,
+            priority = RequestPriority.URGENT,
+            createdAt = System.currentTimeMillis()
+        ),
+        BloodRequest(
+            id = "req2",
+            createdBy = "user2",
+            bloodType = "O-",
+            unitsNeeded = 2,
+            unitsReserved = 0,
+            unitsConfirmed = 0,
+            hospitalName = "Akhmim Central Hospital",
+            governorate = "SOHAG",
+            city = "AKHMIM",
+            hospitalLat = 26.5652,
+            hospitalLng = 31.7441,
+            contactName = "Ahmed",
+            contactPhone = "01000000001",
+            status = RequestStatus.ACTIVE,
+            priority = RequestPriority.NORMAL,
+            createdAt = System.currentTimeMillis()
+        ),
+        BloodRequest(
+            id = "req3",
+            createdBy = "user3",
+            bloodType = "B+",
+            unitsNeeded = 2,
+            unitsReserved = 2,
+            unitsConfirmed = 2,
+            hospitalName = "University Hospital",
+            governorate = "SOHAG",
+            city = "SOHAG",
+            hospitalLat = 26.5500,
+            hospitalLng = 31.6900,
+            contactName = "Ali",
+            contactPhone = "01000000002",
+            status = RequestStatus.COMPLETED,
+            priority = RequestPriority.NORMAL,
+            createdAt = System.currentTimeMillis()
+        ),
+        BloodRequest(
+            id = "req4",
+            createdBy = "user4",
+            bloodType = "AB+",
+            unitsNeeded = 4,
+            unitsReserved = 1,
+            unitsConfirmed = 0,
+            hospitalName = "Sohag Heart Hospital",
+            governorate = "SOHAG",
+            city = "SOHAG",
+            hospitalLat = 26.5570,
+            hospitalLng = 31.6920,
+            contactName = "Omar",
+            contactPhone = "01000000003",
+            status = RequestStatus.CANCELLED,
+            priority = RequestPriority.NORMAL,
+            createdAt = System.currentTimeMillis() - 86400000L
+        ),
+        BloodRequest(
+            id = "req5",
+            createdBy = "user5",
+            bloodType = "O+",
+            unitsNeeded = 3,
+            unitsReserved = 0,
+            unitsConfirmed = 0,
+            hospitalName = "Tahta General Hospital",
+            governorate = "SOHAG",
+            city = "TAHTA",
+            hospitalLat = 26.7700,
+            hospitalLng = 31.5000,
+            contactName = "Karim",
+            contactPhone = "01000000004",
+            status = RequestStatus.EXPIRED,
+            priority = RequestPriority.URGENT,
+            createdAt = System.currentTimeMillis() - 172800000L
+        )
     )
 }

@@ -15,12 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.depi_final_project_bloodbank.domain.model.NotificationItem
+import com.example.depi_final_project_bloodbank.domain.model.Notification
 import com.example.depi_final_project_bloodbank.domain.model.NotificationStatus
 import com.example.depi_final_project_bloodbank.domain.model.NotificationType
 
 @Composable
-fun NotificationCard(notification: NotificationItem, onClick: () -> Unit) {
+fun NotificationCard(notification: Notification, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

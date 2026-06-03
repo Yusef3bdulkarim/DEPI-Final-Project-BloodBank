@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.R
-import com.example.depi_final_project_bloodbank.domain.model.RequestStatus
+import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
 
 @Composable
 fun FilterTabs(
@@ -28,7 +28,8 @@ fun FilterTabs(
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        listOf(RequestStatus.IN_PROGRESS, RequestStatus.COMPLETED, RequestStatus.CANCELLED).forEach { status ->
+        listOf(RequestStatus.ACTIVE, RequestStatus.COMPLETED, RequestStatus.CANCELLED,
+            RequestStatus.EXPIRED).forEach { status ->
             val isSelected = selected == status
             val bgColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
             val txtColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
@@ -44,8 +45,9 @@ fun FilterTabs(
             ) {
                 Text(
                     text = stringResource(when (status) {
-                        RequestStatus.IN_PROGRESS -> R.string.tab_in_progress
+                        RequestStatus.ACTIVE -> R.string.tab_in_progress
                         RequestStatus.COMPLETED -> R.string.tab_completed
+                        RequestStatus.EXPIRED -> R.string.tab_expired
                         else -> R.string.tab_cancelled
                     }),
                     color = txtColor,

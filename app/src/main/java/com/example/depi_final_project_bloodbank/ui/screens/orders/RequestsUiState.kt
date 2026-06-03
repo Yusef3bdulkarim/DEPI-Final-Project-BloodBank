@@ -1,21 +1,30 @@
 package com.example.depi_final_project_bloodbank.ui.screens.orders
 
-import com.example.depi_final_project_bloodbank.domain.model.BloodReq
-import com.example.depi_final_project_bloodbank.domain.model.RequestStatus
+import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
+import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
 
+
+/*
+ * TODO: خلي بالك يا اندرو من هنا
+ * RequestPriority (NORMAL / URGENT) will be implemented later.
+ * Current filtering is based only on RequestStatus.
+ */
 data class RequestsUiState(
-    val orders: List<BloodReq> = emptyList(),
-    val selectedTab: RequestStatus = RequestStatus.IN_PROGRESS,
+    val orders: List<BloodRequest> = emptyList(),
+    val selectedTab: RequestStatus = RequestStatus.ACTIVE,
     val searchQuery: String = "",
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false
 ) {
-    val filteredOrders: List<BloodReq>
+    val filteredOrders: List<BloodRequest>
         get() = orders.filter { order ->
-            val matchesTab = when (selectedTab) {
-                RequestStatus.IN_PROGRESS -> order.status == RequestStatus.IN_PROGRESS || order.status == RequestStatus.URGENT
+            //مؤقتا
+            val matchesTab = order.status == selectedTab
+                /*when (selectedTab) {
+                RequestStatus.IN_PROGRESS ->
+                    order.status == RequestStatus.IN_PROGRESS || order.status == RequestStatus.URGENT
                 else -> order.status == selectedTab
-            }
+            }*/
             
             // Search by Blood Type primarily since Hospital names are now localized resource IDs
             val matchesSearch = if (searchQuery.isBlank()) true 
