@@ -1,5 +1,8 @@
 package com.example.depi_final_project_bloodbank.ui.screens.request
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -23,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.domain.enums.EgyptLocations
 import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
+import com.google.android.gms.location.LocationServices
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,9 +39,38 @@ fun CreateRequestScreen(
     val request by viewModel.request.collectAsState()
     val error by viewModel.error.collectAsState()
 
+    // حالات الرفع للفايربيز
+    val isLoading by viewModel.isLoading.collectAsState()
+    val isSuccess by viewModel.isSuccess.collectAsState()
+
+    // حالات اللوكيشن
+    val isLoadingLocation by viewModel.locationLoading.collectAsState()
+    val isLocationFetched by viewModel.locationSuccess.collectAsState()
+
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
     val shapes = MaterialTheme.shapes
+
+    val context = LocalContext.current
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+
+    // Navigation Effect
+    LaunchedEffect(isSuccess) {
+        if (isSuccess) {
+            onNavigateToDetails()
+        }
+    }
+
+    // Permission Launcher
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val isGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        if (isGranted) {
+            viewModel.fetchCurrentLocation(fusedLocationClient)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -51,9 +85,7 @@ fun CreateRequestScreen(
                 .padding(horizontal = 20.dp)
                 .padding(top = 24.dp, bottom = 16.dp)
         ) {
-            IconButton(
-                onClick = { onBackClick() } // هنا بننده على أمر الرجوع
-            ) {
+            IconButton(onClick = { onBackClick() }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
@@ -97,19 +129,17 @@ fun CreateRequestScreen(
                 textAlign = TextAlign.Center
             )
 
-            var expanded by remember { mutableStateOf(false) }
+            var expandedBloodType by remember { mutableStateOf(false) }
             val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
 
             Card(
                 shape = shapes.medium,
                 colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             ) {
                 ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { expanded = !expanded }
+                    expanded = expandedBloodType,
+                    onExpandedChange = { expandedBloodType = !expandedBloodType }
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -136,14 +166,14 @@ fun CreateRequestScreen(
                         }
                     }
                     ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }) {
+                        expanded = expandedBloodType,
+                        onDismissRequest = { expandedBloodType = false }) {
                         bloodTypes.forEach { type ->
                             DropdownMenuItem(
                                 text = { Text(type, style = typography.bodyLarge) },
                                 onClick = {
                                     viewModel.updateRequest(request.copy(bloodType = type))
-                                    expanded = false
+                                    expandedBloodType = false
                                 }
                             )
                         }
@@ -154,15 +184,11 @@ fun CreateRequestScreen(
             Card(
                 shape = shapes.medium,
                 colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
                 ) {
                     Text(
                         stringResource(R.string.units_required),
@@ -195,16 +221,10 @@ fun CreateRequestScreen(
                     }
                 }
             }
-            // الداتا الوهمية للمحافظات والمراكز (تقدر تنقلها بعدين لـ ViewModel أو ملف منفصل)
+
             var expandedGov by remember { mutableStateOf(false) }
-            var selectedGov by remember { mutableStateOf("") }
-
             var expandedCity by remember { mutableStateOf(false) }
-            // بنجيب المراكز من الملف الخارجي بناءً على المحافظة اللي اختارها
-            val availableCities = if (selectedGov.isNotEmpty()) EgyptLocations.governoratesMap[selectedGov] ?: emptyList() else emptyList()
-
-            var isLoadingLocation by remember { mutableStateOf(false) }
-            var isLocationFetched by remember { mutableStateOf(false) }
+            val availableCities = if (request.governorate.isNotEmpty()) EgyptLocations.governoratesMap[request.governorate] ?: emptyList() else emptyList()
 
             Row(
                 modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
@@ -217,11 +237,14 @@ fun CreateRequestScreen(
                 )
             }
 
-            // زرار الـ GPS
             OutlinedButton(
                 onClick = {
-                    isLoadingLocation = true
-                    // TODO: أمر الـ FusedLocationProvider
+                    locationPermissionLauncher.launch(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
+                    )
                 },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = colorScheme.primary),
@@ -232,7 +255,7 @@ fun CreateRequestScreen(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.fetching_location))
                 } else if (isLocationFetched) {
-                    Icon(androidx.compose.material.icons.Icons.Default.Check, contentDescription = null, tint = Color(0xFF4CAF50))
+                    Icon(Icons.Default.Check, contentDescription = null, tint = Color(0xFF4CAF50))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.location_fetched_success), color = Color(0xFF4CAF50))
                 } else {
@@ -247,13 +270,12 @@ fun CreateRequestScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
 
-                    // 1. المحافظة
                     ExposedDropdownMenuBox(
                         expanded = expandedGov,
                         onExpandedChange = { expandedGov = !expandedGov }
                     ) {
                         OutlinedTextField(
-                            value = selectedGov,
+                            value = request.governorate,
                             onValueChange = {},
                             readOnly = true,
                             placeholder = { Text(stringResource(R.string.select_governorate), color = Color.Gray) },
@@ -270,9 +292,8 @@ fun CreateRequestScreen(
                                 DropdownMenuItem(
                                     text = { Text(gov) },
                                     onClick = {
-                                        selectedGov = gov
+                                        viewModel.updateRequest(request.copy(governorate = gov, city = ""))
                                         expandedGov = false
-                                        viewModel.updateRequest(request.copy(city = "")) // بنفضي المركز لو غير المحافظة
                                     }
                                 )
                             }
@@ -281,13 +302,12 @@ fun CreateRequestScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // 2. المركز
                     ExposedDropdownMenuBox(
                         expanded = expandedCity,
-                        onExpandedChange = { if (selectedGov.isNotEmpty()) expandedCity = !expandedCity }
+                        onExpandedChange = { if (request.governorate.isNotEmpty()) expandedCity = !expandedCity }
                     ) {
                         OutlinedTextField(
-                            value = request.city, // رابطينها بالـ ViewModel لضمان تزامن البيانات صح بين الشاشات
+                            value = request.city,
                             onValueChange = {},
                             readOnly = true,
                             placeholder = { Text(stringResource(R.string.select_city), color = Color.Gray) },
@@ -295,7 +315,7 @@ fun CreateRequestScreen(
                             modifier = Modifier.fillMaxWidth().menuAnchor(),
                             shape = shapes.medium,
                             colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray),
-                            enabled = selectedGov.isNotEmpty()
+                            enabled = request.governorate.isNotEmpty()
                         )
                         ExposedDropdownMenu(
                             expanded = expandedCity,
@@ -315,7 +335,6 @@ fun CreateRequestScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // 3. اسم المستشفى
                     OutlinedTextField(
                         value = request.hospitalName,
                         onValueChange = { viewModel.updateRequest(request.copy(hospitalName = it)) },
@@ -338,9 +357,7 @@ fun CreateRequestScreen(
             Card(
                 shape = shapes.medium,
                 colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
@@ -390,9 +407,7 @@ fun CreateRequestScreen(
             Card(
                 shape = shapes.medium,
                 colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     OutlinedTextField(
@@ -453,29 +468,33 @@ fun CreateRequestScreen(
             }
 
             Button(
-                onClick = {
-                    //انا شيلت يا نصر صفحة الطلب بتاعتك المفروض هنا يرفع الريمويست بقي عالفاير ستور ويعمل الشغل والكلام ده
-                    //if (viewModel.publish()) {
-                       // onNavigateToDetails()
-                   // }
-                },
+                onClick = { viewModel.publish() },
+                enabled = !isLoading,
                 colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary),
                 shape = shapes.large,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text(
-                    stringResource(R.string.post_request_btn),
-                    color = colorScheme.onPrimary,
-                    style = typography.titleMedium
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        color = colorScheme.onPrimary,
+                        modifier = Modifier.size(28.dp),
+                        strokeWidth = 3.dp
+                    )
+                } else {
+                    Text(
+                        stringResource(R.string.post_request_btn),
+                        color = colorScheme.onPrimary,
+                        style = typography.titleMedium
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             TextButton(
-                onClick = { },
+                onClick = { onBackClick() },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(

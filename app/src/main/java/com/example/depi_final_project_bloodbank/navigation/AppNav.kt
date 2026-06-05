@@ -19,28 +19,23 @@ import com.example.depi_final_project_bloodbank.ui.screens.home.HomeScreen
 import com.example.depi_final_project_bloodbank.ui.screens.notification.NotificationScreen
 import com.example.depi_final_project_bloodbank.ui.screens.profile.ProfileScreen
 import com.example.depi_final_project_bloodbank.ui.screens.request.CreateRequestScreen
+import com.example.depi_final_project_bloodbank.ui.screens.request.RequestViewModel
 
 // استورد الـ HomeScreen والـ ProfileScreen بتوع التيم هنا (Alt + Enter)
 
 @Composable
 fun AppNav() {
     val navController = rememberNavController()
-    val sharedRequestViewModel: com.example.depi_final_project_bloodbank.ui.screens.request.RequestViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    // شيلت الـ sharedRequestViewModel لأنه مش مستخدم في الـ composable
     val currentUser = FirebaseAuth.getInstance().currentUser
 
-    // 1. غيرنا البداية لـ "home" بدل "home_screen" لو هو مسجل دخول
     val startDest = if (currentUser != null) "home" else "login"
-
-    // 2. بنجيب مسار الشاشة الحالية عشان نعرف إحنا فين
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
-    // 3. قايمة بالشاشات اللي مسموح يظهر فيها الشريط السفلي بتاع التيم
     val bottomBarScreens = listOf("home", "notifications", "requests", "profile")
 
     Scaffold(
         bottomBar = {
-            // لو إحنا في شاشة من الشاشات الأساسية، اعرض الشريط السفلي
             if (currentRoute in bottomBarScreens) {
                 BloodLinkBottomNav(navController = navController)
             }
@@ -51,9 +46,7 @@ fun AppNav() {
             startDestination = startDest,
             modifier = Modifier.padding(innerPadding)
         ) {
-            // ==========================================
-            // القسم الأول: شاشات الـ Auth بتاعتك (بدون شريط سفلي)
-            // ==========================================
+            // --- Auth ---
             composable("login") { LoginScreen(navController) }
             composable("register") { RegisterScreen(navController) }
             composable("forgot_password") { ForgotPasswordScreen(navController) }
@@ -63,58 +56,51 @@ fun AppNav() {
                 CompleteProfileScreen(navController = navController, uid = uid)
             }
 
-            // ==========================================
-            // القسم التاني: شاشات التيم (بالشريط السفلي)
-            // ==========================================
+            // --- Home ---
             composable("home") {
                 HomeScreen(
                     onRequestBloodClick = {
-                        // هنا بنقوله لما تدوس على الزرار روح للمسار اللي سجلناه تحت
-                        navController.navigate("create_request")
+                        navController.navigate("CreateRequestScreen")
                     }
                 )
             }
 
+            // --- Profile ---
             composable("profile") {
                 ProfileScreen(navController = navController)
             }
 
-            // ضفنا مسار الإشعارات هنا عشان التطبيق ميعملش Crash
+            // --- Notifications ---
             composable("notifications") {
                 NotificationScreen()
             }
-            composable("create_request") {
-                CreateRequestScreen(
-                    viewModel = sharedRequestViewModel, // استخدام المشترك
-                    onNavigateToDetails = {
-                        navController.navigate("RequestDetailsScreen")
-                    },
-                    onBackClick = {
-                        navController.popBackStack()
+
+            // --- Create Request (اللوجيك الجديد) ---
+            composable(route = "CreateRequestScreen") {
+                val factory = object : androidx.lifecycle.ViewModelProvider.Factory {
+                    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                        val repository = com.example.depi_final_project_bloodbank.data.repository.RequestRepositoryImpl()
+                        return RequestViewModel(repository) as T
                     }
+                }
+                val screenViewModel: RequestViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = factory)
+
+                CreateRequestScreen(
+                    viewModel = screenViewModel,
+                    onNavigateToDetails = {
+                        // هنا التعديل المهم: لازم الـ route يبقى مطابق للي سجلناه فوق في الـ NavHost (سطر 81)
+                        navController.navigate(route = "notifications") {
+                            popUpTo(route = "CreateRequestScreen") { inclusive = true }
+                        }
+                    },
+                    onBackClick = { navController.popBackStack() }
                 )
             }
-            // شاشة الطلبات الجديدة
+
+            // --- Orders ---
             composable("requests") {
                 com.example.depi_final_project_bloodbank.ui.screens.orders.RequestsScreen()
             }
-
-            // شاشة تفاصيل الطلب الجديدة
-            /* دي الديتيلز الي بتظهر بعد م الطلب يتعمل انا شيلتها لانها في بتظهر
-            بتظهر في بوتوم شيت من صفحة الاوردرات
-            composable("RequestDetailsScreen") {
-                com.example.depi_final_project_bloodbank.ui.screens.request.RequestDetailsScreen(
-                    viewModel = sharedRequestViewModel,
-                    onBackClick = {
-                        navController.popBackStack()
-                    },
-                    onNavigateToNotifications = {
-                        navController.navigate("notifications")
-                    }
-                )
-            }
-            */
-            // تقدر تضيف الـ notifications والـ centers بنفس الطريقة بعدين
         }
     }
 }
