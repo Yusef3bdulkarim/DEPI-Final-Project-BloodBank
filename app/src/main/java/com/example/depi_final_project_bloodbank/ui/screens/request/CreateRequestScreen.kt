@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.R
+import com.example.depi_final_project_bloodbank.domain.enums.EgyptLocations
 import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -193,78 +195,134 @@ fun CreateRequestScreen(
                     }
                 }
             }
-            var useCurrentLocation by remember { mutableStateOf(false) }
+            // الداتا الوهمية للمحافظات والمراكز (تقدر تنقلها بعدين لـ ViewModel أو ملف منفصل)
+            var expandedGov by remember { mutableStateOf(false) }
+            var selectedGov by remember { mutableStateOf("") }
+
+            var expandedCity by remember { mutableStateOf(false) }
+            // بنجيب المراكز من الملف الخارجي بناءً على المحافظة اللي اختارها
+            val availableCities = if (selectedGov.isNotEmpty()) EgyptLocations.governoratesMap[selectedGov] ?: emptyList() else emptyList()
+
+            var isLoadingLocation by remember { mutableStateOf(false) }
+            var isLocationFetched by remember { mutableStateOf(false) }
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = stringResource(R.string.location_details),
-                    style = typography.titleMedium,
-                    modifier = Modifier.weight(1f) // عشان يزق الزرار لليمين
-                )
-
-                Text(
-                    text = "Current Location",
-                    style = typography.labelMedium,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-
-                Switch(
-                    checked = useCurrentLocation,
-                    onCheckedChange = { isChecked ->
-                        useCurrentLocation = isChecked
-                        // أمر جلب اللوكيشن هيتحط هنا بعدين
-                    },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = colorScheme.primary,
-                        checkedTrackColor = colorScheme.primaryContainer
-                    )
+                    style = typography.titleMedium
                 )
             }
 
-// 2. الكارد بتاعك (الخانات مفتوحة دايماً للكتابة)
+            // زرار الـ GPS
+            OutlinedButton(
+                onClick = {
+                    isLoadingLocation = true
+                    // TODO: أمر الـ FusedLocationProvider
+                },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = colorScheme.primary),
+                shape = shapes.medium
+            ) {
+                if (isLoadingLocation) {
+                    CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp, color = colorScheme.primary)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.fetching_location))
+                } else if (isLocationFetched) {
+                    Icon(androidx.compose.material.icons.Icons.Default.Check, contentDescription = null, tint = Color(0xFF4CAF50))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.location_fetched_success), color = Color(0xFF4CAF50))
+                } else {
+                    Text(stringResource(R.string.fetch_gps_location))
+                }
+            }
+
             Card(
                 shape = shapes.medium,
                 colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
+
+                    // 1. المحافظة
+                    ExposedDropdownMenuBox(
+                        expanded = expandedGov,
+                        onExpandedChange = { expandedGov = !expandedGov }
+                    ) {
+                        OutlinedTextField(
+                            value = selectedGov,
+                            onValueChange = {},
+                            readOnly = true,
+                            placeholder = { Text(stringResource(R.string.select_governorate), color = Color.Gray) },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedGov) },
+                            modifier = Modifier.fillMaxWidth().menuAnchor(),
+                            shape = shapes.medium,
+                            colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandedGov,
+                            onDismissRequest = { expandedGov = false }
+                        ) {
+                            EgyptLocations.allGovernorates.forEach { gov ->
+                                DropdownMenuItem(
+                                    text = { Text(gov) },
+                                    onClick = {
+                                        selectedGov = gov
+                                        expandedGov = false
+                                        viewModel.updateRequest(request.copy(city = "")) // بنفضي المركز لو غير المحافظة
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // 2. المركز
+                    ExposedDropdownMenuBox(
+                        expanded = expandedCity,
+                        onExpandedChange = { if (selectedGov.isNotEmpty()) expandedCity = !expandedCity }
+                    ) {
+                        OutlinedTextField(
+                            value = request.city, // رابطينها بالـ ViewModel لضمان تزامن البيانات صح بين الشاشات
+                            onValueChange = {},
+                            readOnly = true,
+                            placeholder = { Text(stringResource(R.string.select_city), color = Color.Gray) },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCity) },
+                            modifier = Modifier.fillMaxWidth().menuAnchor(),
+                            shape = shapes.medium,
+                            colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray),
+                            enabled = selectedGov.isNotEmpty()
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandedCity,
+                            onDismissRequest = { expandedCity = false }
+                        ) {
+                            availableCities.forEach { city ->
+                                DropdownMenuItem(
+                                    text = { Text(city) },
+                                    onClick = {
+                                        viewModel.updateRequest(request.copy(city = city))
+                                        expandedCity = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // 3. اسم المستشفى
                     OutlinedTextField(
                         value = request.hospitalName,
                         onValueChange = { viewModel.updateRequest(request.copy(hospitalName = it)) },
                         placeholder = {
-                            Text(
-                                stringResource(R.string.hospital_name),
-                                style = typography.bodyLarge,
-                                color = Color.Gray
-                            )
+                            Text(stringResource(R.string.hospital_name), style = typography.bodyLarge, color = Color.Gray)
                         },
                         isError = error == "REQUIRED" && request.hospitalName.isBlank(),
-                        shape = shapes.medium,
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    OutlinedTextField(
-                        value = request.city,
-                        onValueChange = { viewModel.updateRequest(request.copy(city = it)) },
-                        placeholder = {
-                            Text(
-                                stringResource(R.string.city_area),
-                                style = typography.bodyLarge,
-                                color = Color.Gray
-                            )
-                        },
-                        isError = error == "REQUIRED" && request.city.isBlank(),
                         shape = shapes.medium,
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)

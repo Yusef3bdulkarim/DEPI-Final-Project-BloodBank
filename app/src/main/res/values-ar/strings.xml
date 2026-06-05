@@ -134,5 +134,9 @@
     <string name="fulfill_request_btn">تلبية الطلب الآن</string>
     <string name="urgency_instruction"> يرجى تحديد حالة الطوارئ بناءً على تشخيص الطبيب المعالج.</string>
 
-
+    <string name="select_governorate">اختر المحافظة</string>
+    <string name="select_city">اختر المركز/المدينة</string>
+    <string name="fetching_location">جاري سحب الإحداثيات...</string>
+    <string name="location_fetched_success">تم تحديد الموقع بنجاح</string>
+    <string name="fetch_gps_location">📍 تحديد موقعي الحالي (GPS)</string>
 </resources>
