@@ -11,7 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource // استيراد ضروري
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,6 +30,8 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = viewModel()
 ) {
 
+    val context = LocalContext.current
+
     val uiState by viewModel.uiState.collectAsState()
 
     var showLogoutDialog by remember {
@@ -36,6 +40,11 @@ fun ProfileScreen(
 
     var showLanguageDialog by remember {
         mutableStateOf(false)
+    }
+
+    // التعديل الأول: تجهيز نص "Not Available" في حالة عدم وجود تاريخ
+    val displayLastDonationDate = uiState.lastDonationDate.ifEmpty {
+        stringResource(id = R.string.not_available)
     }
 
     Scaffold(
@@ -56,7 +65,8 @@ fun ProfileScreen(
 
             item {
                 ProfileHeader(
-                    name = uiState.name,
+                    // التعديل الثاني: استخدام "Loading..." لو الاسم لسه فاضي
+                    name = uiState.name.ifEmpty { stringResource(id = R.string.loading) },
                     location = uiState.location,
                     bloodType = uiState.bloodType
                 )
@@ -77,7 +87,8 @@ fun ProfileScreen(
 
                     StatCard(
                         label = "Last Donate",
-                        value = uiState.lastDonationDate,
+                        // التعديل الثالث: استخدام المتغير اللي بيحمل التاريخ أو كلمة "Not Available"
+                        value = displayLastDonationDate,
                         modifier = Modifier.weight(1f)
                     )
 
@@ -116,8 +127,9 @@ fun ProfileScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(uiState.badges) { badge ->
+                            // التعديل الرابع: جلب نصوص الأوسمة المترجمة (Expert, Life Saver, First Year)
                             BadgeItem(
-                                title = badge.title,
+                                title = stringResource(id = badge.titleRes),
                                 type = badge.type
                             )
                         }
@@ -204,12 +216,18 @@ fun ProfileScreen(
                         onClick = {
                             showLogoutDialog = false
 
-                            // 1. تسجيل الخروج من فايربيز
                             FirebaseAuth.getInstance().signOut()
 
-                            // 2. التوجيه لشاشة تسجيل الدخول ومسح الذاكرة (عشان زرار الرجوع)
-                            navController.navigate("login") {
-                                popUpTo(0)
+                            val gso = com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(
+                                com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
+                            ).build()
+
+                            val googleSignInClient = com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(context, gso)
+
+                            googleSignInClient.signOut().addOnCompleteListener {
+                                navController.navigate("login") {
+                                    popUpTo(0)
+                                }
                             }
                         }
                     ) {

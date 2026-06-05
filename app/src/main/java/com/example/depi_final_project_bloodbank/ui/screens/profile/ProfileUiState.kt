@@ -1,20 +1,23 @@
 package com.example.depi_final_project_bloodbank.ui.screens.profile
 
+import androidx.annotation.StringRes
+import com.example.depi_final_project_bloodbank.R
+
 data class ProfileUiState(
-    val name: String = "Ahmed Mohamed",
-    val location: String = "Cairo, Egypt",
-    val bloodType: String = "O+",
-    val totalDonations: Int = 14,
-    val lastDonationDate: String = "12 May",
+    val name: String = "",
+    val location: String = "...",
+    val bloodType: String = "-",
+    val totalDonations: Int = 0,
+    val lastDonationDate: String = "",
     val badges: List<Badge> = listOf(
-        Badge("Expert", "expert"),
-        Badge("Life Saver", "life"),
-        Badge("First Year", "star")
+        Badge(R.string.badge_expert, "expert"),
+        Badge(R.string.badge_life_saver, "life"),
+        Badge(R.string.badge_first_year, "star")
     ),
-    val nextAppointmentDays: Int = 4
+    val nextAppointmentDays: Int = 0
 )
 
 data class Badge(
-    val title: String,
+    @StringRes val titleRes: Int,
     val type: String
 )
