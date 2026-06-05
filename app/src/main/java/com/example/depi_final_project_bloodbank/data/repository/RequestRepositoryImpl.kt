@@ -5,6 +5,7 @@ import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import com.example.depi_final_project_bloodbank.domain.repository.RequestRepository
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -14,19 +15,36 @@ class RequestRepositoryImpl(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) : RequestRepository {
 
-    // بنحدد الكولكشن بتاعنا في الفايربيز
     private val requestsCollection = firestore.collection("requests")
 
     override suspend fun createRequest(request: BloodRequest): Result<Boolean> {
         return try {
-            val docRef = requestsCollection.document() // بنعمل ID جديد
-            val finalRequest = request.copy(id = docRef.id) // بنحط الـ ID في الموديل
-
-            docRef.set(finalRequest).await() // بنرفع الداتا
+            val docRef = requestsCollection.document()
+            val finalRequest = request.copy(id = docRef.id)
+            docRef.set(finalRequest).await()
             Result.success(true)
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    // الدالة الجديدة لجلب كل الطلبات وتحديثها لحظياً
+    override fun getAllRequests(): Flow<List<BloodRequest>> = callbackFlow {
+        val query = requestsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
+
+        val listener = query.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+            if (snapshot != null) {
+                val requests = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(BloodRequest::class.java)
+                }
+                trySend(requests).isSuccess
+            }
+        }
+        awaitClose { listener.remove() }
     }
 
     override fun getRequestsByCity(city: String): Flow<List<BloodRequest>> = callbackFlow {

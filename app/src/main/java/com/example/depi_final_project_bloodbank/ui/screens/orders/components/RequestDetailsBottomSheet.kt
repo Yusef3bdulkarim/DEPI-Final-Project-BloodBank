@@ -1,28 +1,52 @@
 package com.example.depi_final_project_bloodbank.ui.screens.orders.components
 
-import androidx.compose.foundation.BorderStroke
+import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Bloodtype
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.toString
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.depi_final_project_bloodbank.R
+import androidx.core.net.toUri
 import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
-import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
+import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import com.example.depi_final_project_bloodbank.utils.toFormattedDate
 
@@ -34,6 +58,7 @@ fun RequestDetailsBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val isUrgent = request.priority == RequestPriority.URGENT
+    val context = LocalContext.current
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -44,13 +69,13 @@ fun RequestDetailsBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                //.fillMaxHeight(0.75f)
                 .wrapContentHeight(align = Alignment.Bottom)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp)
                 .padding(bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            // --- كارد بيانات الفصيلة ---
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
@@ -69,7 +94,7 @@ fun RequestDetailsBottomSheet(
                             shape = CircleShape
                         ) {
                             Text(
-                                text = "عاجل جداً",
+                                "عاجل جداً",
                                 color = MaterialTheme.colorScheme.error,
                                 style = MaterialTheme.typography.labelSmall,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
@@ -78,8 +103,11 @@ fun RequestDetailsBottomSheet(
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                     }
-
-                    Text("فصيلة الدم المطلوبة", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                    Text(
+                        "فصيلة الدم المطلوبة",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.Gray
+                    )
                     Text(
                         text = request.bloodType,
                         style = MaterialTheme.typography.headlineLarge,
@@ -87,11 +115,14 @@ fun RequestDetailsBottomSheet(
                         fontWeight = FontWeight.Bold,
                         fontSize = 48.sp
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Bloodtype, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                        Icon(
+                            Icons.Default.Bloodtype,
+                            null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = "${request.unitsReserved}/${request.unitsNeeded} units",
@@ -101,6 +132,8 @@ fun RequestDetailsBottomSheet(
                     }
                 }
             }
+
+            // --- كارد موقع المستشفى (تم تعديل الـ onClick لتشغيل الخرائط) ---
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
@@ -114,38 +147,51 @@ fun RequestDetailsBottomSheet(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("موقع المستشفى", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
-                        Text(request.hospitalName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text(
+                            "موقع المستشفى",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            request.hospitalName,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
-
                     Button(
                         onClick = {
-                            // TODO: Open Google Maps with hospital location
-                            // val uri = Uri.parse("geo:${request.hospitalLat},${request.hospitalLng}?q=${request.hospitalLat},${request.hospitalLng}(${request.hospitalName})")
-                            // val intent = Intent(Intent.ACTION_VIEW, uri)
-                            // intent.setPackage("com.google.android.apps.maps")
-                            // context.startActivity(intent)
+                            // إنشاء الـ URI الخاص بخرائط جوجل وتمرير الإحداثيات واسم المستشفى كـ Label
+                            val mapUri =
+                                "geo:${request.hospitalLat},${request.hospitalLng}?q=${request.hospitalLat},${request.hospitalLng}(${request.hospitalName})".toUri()
+                            val mapIntent = Intent(Intent.ACTION_VIEW, mapUri).apply {
+                                setPackage("com.google.android.apps.maps")
+                            }
+                            try {
+                                context.startActivity(mapIntent)
+                            } catch (e: Exception) {
+                                // حل احتياطي في حال عدم وجود تطبيق الخرائط (يفتح خرائط جوجل عبر المتصفح)
+                                val browserIntent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    "https://www.google.com/maps/search/?api=1&query=${request.hospitalLat},${request.hospitalLng}".toUri()
+                                )
+                                context.startActivity(browserIntent)
+                            }
                         },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        ),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         shape = MaterialTheme.shapes.small
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.LocationOn,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
+                        Icon(Icons.Default.LocationOn, null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "Go to Hospital",
-                            style = MaterialTheme.typography.labelSmall
-                        )
+                        Text("Go to Hospital", style = MaterialTheme.typography.labelSmall)
                     }
                 }
             }
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            // --- كارد حالة الطلب والتاريخ ---
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
                 val (statusText, statusDotColor) = when (request.status) {
                     RequestStatus.ACTIVE -> "Active" to Color.Green
                     RequestStatus.COMPLETED -> "Completed" to Color.Blue
@@ -157,11 +203,16 @@ fun RequestDetailsBottomSheet(
                     value = statusText,
                     modifier = Modifier.weight(1f),
                     showDot = true,
-                    dotColor = statusDotColor)
-
-                InfoBox(label = "تاريخ النشر", value = request.createdAt.toFormattedDate(), modifier = Modifier.weight(1f))
+                    dotColor = statusDotColor
+                )
+                InfoBox(
+                    label = "تاريخ النشر",
+                    value = request.createdAt.toFormattedDate(),
+                    modifier = Modifier.weight(1f)
+                )
             }
-            // Action Buttons & Navigation Triggers
+
+            // --- كارد بيانات المتصل والاتصال الحقيقي ---
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -170,19 +221,50 @@ fun RequestDetailsBottomSheet(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
-                Row(modifier = Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = { /* Call */ }, modifier = Modifier.background(MaterialTheme.colorScheme.error.copy(alpha = 0.1f), CircleShape)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = {
+                            val intent =
+                                Intent(Intent.ACTION_DIAL, "tel:${request.contactPhone}".toUri())
+                            context.startActivity(intent)
+                        },
+                        modifier = Modifier.background(
+                            MaterialTheme.colorScheme.error.copy(alpha = 0.1f),
+                            CircleShape
+                        )
+                    ) {
                         Icon(Icons.Default.Call, null, tint = MaterialTheme.colorScheme.error)
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Column(horizontalAlignment = Alignment.End) {
-                        // TODO: Replace static donor information with request creator data from Firestore.
-                        Text("أحمد محمد العلي", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                        Text("+966 50 XXX XXXX", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(
+                            text = request.contactName,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = request.contactPhone,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                     Spacer(modifier = Modifier.width(12.dp))
-                    Box(modifier = Modifier.size(40.dp).background(MaterialTheme.colorScheme.primary, CircleShape), contentAlignment = Alignment.Center) {
-                        Text("أ", color = Color.White, fontWeight = FontWeight.Bold)
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(MaterialTheme.colorScheme.primary, CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = request.contactName.firstOrNull()?.toString() ?: "أ",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -191,7 +273,13 @@ fun RequestDetailsBottomSheet(
 }
 
 @Composable
-fun InfoBox(label: String, value: String, modifier: Modifier = Modifier, showDot: Boolean = false, dotColor: Color = Color.Red) {
+fun InfoBox(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+    showDot: Boolean = false,
+    dotColor: Color = Color.Red
+) {
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
@@ -199,10 +287,25 @@ fun InfoBox(label: String, value: String, modifier: Modifier = Modifier, showDot
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.End) {
-            Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (showDot) { Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(dotColor)); Spacer(Modifier.width(6.dp)) }
-                Text(value, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
+                if (showDot) {
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .clip(CircleShape)
+                            .background(dotColor)
+                    ); Spacer(Modifier.width(6.dp))
+                }
+                Text(
+                    value,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }

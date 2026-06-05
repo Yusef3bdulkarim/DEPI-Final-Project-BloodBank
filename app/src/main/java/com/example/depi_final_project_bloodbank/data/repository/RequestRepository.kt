@@ -22,4 +22,6 @@ interface RequestRepository {
 
     // دالة لزيادة عدد الوحدات المؤكدة (اللي اتبرعوا بيها فعلا)
     suspend fun incrementConfirmedUnits(id: String): Result<Boolean>
+
+    fun getAllRequests(): Flow<List<BloodRequest>>
 }

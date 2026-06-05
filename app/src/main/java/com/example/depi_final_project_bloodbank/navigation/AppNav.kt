@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 // لو الـ Imports دي لونها أحمر، اقف عليها ودوس Alt + Enter عشان يجيب مسار التيم الصح
 import com.example.depi_final_project_bloodbank.ui.screens.home.HomeScreen
 import com.example.depi_final_project_bloodbank.ui.screens.notification.NotificationScreen
+import com.example.depi_final_project_bloodbank.ui.screens.orders.RequestsViewModel
 import com.example.depi_final_project_bloodbank.ui.screens.profile.ProfileScreen
 import com.example.depi_final_project_bloodbank.ui.screens.request.CreateRequestScreen
 import com.example.depi_final_project_bloodbank.ui.screens.request.RequestViewModel
@@ -98,8 +99,20 @@ fun AppNav() {
             }
 
             // --- Orders ---
+            // --- Orders ---
             composable("requests") {
-                com.example.depi_final_project_bloodbank.ui.screens.orders.RequestsScreen()
+                // 1. عرف الـ Factory
+                val factory = object : androidx.lifecycle.ViewModelProvider.Factory {
+                    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                        val repository = com.example.depi_final_project_bloodbank.data.repository.RequestRepositoryImpl()
+                        return RequestsViewModel(repository) as T
+                    }
+                }
+                // 2. عرف الـ ViewModel
+                val vm: RequestsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = factory)
+
+                // 3. ابعت الـ vm للشاشة (ده اللي كان ناقص!)
+                com.example.depi_final_project_bloodbank.ui.screens.orders.RequestsScreen(vm = vm)
             }
         }
     }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class RequestViewModel(
-    private val repository: RequestRepository // ضفنا الريبوزيتوري هنا
+    private val repository: RequestRepository
 ) : ViewModel() {
 
     private val _request = MutableStateFlow(BloodRequest())
@@ -28,7 +28,6 @@ class RequestViewModel(
     private val _locationSuccess = MutableStateFlow(false)
     val locationSuccess = _locationSuccess.asStateFlow()
 
-    // حالات الرفع للفايربيز
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
@@ -72,7 +71,13 @@ class RequestViewModel(
     fun publish() {
         val current = _request.value
 
-        // 1. Validation
+        // التحقق من الموقع الإجباري
+        if (!_locationSuccess.value) {
+            _error.value = "LOCATION_REQUIRED"
+            return
+        }
+
+        // التحقق من البيانات
         if (current.hospitalName.isBlank() || current.city.isBlank() || current.contactPhone.isBlank()) {
             _error.value = "REQUIRED"
             return
@@ -84,16 +89,11 @@ class RequestViewModel(
             return
         }
 
-        // 2. بدأ الرفع للفايربيز
         _error.value = null
         _isLoading.value = true
 
-        val finalRequest = current.copy(
-            createdAt = System.currentTimeMillis()
-            // لو معاك الـ userId من الشاشة اللي فاتت، ضيفه هنا لخانة createdBy
-        )
+        val finalRequest = current.copy(createdAt = System.currentTimeMillis())
 
-        // 3. استخدام الـ Coroutines لعملية الرفع
         viewModelScope.launch {
             val result = repository.createRequest(finalRequest)
             result.onSuccess {
