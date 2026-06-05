@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.*
 import com.example.depi_final_project_bloodbank.ui.screens.auth.CompleteProfileScreen
@@ -26,10 +27,11 @@ import com.example.depi_final_project_bloodbank.ui.screens.request.CreateRequest
 fun AppNav() {
     val navController = rememberNavController()
     val sharedRequestViewModel: com.example.depi_final_project_bloodbank.ui.screens.request.RequestViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-    val currentUser = FirebaseAuth.getInstance().currentUser
 
-    // 1. غيرنا البداية لـ "home" بدل "home_screen" لو هو مسجل دخول
-    val startDest = if (currentUser != null) "home" else "login"
+    val startDest = remember {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) "home" else "login"
+    }
 
     // 2. بنجيب مسار الشاشة الحالية عشان نعرف إحنا فين
     val navBackStackEntry by navController.currentBackStackEntryAsState()
