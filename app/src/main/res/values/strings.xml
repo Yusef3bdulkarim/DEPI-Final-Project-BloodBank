@@ -139,4 +139,44 @@
         <string name="time_may_20">May 20, 2024</string>
         <string name="time_may_18">May 18, 2024</string>
         <string name="time_may_15">May 15, 2024</string>
+    <string name="governorate">Governorate</string>
+    <string name="lastDonationDate">غير متوفر</string>
+
+    <string-array name="governorates_array">
+        <item>Cairo</item>
+        <item>Giza</item>
+        <item>Alexandria</item>
+        <item>Dakahlia</item>
+        <item>Red Sea</item>
+        <item>Beheira</item>
+        <item>Fayoum</item>
+        <item>Gharbia</item>
+        <item>Ismailia</item>
+        <item>Monufia</item>
+        <item>Minya</item>
+        <item>Qalyubia</item>
+        <item>New Valley</item>
+        <item>Suez</item>
+        <item>Aswan</item>
+        <item>Asyut</item>
+        <item>Beni Suef</item>
+        <item>Port Said</item>
+        <item>Damietta</item>
+        <item>Al Sharqia</item>
+        <item>South Sinai</item>
+        <item>Kafr El Sheikh</item>
+        <item>Matrouh</item>
+        <item>Luxor</item>
+        <item>Qena</item>
+        <item>North Sinai</item>
+        <item>Sohag</item>
+    </string-array>
+
+    <!-- Profile Screen -->
+    <string name="loading">Loading...</string>
+    <string name="not_available">Not Available</string>
+    <string name="badge_expert">Expert</string>
+    <string name="badge_life_saver">Life Saver</string>
+    <string name="badge_first_year">First Year</string>
+
 </resources>

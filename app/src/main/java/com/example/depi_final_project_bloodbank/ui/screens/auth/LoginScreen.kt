@@ -206,6 +206,7 @@ fun LoginScreen(
                 }
                 is AuthState.NeedsProfileCompletion -> {
                     LaunchedEffect(Unit) {
+                        android.widget.Toast.makeText(context, "Going to Complete Profile...", android.widget.Toast.LENGTH_SHORT).show()
                         navController.navigate("complete_profile") {
                             popUpTo("login") { inclusive = true }
                         }

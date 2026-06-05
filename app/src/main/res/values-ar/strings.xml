@@ -133,6 +133,45 @@
     <string name="post_request_btn">نشر الطلب</string>
     <string name="fulfill_request_btn">تلبية الطلب الآن</string>
     <string name="urgency_instruction"> يرجى تحديد حالة الطوارئ بناءً على تشخيص الطبيب المعالج.</string>
+    <string name="governorate">المحافظة</string>
+    <string name="lastDonationDate">غير متوفر</string>
+
+    <string-array name="governorates_array">
+        <item>القاهرة</item>
+        <item>الجيزة</item>
+        <item>الإسكندرية</item>
+        <item>الدقهلية</item>
+        <item>البحر الأحمر</item>
+        <item>البحيرة</item>
+        <item>الفيوم</item>
+        <item>الغربية</item>
+        <item>الإسماعيلية</item>
+        <item>المنوفية</item>
+        <item>المنيا</item>
+        <item>القليوبية</item>
+        <item>الوادي الجديد</item>
+        <item>السويس</item>
+        <item>أسوان</item>
+        <item>أسيوط</item>
+        <item>بني سويف</item>
+        <item>بورسعيد</item>
+        <item>دمياط</item>
+        <item>الشرقية</item>
+        <item>جنوب سيناء</item>
+        <item>كفر الشيخ</item>
+        <item>مطروح</item>
+        <item>الأقصر</item>
+        <item>قنا</item>
+        <item>شمال سيناء</item>
+        <item>سوهاج</item>
+    </string-array>
+
+    <!-- شاشة الملف الشخصي -->
+    <string name="loading">جاري التحميل...</string>
+    <string name="not_available">غير متوفر</string>
+    <string name="badge_expert">خبير</string>
+    <string name="badge_life_saver">منقذ حياة</string>
+    <string name="badge_first_year">السنة الأولى</string>
 
 
 </resources>

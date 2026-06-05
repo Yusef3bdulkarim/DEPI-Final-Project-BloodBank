@@ -36,6 +36,7 @@ import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.depi_final_project_bloodbank.ui.screens.auth.components.GovernorateDropdown
 import com.example.depi_final_project_bloodbank.ui.theme.TextDark
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState
 
@@ -58,6 +59,7 @@ fun RegisterScreen(
     var selectedBlood by remember { mutableStateOf("") }
     val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
     val authState by viewModel.authState.collectAsState()
+    var selectedGovernorate by remember { mutableStateOf("") }
 
     // ضيف دول فوق الـ Column الأساسي
     val context = LocalContext.current
@@ -131,7 +133,7 @@ fun RegisterScreen(
                 }
                 is AuthState.Success -> {
                     LaunchedEffect(Unit) {
-                        navController.navigate("home_screen") {
+                        navController.navigate("home") {
                             // هنا بنمسح الـ register
                             popUpTo("register") { inclusive = true }
                         }
@@ -196,6 +198,12 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            GovernorateDropdown(
+                selectedGovernorate = selectedGovernorate,
+                onGovernorateSelected = { selectedGovernorate = it }
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -257,7 +265,8 @@ fun RegisterScreen(
                         email = email,
                         phone = phone,
                         pass = password,
-                        bloodType = selectedBlood
+                        bloodType = selectedBlood,
+                        governorate = selectedGovernorate
                     )
                 }
             )
