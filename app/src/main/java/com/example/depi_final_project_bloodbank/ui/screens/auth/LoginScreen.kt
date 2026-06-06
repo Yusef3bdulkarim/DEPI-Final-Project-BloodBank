@@ -1,5 +1,7 @@
 package com.example.depi_final_project_bloodbank.ui.screens.auth
 
+import android.app.Activity
+import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
@@ -52,6 +54,10 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(value = false) }
+    val context = LocalContext.current
+    val activity = context as Activity
+    val sharedPref = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+
 
     // <-- مراقبة حالة الـ Auth
     val authState by viewModel.authState.collectAsState()
@@ -60,7 +66,6 @@ fun LoginScreen(
     val isArabic = currentLocales.toLanguageTags().contains("ar")
 
     // ضيف دول فوق الـ Column الأساسي
-    val context = LocalContext.current
 
     // إعدادات جوجل
     val gso = GoogleSignInOptions.Builder(
@@ -96,16 +101,20 @@ fun LoginScreen(
         TextButton(
             onClick = {
                 // تبديل اللغة
-                val newLang = if (isArabic) "en" else "ar"
-                val appLocale = LocaleListCompat.forLanguageTags(newLang)
-                AppCompatDelegate.setApplicationLocales(appLocale)
+                val currentLang = sharedPref.getString("lang", "en")
+
+                val newLang = if (currentLang == "en") "ar" else "en"
+
+                sharedPref.edit().putString("lang", newLang).apply()
+
+                activity.recreate()
             },
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(top = 30.dp, end = 16.dp, start = 16.dp)
         ) {
             Text(
-                text = if (isArabic) "English" else "عربي",
+                text = stringResource(R.string.lang_login),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = PrimaryRed
@@ -136,7 +145,9 @@ fun LoginScreen(
             Image(
                 painter = painterResource(id = R.drawable.avatar),
                 contentDescription = null,
-                modifier = Modifier.size(160.dp).clip(CircleShape),
+                modifier = Modifier
+                    .size(160.dp)
+                    .clip(CircleShape),
                 contentScale = ContentScale.Crop
             )
 
@@ -266,7 +277,7 @@ fun LoginScreen(
                     .size(120.dp)
                     .clip(CircleShape)
                     .align(Alignment.CenterHorizontally)
-                   .clickable {
+                    .clickable {
                         launcher.launch(googleSignInClient.signInIntent)
                     }
             )

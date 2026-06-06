@@ -178,5 +178,18 @@
     <string name="badge_expert">Expert</string>
     <string name="badge_life_saver">Life Saver</string>
     <string name="badge_first_year">First Year</string>
+    <string name="total_donation">Total Donation</string>
+    <string name="last_donate">Last Donate</string>
+    <string name="blood_type_text">Blood Type</string>
+    <string name="badges">Badges</string>
+    <string name="donations">Donations</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="lang_login">عربي</string>
+    <string name="upcoming_appointment">Upcoming appointment</string>
+    <string name="you_have_days_left_until_your_next_donation">You have %1$d days left until your next donation</string>
 
 </resources>

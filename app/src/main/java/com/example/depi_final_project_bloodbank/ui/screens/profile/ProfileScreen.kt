@@ -1,5 +1,7 @@
 package com.example.depi_final_project_bloodbank.ui.screens.profile
 
+import android.app.Activity
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,6 +33,8 @@ fun ProfileScreen(
 ) {
 
     val context = LocalContext.current
+    val activity = context as Activity
+    val sharedPref = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
     val uiState by viewModel.uiState.collectAsState()
 
@@ -80,20 +84,20 @@ fun ProfileScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     StatCard(
-                        label = "Total Donation",
+                        label = stringResource(R.string.total_donation),
                         value = uiState.totalDonations.toString(),
                         modifier = Modifier.weight(1f)
                     )
 
                     StatCard(
-                        label = "Last Donate",
+                        label = stringResource(R.string.last_donate),
                         // التعديل الثالث: استخدام المتغير اللي بيحمل التاريخ أو كلمة "Not Available"
                         value = displayLastDonationDate,
                         modifier = Modifier.weight(1f)
                     )
 
                     StatCard(
-                        label = "Blood Type",
+                        label = stringResource(R.string.blood_type_text),
                         value = uiState.bloodType,
                         modifier = Modifier.weight(1f)
                     )
@@ -115,7 +119,7 @@ fun ProfileScreen(
                     ) {
 
                         Text(
-                            text = "Badges",
+                            text = stringResource(R.string.badges),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -157,13 +161,13 @@ fun ProfileScreen(
                     Column {
 
                         MenuItem(
-                            title = "Donations",
+                            title = stringResource(R.string.donations),
                             icon = R.drawable.recent,
                             onClick = { }
                         )
 
                         MenuItem(
-                            title = "Settings",
+                            title = stringResource(R.string.settings),
                             icon = R.drawable.settings,
                             onClick = {
                                 showLanguageDialog = true
@@ -171,7 +175,7 @@ fun ProfileScreen(
                         )
 
                         MenuItem(
-                            title = "Logout",
+                            title = stringResource(R.string.logout),
                             icon = R.drawable.logout,
                             onClick = {
                                 showLogoutDialog = true
@@ -204,11 +208,11 @@ fun ProfileScreen(
                 },
 
                 title = {
-                    Text("Logout")
+                    Text(stringResource(R.string.logout))
                 },
 
                 text = {
-                    Text("Are you sure you want to logout?")
+                    Text(stringResource(R.string.are_you_sure_you_want_to_logout))
                 },
 
                 confirmButton = {
@@ -232,7 +236,7 @@ fun ProfileScreen(
                         }
                     ) {
                         Text(
-                            text = "Logout",
+                            text =  stringResource(R.string.logout),
                             color = MaterialTheme.colorScheme.error
                         )
                     }
@@ -245,7 +249,7 @@ fun ProfileScreen(
                             showLogoutDialog = false
                         }
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             )
@@ -261,7 +265,7 @@ fun ProfileScreen(
                 },
 
                 title = {
-                    Text("Choose Language")
+                    Text(stringResource(R.string.choose_language))
                 },
 
                 text = {
@@ -273,7 +277,13 @@ fun ProfileScreen(
 
                                 showLanguageDialog = false
 
+
                                 // Arabic Language Logic
+                                sharedPref.edit()
+                                    .putString("lang", "ar")
+                                    .apply()
+                                activity.recreate()
+
                             }
                         ) {
                             Text("العربية")
@@ -285,6 +295,11 @@ fun ProfileScreen(
                                 showLanguageDialog = false
 
                                 // English Language Logic
+                                sharedPref.edit()
+                                    .putString("lang", "en")
+                                    .apply()
+
+                                activity.recreate()
                             }
                         ) {
                             Text("English")

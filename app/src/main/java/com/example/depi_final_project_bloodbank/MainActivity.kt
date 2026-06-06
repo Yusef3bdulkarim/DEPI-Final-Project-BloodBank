@@ -1,9 +1,11 @@
 package com.example.depi_final_project_bloodbank
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.depi_final_project_bloodbank.data.locale.LocaleManager
 import com.example.depi_final_project_bloodbank.navigation.AppNav
 import com.example.depi_final_project_bloodbank.ui.theme.DEPIFinalProjectBloodBankTheme
 
@@ -16,5 +18,12 @@ class MainActivity : ComponentActivity() {
                 AppNav()
             }
         }
+    }
+    override fun attachBaseContext(newBase: Context) {
+        val sharedPref = newBase.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val lang = sharedPref.getString("lang", "en") ?: "en"
+
+        val context = LocaleManager.setLocale(newBase, lang)
+        super.attachBaseContext(context)
     }
 }
