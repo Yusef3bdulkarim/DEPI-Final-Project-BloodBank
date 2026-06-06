@@ -98,31 +98,36 @@ fun LoginScreen(
             .background(Color.White),
     ) {
 
-        TextButton(
-            onClick = {
-                // تبديل اللغة
-                val currentLang = sharedPref.getString("lang", "en")
-
-                val newLang = if (currentLang == "en") "ar" else "en"
-
-                sharedPref.edit().putString("lang", newLang).apply()
-
-                activity.recreate()
-            },
+        Row(
             modifier = Modifier
-                .align(Alignment.End)
-                .padding(top = 30.dp, end = 16.dp, start = 16.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = stringResource(R.string.lang_login),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = PrimaryRed
+
+            TextButton(
+                onClick = {
+                    val currentLang = sharedPref.getString("lang", "en")
+                    val newLang = if (currentLang == "en") "ar" else "en"
+
+                    sharedPref.edit().putString("lang", newLang).apply()
+                    activity.recreate()
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.lang_login),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = PrimaryRed
+                )
+            }
+
+            LogoHeader(
+                modifier = Modifier.size(120.dp)
             )
         }
 
-
-        LogoHeader()
 
         Column(
             modifier = Modifier
@@ -198,9 +203,11 @@ fun LoginScreen(
                 is AuthState.Loading -> {
                     CircularProgressIndicator(color = PrimaryRed)
                 }
+
                 is AuthState.Error -> {
                     val errorState = authState as AuthState.Error
-                    val errorMessage = errorState.messageId?.let { stringResource(id = it) } ?: errorState.messageStr ?: ""
+                    val errorMessage = errorState.messageId?.let { stringResource(id = it) }
+                        ?: errorState.messageStr ?: ""
 
                     Text(
                         text = errorMessage,
@@ -208,6 +215,7 @@ fun LoginScreen(
                         textAlign = TextAlign.Center
                     )
                 }
+
                 is AuthState.Success -> {
                     LaunchedEffect(Unit) {
                         navController.navigate("home") {
@@ -215,14 +223,20 @@ fun LoginScreen(
                         }
                     }
                 }
+
                 is AuthState.NeedsProfileCompletion -> {
                     LaunchedEffect(Unit) {
-                        android.widget.Toast.makeText(context, "Going to Complete Profile...", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(
+                            context,
+                            "Going to Complete Profile...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
                         navController.navigate("complete_profile") {
                             popUpTo("login") { inclusive = true }
                         }
                     }
                 }
+
                 is AuthState.NeedsVerification -> {
                     LaunchedEffect(Unit) {
                         navController.navigate("verify_account") {
@@ -231,6 +245,7 @@ fun LoginScreen(
                         }
                     }
                 }
+
                 else -> {}
             }
 
