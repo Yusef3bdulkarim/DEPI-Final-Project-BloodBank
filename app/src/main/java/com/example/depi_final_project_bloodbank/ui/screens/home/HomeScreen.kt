@@ -9,6 +9,9 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +27,8 @@ import com.example.depi_final_project_bloodbank.ui.screens.home.components.Heade
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.SectionTitle
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLogoBar
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.UrgentAppealsList
+// استيراد الشيت من مكانه الصحيح اللي بعتهولي في الكود
+import com.example.depi_final_project_bloodbank.ui.screens.orders.components.RequestDetailsBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +41,9 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    // ✅ استخدام هيكلية if-else بدلاً من الـ return المبكر للمحافظة على استقرار الـ UI
+    // ✅ الاعتماد على متغيّر واحد فقط للإظهار والإغلاق لمنع الـ Conflict والشاشة البيضاء
+    var selectedRequest by remember { mutableStateOf<BloodRequest?>(null) }
+
     if (state.isLoading) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -87,11 +94,23 @@ fun HomeScreen(
                 item {
                     UrgentAppealsList(
                         requests = state.filteredRequests,
-                        onViewRequest = onViewRequest
+                        onViewRequest = { request ->
+                            // ✅ بمجرد الضغط، بنسجل الطلب المختار والشيت هيفتح فوراً بشكل سليم
+                            selectedRequest = request
+                            onViewRequest(request)
+                        }
                     )
                 }
             }
         }
+    }
+
+    // ✅ استدعاء الشيت بنفس أسلوب صفحة الأوردرات بالملي خارج الـ PullToRefresh
+    if (selectedRequest != null) {
+        RequestDetailsBottomSheet(
+            request = selectedRequest!!,
+            onDismiss = { selectedRequest = null } // يصفر الطلب فيقفل الشيت وينضف الـ Backdrop تماماً
+        )
     }
 }
 
