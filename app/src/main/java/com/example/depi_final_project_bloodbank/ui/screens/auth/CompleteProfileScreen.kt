@@ -138,12 +138,13 @@ fun CompleteProfileScreen(
             if (authState is AuthState.Loading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally), color = PrimaryRed)
             }
-            if (authState is AuthState.Error) {
-                Text(text = (authState as AuthState.Error).messageStr ?: "", color = Color.Red, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            if (authState is AuthState.Error) { val error = authState as AuthState.Error
+                val msg = error.messageId?.let { stringResource(it) } ?: error.messageStr ?: ""
+                Text(text = msg, color = Color.Red, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
             }
             if (authState is AuthState.Success) {
                 LaunchedEffect(Unit) {
-                    navController.navigate("home_screen") { popUpTo("complete_profile") { inclusive = true } }
+                    navController.navigate("home") { popUpTo("complete_profile") { inclusive = true } }
                 }
             }
         }

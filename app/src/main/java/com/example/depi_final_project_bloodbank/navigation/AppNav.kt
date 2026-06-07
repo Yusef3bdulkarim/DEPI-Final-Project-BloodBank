@@ -69,8 +69,13 @@ fun AppNav() {
             composable("home") {
                 HomeScreen(
                     onRequestBloodClick = {
-                        // هنا بنقوله لما تدوس على الزرار روح للمسار اللي سجلناه تحت
                         navController.navigate("create_request")
+                    },
+                    onDonateNowClick = {
+                        navController.navigate("requests")
+                    },
+                    onNotificationsClick = {
+                        navController.navigate("notifications")
                     }
                 )
             }

@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun UrgentAppealCard(
     hospitalName: String,
-    distance: String,
+    location: String,
     units: Int,
     bloodType: String,
     isUrgent: Boolean = true,
@@ -102,7 +102,7 @@ fun UrgentAppealCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            "$distance away",
+                            location,
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.Gray,
                             maxLines = 1
@@ -135,5 +135,5 @@ fun UrgentAppealCard(
 @Preview(showBackground = true)
 @Composable
 private fun UrgentAppealCardPrev() {
-    UrgentAppealCard("Kafr-Elshiekh Blood-Bank", "", 1, "A+") {}
+    UrgentAppealCard("Kafr-Elshiekh Blood-Bank", "Kafr El-Sheikh", 1, "A+") {}
 }

@@ -70,7 +70,7 @@ fun RegisterScreen(
         .requestEmail()
         .build()
 
-    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+    val googleSignInClient = remember { GoogleSignIn.getClient(context, gso) }
 
     // الـ Launcher اللي بيستقبل النتيجة من جوجل
     val launcher = rememberLauncherForActivityResult(
@@ -131,8 +131,7 @@ fun RegisterScreen(
                 }
                 is AuthState.Success -> {
                     LaunchedEffect(Unit) {
-                        navController.navigate("home_screen") {
-                            // هنا بنمسح الـ register
+                        navController.navigate("home") {
                             popUpTo("register") { inclusive = true }
                         }
                     }
@@ -272,7 +271,10 @@ fun RegisterScreen(
                 Text(
                     text = stringResource(id = R.string.login_link),
                     color = PrimaryRed,
-                    modifier = Modifier.clickable { navController.popBackStack() }
+                    modifier = Modifier.clickable {
+                        viewModel.resetState()
+                        navController.popBackStack()
+                    }
                 )
             }
 

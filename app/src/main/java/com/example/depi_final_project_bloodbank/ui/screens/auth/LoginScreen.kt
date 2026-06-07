@@ -70,7 +70,7 @@ fun LoginScreen(
         .requestEmail()
         .build()
 
-    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+    val googleSignInClient = remember { GoogleSignIn.getClient(context, gso) }
 
     // الـ Launcher اللي بيستقبل النتيجة من جوجل
     val launcher = rememberLauncherForActivityResult(
@@ -168,7 +168,10 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.End)
-                    .clickable { navController.navigate("forgot_password") }
+                    .clickable {
+                        viewModel.resetState()
+                        navController.navigate("forgot_password")
+                    }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
