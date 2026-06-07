@@ -36,62 +36,64 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    // ✅ استخدام هيكلية if-else بدلاً من الـ return المبكر للمحافظة على استقرار الـ UI
     if (state.isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             CircularProgressIndicator()
         }
-        return
-    }
-
-    PullToRefreshBox(
-        isRefreshing = state.isRefreshing,
-        onRefresh = { viewModel.loadData(isRefresh = true) },
-        modifier = Modifier.fillMaxSize()
-    ) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            item { TopLogoBar(onNotificationsClick = onNotificationsClick) }
-            item { HeaderSection(state.userName, state.bloodType) }
-            item {
-                AvailabilityToggle(
-                    isAvailable = state.isAvailableForDonation,
-                    onToggle = { viewModel.toggleAvailability() }
-                )
-            }
-            item {
-                if (state.canDonateNow) {
-                    DonationStatusBanner()
-                } else {
-                    DonationCounterBanner(
-                        daysElapsed = state.daysElapsed,
-                        nextDate = state.nextDonationDate,
-                        lastDate = state.lastDonationDate
+    } else {
+        PullToRefreshBox(
+            isRefreshing = state.isRefreshing,
+            onRefresh = { viewModel.loadData(isRefresh = true) },
+            modifier = Modifier.fillMaxSize()
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                item { TopLogoBar(onNotificationsClick = onNotificationsClick) }
+                item { HeaderSection(state.userName, state.bloodType) }
+                item {
+                    AvailabilityToggle(
+                        isAvailable = state.isAvailableForDonation,
+                        onToggle = { viewModel.toggleAvailability() }
                     )
                 }
-            }
-            item { DynamicHealthTipsSection() }
-            item {
-                ActionButtonSection(
-                    onRequestBloodClick = onRequestBloodClick,
-                    onDonateNowClick = onDonateNowClick
-                )
-            }
-            item { SectionTitle("URGENT APPEALS", "Urgent Appeals Near You") }
-            item {
-                BloodTypeFilterRow(
-                    selected = state.selectedBloodTypeFilter,
-                    onSelected = { viewModel.onBloodTypeFilterChanged(it) }
-                )
-            }
-            item {
-                UrgentAppealsList(
-                    requests = state.filteredRequests,
-                    onViewRequest = onViewRequest
-                )
+                item {
+                    if (state.canDonateNow) {
+                        DonationStatusBanner()
+                    } else {
+                        DonationCounterBanner(
+                            daysElapsed = state.daysElapsed,
+                            nextDate = state.nextDonationDate,
+                            lastDate = state.lastDonationDate
+                        )
+                    }
+                }
+                item { DynamicHealthTipsSection() }
+                item {
+                    ActionButtonSection(
+                        onRequestBloodClick = onRequestBloodClick,
+                        onDonateNowClick = onDonateNowClick
+                    )
+                }
+                item { SectionTitle("URGENT APPEALS", "Urgent Appeals Near You") }
+                item {
+                    BloodTypeFilterRow(
+                        selected = state.selectedBloodTypeFilter,
+                        onSelected = { viewModel.onBloodTypeFilterChanged(it) }
+                    )
+                }
+                item {
+                    UrgentAppealsList(
+                        requests = state.filteredRequests,
+                        onViewRequest = onViewRequest
+                    )
+                }
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

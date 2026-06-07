@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -24,9 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.depi_final_project_bloodbank.R
 
 @Composable
 fun UrgentAppealCard(
@@ -39,31 +40,32 @@ fun UrgentAppealCard(
 ) {
     Card(
         modifier = Modifier
-            .width(250.dp).height(145.dp)
+            .width(250.dp)
             .padding(vertical = 4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = MaterialTheme.shapes.small
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
-                    color = if (isUrgent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+//                    color = if (isUrgent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                     shape = CircleShape,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(34.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Warning,
+                        painter = painterResource(id = R.drawable.warning_blood),
                         contentDescription = null,
-                        tint = if (isUrgent) Color.White else Color.Yellow,
-                        modifier = Modifier.padding(4.dp)
+                        tint = MaterialTheme.colorScheme.primary,
+//                        tint = if (isUrgent) Color.White else MaterialTheme.colorScheme.primary,
+
                     )
                 }
-                Spacer(modifier = Modifier.width(5.dp))
+//                Spacer(modifier = Modifier.width(5.dp))
                 Text(
-                    text = if (isUrgent) "URGENT: " else "",
+                    text = if (isUrgent) "URGENT:" else " ",
                     style = MaterialTheme.typography.titleMedium,
                     color =  if (isUrgent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
@@ -78,7 +80,6 @@ fun UrgentAppealCard(
                     )
 
             }
-
             Spacer(modifier = Modifier.height(5.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),

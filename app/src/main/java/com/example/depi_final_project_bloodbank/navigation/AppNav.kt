@@ -6,7 +6,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import androidx.navigation.navArgument
 import com.example.depi_final_project_bloodbank.ui.screens.auth.CompleteProfileScreen
 import com.example.depi_final_project_bloodbank.ui.screens.auth.ForgotPasswordScreen
 import com.example.depi_final_project_bloodbank.ui.screens.auth.LoginScreen
@@ -25,7 +27,8 @@ import com.example.depi_final_project_bloodbank.ui.screens.request.CreateRequest
 @Composable
 fun AppNav() {
     val navController = rememberNavController()
-    val sharedRequestViewModel: com.example.depi_final_project_bloodbank.ui.screens.request.RequestViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val sharedRequestViewModel: com.example.depi_final_project_bloodbank.ui.screens.request.RequestViewModel =
+        androidx.lifecycle.viewmodel.compose.viewModel()
     val currentUser = FirebaseAuth.getInstance().currentUser
 
     // 1. غيرنا البداية لـ "home" بدل "home_screen" لو هو مسجل دخول
@@ -76,6 +79,10 @@ fun AppNav() {
                     },
                     onNotificationsClick = {
                         navController.navigate("notifications")
+                    },
+                    // ✅ هنا الربط السحري! مررنا الـ request وضفنا الـ id بتاعه في الـ Route
+                    onViewRequest = { request ->
+                        navController.navigate("blood_request_details/${request.id}")
                     }
                 )
             }
@@ -103,7 +110,15 @@ fun AppNav() {
             composable("requests") {
                 com.example.depi_final_project_bloodbank.ui.screens.orders.RequestsScreen()
             }
+            composable(
+                route = "blood_request_details/{requestId}",
+                arguments = listOf(navArgument("requestId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val requestId = backStackEntry.arguments?.getString("requestId") ?: ""
 
+                // تذكر تستبدل الكومبوزابل ده باسم شاشة التفاصيل الفعلية بتاعتك ممرراً لها الـ requestId
+                // com.example.depi_final_project_bloodbank.ui.screens.request.UrgentRequestDetailsScreen(requestId = requestId, navController = navController)
+            }
             // شاشة تفاصيل الطلب الجديدة
             /* دي الديتيلز الي بتظهر بعد م الطلب يتعمل انا شيلتها لانها في بتظهر
             بتظهر في بوتوم شيت من صفحة الاوردرات
