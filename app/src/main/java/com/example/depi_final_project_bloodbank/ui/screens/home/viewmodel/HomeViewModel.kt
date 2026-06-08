@@ -1,4 +1,4 @@
-package com.example.depi_final_project_bloodbank.ui.screens.profile
+package com.example.depi_final_project_bloodbank.ui.screens.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,15 +8,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ProfileViewModel : ViewModel() {
-    // تعريف الـ Repository اللي عملناه
+// 1. حالة الشاشة (البيانات اللي هتتعرض)
+data class HomeUiState(
+    val userName: String = "جاري التحميل...",
+    val bloodType: String = "-"
+)
+
+class HomeViewModel : ViewModel() {
     private val repository = UserRepository()
 
-    private val _uiState = MutableStateFlow(ProfileUiState())
-    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
-        // أول ما الـ ViewModel يشتغل، هيروح يجيب الداتا فوراً
         fetchUserData()
     }
 
@@ -24,16 +28,14 @@ class ProfileViewModel : ViewModel() {
         viewModelScope.launch {
             val user = repository.getCurrentUser()
             if (user != null) {
-                // لقينا اليوزر، هنحدث الـ State بالبيانات الحقيقية
+                // لو لقينا اليوزر، بنحدث الاسم وفصيلة الدم
                 _uiState.value = _uiState.value.copy(
-                    name = user.name,
-                    location = user.governorate,
+                    userName = user.name,
                     bloodType = user.bloodType
                 )
             } else {
-                // لو حصل مشكلة أو ملقاش اليوزر
                 _uiState.value = _uiState.value.copy(
-                    name = "مستخدم غير معروف"
+                    userName = "مستخدم"
                 )
             }
         }

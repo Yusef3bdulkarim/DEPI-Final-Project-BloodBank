@@ -1,15 +1,8 @@
 package com.example.depi_final_project_bloodbank.ui.screens.profile.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -19,12 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.depi_final_project_bloodbank.R
+import androidx.compose.ui.unit.sp
+
 @Composable
 fun ProfileHeader(
     name: String,
@@ -32,51 +23,38 @@ fun ProfileHeader(
     bloodType: String,
     modifier: Modifier = Modifier
 ) {
-
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        // Profile Image + Blood Type Badge
-        Box(contentAlignment = Alignment.BottomEnd) {
-
-            Image(
-                painter = painterResource(id = R.drawable.person),
-                contentDescription = "Profile Picture",
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .border(
-                        2.dp,
-                        MaterialTheme.colorScheme.primary,
-                        CircleShape
-                    ),
-                contentScale = ContentScale.Crop
-            )
-
-            Box(
-                modifier = Modifier
-                    .offset(x = (-4).dp, y = (-4).dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = CircleShape
-                    )
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                Text(
-                    text = bloodType,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Bold
+        // البديل للصورة: دائرة احترافية تعرض فصيلة الدم
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(100.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                    shape = CircleShape
                 )
-            }
+                .border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape
+                )
+        ) {
+            Text(
+                text = bloodType,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 36.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
         }
 
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // Name
+        // الاسم
         Text(
             text = name,
             style = MaterialTheme.typography.titleLarge,
@@ -84,20 +62,19 @@ fun ProfileHeader(
             color = MaterialTheme.colorScheme.primary
         )
 
+        Spacer(modifier = Modifier.height(4.dp))
 
-        // Location
+        // المحافظة
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Icon(
                 imageVector = Icons.Default.LocationOn,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 modifier = Modifier.size(16.dp)
             )
-
-
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = location,
                 style = MaterialTheme.typography.labelSmall,
