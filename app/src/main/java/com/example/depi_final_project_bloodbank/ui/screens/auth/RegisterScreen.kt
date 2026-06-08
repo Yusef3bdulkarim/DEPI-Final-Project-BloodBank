@@ -61,18 +61,17 @@ fun RegisterScreen(
     val authState by viewModel.authState.collectAsState()
     var selectedGovernorate by remember { mutableStateOf("") }
 
-    // ضيف دول فوق الـ Column الأساسي
     val context = LocalContext.current
 
     // إعدادات جوجل
     val gso = GoogleSignInOptions.Builder(
         GoogleSignInOptions.DEFAULT_SIGN_IN
     )
-        .requestIdToken(stringResource(id = R.string.default_web_client_id)) // ده كود بيتعمل تلقائي من فايربيز
+        .requestIdToken(stringResource(id = R.string.default_web_client_id))
         .requestEmail()
         .build()
 
-    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+    val googleSignInClient = remember { GoogleSignIn.getClient(context, gso) }
 
     // الـ Launcher اللي بيستقبل النتيجة من جوجل
     val launcher = rememberLauncherForActivityResult(
@@ -82,7 +81,7 @@ fun RegisterScreen(
         try {
             val account = task.getResult(ApiException::class.java)
             account?.idToken?.let { idToken ->
-                viewModel.loginWithGoogle(idToken) // نبعت التوكن للـ ViewModel
+                viewModel.loginWithGoogle(idToken)
             }
         } catch (e: Exception) {
             // لو المستخدم قفل شاشة جوجل أو حصل خطأ
@@ -149,7 +148,6 @@ fun RegisterScreen(
                 is AuthState.NeedsVerification -> {
                     LaunchedEffect(Unit) {
                         navController.navigate("verify_account") {
-                            // بنمسح الشاشة من الذاكرة عشان ميرجعلهاش بالغلط
                             popUpTo(navController.graph.startDestinationId) { inclusive = true }
                         }
                     }
@@ -281,13 +279,15 @@ fun RegisterScreen(
                 Text(
                     text = stringResource(id = R.string.login_link),
                     color = PrimaryRed,
-                    modifier = Modifier.clickable { navController.popBackStack() }
+                    modifier = Modifier.clickable {
+                        viewModel.resetState()
+                        navController.popBackStack()
+                    }
                 )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // سطر "أو سجل الدخول باستخدام" بين خطين
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -303,7 +303,6 @@ fun RegisterScreen(
             }
 
             Spacer(modifier = Modifier.height(20.dp))
-
 
             Image(
                 painter = painterResource(id = R.drawable.google),
@@ -325,10 +324,6 @@ fun RegisterScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun RegisterScreenPreview() {
-    // ننشئ NavController وهمي فقط للعرض داخل الـ Preview
     val navController = rememberNavController()
-
-    // استدعاء الشاشة الخاصة بك
     RegisterScreen(navController = navController)
 }
-

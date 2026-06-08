@@ -99,7 +99,11 @@ fun ForgotPasswordScreen(
             Spacer(modifier = Modifier.height(16.dp))
             when (authState) {
                 is AuthState.Loading -> CircularProgressIndicator(color = PrimaryRed)
-                is AuthState.Error -> Text(text = (authState as AuthState.Error).messageStr ?: "", color = Color.Red, textAlign = TextAlign.Center)
+                is AuthState.Error -> {
+                    val error = authState as AuthState.Error
+                    val msg = error.messageId?.let { stringResource(it) } ?: error.messageStr ?: ""
+                    Text(text = msg, color = Color.Red, textAlign = TextAlign.Center)
+                }
                 is AuthState.PasswordResetSent -> {
                     Text(text = stringResource(R.string.resent_email), color = Color(0xFF4CAF50), textAlign = TextAlign.Center)
                     LaunchedEffect(Unit) {
@@ -113,7 +117,10 @@ fun ForgotPasswordScreen(
 
             Text(
                 text = stringResource(id = R.string.back_to_login),
-                modifier = Modifier.clickable { navController.popBackStack() },
+                modifier = Modifier.clickable {
+                    viewModel.resetState()
+                    navController.popBackStack()
+                },
                 color = TextDark
             )
 

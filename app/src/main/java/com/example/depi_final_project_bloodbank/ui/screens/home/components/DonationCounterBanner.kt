@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DonationCounterBanner(daysElapsed: Int, nextDate: String, lastDate: String) {
+    val daysRemaining = (90 - daysElapsed).coerceAtLeast(0)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,7 +35,7 @@ fun DonationCounterBanner(daysElapsed: Int, nextDate: String, lastDate: String) 
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    "Next donation eligible\nin 28 days",
+                    "Next donation eligible\nin $daysRemaining days",
                     color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -51,8 +53,8 @@ fun DonationCounterBanner(daysElapsed: Int, nextDate: String, lastDate: String) 
             }
             DonationCounter(daysElapesed = daysElapsed)
         }
-        }
-        }
+    }
+}
 
 
 @Preview(showBackground = true)
