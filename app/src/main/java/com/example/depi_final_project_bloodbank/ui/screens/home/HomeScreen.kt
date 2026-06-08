@@ -8,10 +8,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.getValue // 👈 تأكدنا من إضافة الإمبورت ده صراحة
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.setValue  // 👈 وإمبورت الـ setter للـ selectedRequest
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,9 +39,10 @@ fun HomeScreen(
     onNotificationsClick: () -> Unit = {},
     onViewRequest: (BloodRequest) -> Unit = {}
 ) {
+    // طالما أضفنا الـ getValue فوق، الـ by هنا هتقرأ الـ HomeUiState مباشرة
     val state by viewModel.uiState.collectAsState()
 
-    // الاعتماد على متغيّر واحد فقط للإظهار والإغلاق لمنع الـ Conflict والشاشة البيضاء
+    // متغيّر واحد للإظهار والإغلاق لمنع الـ Conflict
     var selectedRequest by remember { mutableStateOf<BloodRequest?>(null) }
 
     if (state.isLoading) {
@@ -95,7 +96,6 @@ fun HomeScreen(
                     UrgentAppealsList(
                         requests = state.filteredRequests,
                         onViewRequest = { request ->
-                            // بمجرد الضغط، بنسجل الطلب المختار والشيت هيفتح فوراً بشكل سليم
                             selectedRequest = request
                             onViewRequest(request)
                         }
@@ -105,11 +105,11 @@ fun HomeScreen(
         }
     }
 
-    // استدعاء الشيت بنفس أسلوب صفحة الأوردرات بالملي خارج الـ PullToRefresh
+    // عرض الـ BottomSheet خارج الـ PullToRefresh
     if (selectedRequest != null) {
         RequestDetailsBottomSheet(
             request = selectedRequest!!,
-            onDismiss = { selectedRequest = null } // يصفر الطلب فيقفل الشيت وينضف الـ Backdrop تماماً
+            onDismiss = { selectedRequest = null }
         )
     }
 }
@@ -117,5 +117,6 @@ fun HomeScreen(
 @Preview(showBackground = true)
 @Composable
 private fun HomeScreenPrev() {
-    HomeScreen()
+    // باصينا الـ ViewModel هنا عشان الـ Preview يشتغل وميديّاش إيرور أثناء الـ Build
+    HomeScreen(viewModel = viewModel())
 }

@@ -1,4 +1,4 @@
-package com.example.depi_final_project_bloodbank.ui.screens.home
+package com.example.depi_final_project_bloodbank.ui.screens.home.viewmodel
 
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 

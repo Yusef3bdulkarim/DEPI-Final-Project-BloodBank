@@ -35,33 +35,33 @@ fun TopLogoBar(onNotificationsClick: () -> Unit = {}) {
             painter = painterResource(id = com.example.depi_final_project_bloodbank.R.drawable.bloodlink),
             contentDescription = "BloodLink Logo",
             modifier = Modifier
-                .height(65.dp)
+                .height(55.dp)
                 .align(Alignment.Center), // مواءمة في السنتر بالظبط
             contentScale = ContentScale.Fit
         )
 
         // 2. زر الإشعارات في أقصى اليمين (End)
-        Box(
-            modifier = Modifier
-                .clickable { onNotificationsClick() }
-                .padding(4.dp)
-                .align(Alignment.CenterEnd) // مواءمة في آخر اليمين
-        ) {
-            Icon(
-                imageVector = Icons.Default.Notifications,
-                contentDescription = "Notifications",
-                modifier = Modifier.size(26.dp)
-            )
-            // النقطة (Badge)
-            Surface(
-                color = Color(0xD74DA2AF),
-                shape = CircleShape,
-                modifier = Modifier
-                    .size(9.dp)
-                    .align(Alignment.TopEnd)
-                    .offset(x = (1).dp, y = (-1).dp)
-            ) {}
-        }
+//        Box(
+//            modifier = Modifier
+//                .clickable { onNotificationsClick() }
+//                .padding(4.dp)
+//                .align(Alignment.CenterEnd) // مواءمة في آخر اليمين
+//        ) {
+//            Icon(
+//                imageVector = Icons.Default.Notifications,
+//                contentDescription = "Notifications",
+//                modifier = Modifier.size(26.dp)
+//            )
+//            // النقطة (Badge)
+//            Surface(
+//                color = Color(0xD74DA2AF),
+//                shape = CircleShape,
+//                modifier = Modifier
+//                    .size(9.dp)
+//                    .align(Alignment.TopEnd)
+//                    .offset(x = (1).dp, y = (-1).dp)
+//            ) {}
+//        }
     }
 }
 
