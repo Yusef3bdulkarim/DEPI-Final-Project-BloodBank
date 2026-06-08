@@ -133,6 +133,61 @@
     <string name="post_request_btn">نشر الطلب</string>
     <string name="fulfill_request_btn">تلبية الطلب الآن</string>
     <string name="urgency_instruction"> يرجى تحديد حالة الطوارئ بناءً على تشخيص الطبيب المعالج.</string>
+    <string name="governorate">المحافظة</string>
+    <string name="lastDonationDate">غير متوفر</string>
+
+    <string-array name="governorates_array">
+        <item>القاهرة</item>
+        <item>الجيزة</item>
+        <item>الإسكندرية</item>
+        <item>الدقهلية</item>
+        <item>البحر الأحمر</item>
+        <item>البحيرة</item>
+        <item>الفيوم</item>
+        <item>الغربية</item>
+        <item>الإسماعيلية</item>
+        <item>المنوفية</item>
+        <item>المنيا</item>
+        <item>القليوبية</item>
+        <item>الوادي الجديد</item>
+        <item>السويس</item>
+        <item>أسوان</item>
+        <item>أسيوط</item>
+        <item>بني سويف</item>
+        <item>بورسعيد</item>
+        <item>دمياط</item>
+        <item>الشرقية</item>
+        <item>جنوب سيناء</item>
+        <item>كفر الشيخ</item>
+        <item>مطروح</item>
+        <item>الأقصر</item>
+        <item>قنا</item>
+        <item>شمال سيناء</item>
+        <item>سوهاج</item>
+    </string-array>
+
+    <!-- شاشة الملف الشخصي -->
+    <string name="loading">جاري التحميل...</string>
+    <string name="not_available">غير متوفر</string>
+    <string name="badge_expert">خبير</string>
+    <string name="badge_life_saver">منقذ حياة</string>
+    <string name="badge_first_year">السنة الأولى</string>
+
+    <string name="total_donation">إجمالي التبرعات</string>
+    <string name="last_donate">آخر تبرع</string>
+    <string name="blood_type_text">فصيلة الدم</string>
+    <string name="badges">الأوسمة</string>
+    <string name="donations">التبرعات</string>
+    <string name="settings">الإعدادات</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="are_you_sure_you_want_to_logout">هل أنت متأكد من تسجيل الخروج؟</string>
+    <string name="cancel">إلغاء</string>
+    <string name="choose_language">اختر اللغة</string>
+    <string name="lang_login">English</string>
+
+    <string name="upcoming_appointment">الموعد القادم</string>
+    <string name="you_have_days_left_until_your_next_donation">متبقي %1$d يومًا حتى موعد تبرعك القادم</string>
+
 
 
 </resources>

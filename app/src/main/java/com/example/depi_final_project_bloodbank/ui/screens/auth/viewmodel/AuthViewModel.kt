@@ -116,8 +116,8 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun completeProfile(uid: String, name: String, phone: String, bloodType: String) {
-        if (name.isBlank() || phone.isBlank() || bloodType.isBlank()) {
+    fun completeProfile(uid: String, name: String, phone: String, bloodType: String, governorate: String) {
+        if (name.isBlank() || phone.isBlank() || bloodType.isBlank() || governorate.isBlank()) { // ضفنا شرط المحافظة
             _authState.value = AuthState.Error(messageId = R.string.error_empty_fields)
             return
         }
@@ -125,17 +125,18 @@ class AuthViewModel : ViewModel() {
         _authState.value = AuthState.Loading
 
         // التعديل هنا: ضفنا الإيميل والـ uid عشان الملف يتكريت كامل
-        val userMap = hashMapOf(
-            "uid" to uid,
-            "name" to name.trim(),
-            "phone" to phone.trim(),
-            "bloodType" to bloodType,
-            "email" to (auth.currentUser?.email ?: "") // بنجيب إيميل جوجل ونحفظه برضه
+        val user = User(
+            uid = uid,
+            name = name.trim(),
+            email = auth.currentUser?.email ?: "",
+            phone = phone.trim(),
+            bloodType = bloodType,
+            governorate = governorate
         )
 
         // التعديل الأهم: استخدمنا set مع SetOptions.merge()
         // عشان لو الملف مش موجود يكريته، ولو موجود يضيف عليه
-        firestore.collection("Users").document(uid).set(userMap, SetOptions.merge())
+        firestore.collection("Users").document(uid).set(user)
             .addOnSuccessListener {
                 _authState.value = AuthState.Success
             }
@@ -148,8 +149,8 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun register(name: String, email: String, phone: String, pass: String, bloodType: String) {
-        if (name.isBlank() || email.isBlank() || phone.isBlank() || pass.isBlank() || bloodType.isBlank()) {
+    fun register(name: String, email: String, phone: String, pass: String, bloodType: String, governorate: String) {
+        if (name.isBlank() || email.isBlank() || phone.isBlank() || pass.isBlank() || bloodType.isBlank() || governorate.isBlank()) { // ضفنا شرط المحافظة
             _authState.value = AuthState.Error(messageId = R.string.error_empty_fields)
             return
         }
@@ -163,7 +164,8 @@ class AuthViewModel : ViewModel() {
                         name = name.trim(),
                         email = email.trim(),
                         phone = phone.trim(),
-                        bloodType = bloodType
+                        bloodType = bloodType,
+                        governorate = governorate
                     )
 
                     firestore.collection("Users").document(uid).set(user)

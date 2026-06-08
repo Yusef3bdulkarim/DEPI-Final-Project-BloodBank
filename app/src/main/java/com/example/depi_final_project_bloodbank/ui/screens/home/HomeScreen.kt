@@ -27,7 +27,7 @@ import com.example.depi_final_project_bloodbank.ui.screens.home.components.Heade
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.SectionTitle
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLogoBar
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.UrgentAppealsList
-// استيراد الشيت من مكانه الصحيح اللي بعتهولي في الكود
+import com.example.depi_final_project_bloodbank.ui.screens.home.viewmodel.HomeViewModel
 import com.example.depi_final_project_bloodbank.ui.screens.orders.components.RequestDetailsBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +41,7 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    // ✅ الاعتماد على متغيّر واحد فقط للإظهار والإغلاق لمنع الـ Conflict والشاشة البيضاء
+    // الاعتماد على متغيّر واحد فقط للإظهار والإغلاق لمنع الـ Conflict والشاشة البيضاء
     var selectedRequest by remember { mutableStateOf<BloodRequest?>(null) }
 
     if (state.isLoading) {
@@ -95,7 +95,7 @@ fun HomeScreen(
                     UrgentAppealsList(
                         requests = state.filteredRequests,
                         onViewRequest = { request ->
-                            // ✅ بمجرد الضغط، بنسجل الطلب المختار والشيت هيفتح فوراً بشكل سليم
+                            // بمجرد الضغط، بنسجل الطلب المختار والشيت هيفتح فوراً بشكل سليم
                             selectedRequest = request
                             onViewRequest(request)
                         }
@@ -105,7 +105,7 @@ fun HomeScreen(
         }
     }
 
-    // ✅ استدعاء الشيت بنفس أسلوب صفحة الأوردرات بالملي خارج الـ PullToRefresh
+    // استدعاء الشيت بنفس أسلوب صفحة الأوردرات بالملي خارج الـ PullToRefresh
     if (selectedRequest != null) {
         RequestDetailsBottomSheet(
             request = selectedRequest!!,
