@@ -3,6 +3,7 @@ package com.example.depi_final_project_bloodbank.ui.screens.notification
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,94 +27,55 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.depi_final_project_bloodbank.domain.enums.NotificationType
-import com.example.depi_final_project_bloodbank.domain.model.Notification
 import com.example.depi_final_project_bloodbank.ui.screens.notification.components.NotificationCard
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.compositeOver
 
-val notifications = listOf(
-
-    Notification(
-        id = "notif_1",
-        userId = "user_1",
-        type = NotificationType.URGENT_REQUEST,
-        title = "Urgent Blood Request",
-        message = "Al Salam Hospital urgently needs O+ blood donors in Sohag.",
-        isRead = false,
-        relatedId = "request_101",
-        createdAt = System.currentTimeMillis()
-    ),
-
-    Notification(
-        id = "notif_2",
-        userId = "user_1",
-        type = NotificationType.DONATION_SUCCESS,
-        title = "Donation Confirmed",
-        message = "Thank you for completing your blood donation.",
-        isRead = true,
-        relatedId = "donation_201",
-        createdAt = System.currentTimeMillis() - 2 * 60 * 60 * 1000
-    ),
-
-    Notification(
-        id = "notif_3",
-        userId = "user_1",
-        type = NotificationType.REMINDER,
-        title = "Donation Reminder",
-        message = "You are now eligible to donate blood again.",
-        isRead = false,
-        relatedId = "",
-        createdAt = System.currentTimeMillis() - 24 * 60 * 60 * 1000
-    ),
-
-    Notification(
-        id = "notif_4",
-        userId = "user_1",
-        type = NotificationType.URGENT_REQUEST,
-        title = "New Emergency Request",
-        message = "A+ blood is needed at Sohag University Hospital.",
-        isRead = false,
-        relatedId = "request_102",
-        createdAt = System.currentTimeMillis() - 30 * 60 * 1000
-    ),
-
-    Notification(
-        id = "notif_5",
-        userId = "user_1",
-        type = NotificationType.DONATION_SUCCESS,
-        title = "Request Completed",
-        message = "The blood request you contributed to has been fulfilled.",
-        isRead = true,
-        relatedId = "request_103",
-        createdAt = System.currentTimeMillis() - 3 * 60 * 60 * 1000
-    )
-)
 
 @Composable
 fun NotificationScreen(modifier: Modifier = Modifier) {
+    val vm: NotificationViewModel = viewModel()
+    val state by vm.uiState.collectAsState()
+    val count = state.unreadCount
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
         NotificationsTopBar(onBackClick = {})
-        NotificationsHeader(count = notifications.count { !it.isRead }, onMarkAllRead = {})
-        LazyColumn() {
-            items(notifications) { notification ->
-                NotificationCard(notification, onClick = {
-                    //لما يدوس علي الاشعار ايه الي حصل
-                    when (notification.type) {
-                        NotificationType.URGENT_REQUEST -> {
-                            // افتح تفاصيل الطلب
-                        }
+        NotificationsHeader(count = count, onMarkAllRead = { vm.markAllRead() })
+        if(state.isLoading){
+            CircularProgressIndicator()
+        }else {
+            LazyColumn(
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                items(state.notifications) { notification ->
+                    val cardColor =
+                        if (notification.isRead) MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+                            .compositeOver(MaterialTheme.colorScheme.background)
+                        else MaterialTheme.colorScheme.surface
+                    NotificationCard(notification, cardColor = cardColor, onClick = {
+                        //لما يدوس علي الاشعار ايه الي حصل
+                        //اول م يدوس بتبقي read و بعد كدا بنشوف هيحصل ايه
+                        vm.markAsRead(notification.id)
+                        when (notification.type) {
+                            NotificationType.URGENT_REQUEST -> {
+                                // افتح تفاصيل الطلب
+                            }
 
-                        NotificationType.DONATION_SUCCESS -> {
-                            // افتح تفاصيل التبرع
-                        }
+                            NotificationType.DONATION_SUCCESS -> {
+                                // افتح تفاصيل التبرع
+                            }
 
-                        NotificationType.REMINDER -> {
-                            // افتح صفحة التبرعات أو البروفايل
+                            NotificationType.REMINDER -> {
+                                // افتح صفحة التبرعات أو البروفايل
+                            }
                         }
-                    }
-                })
+                    })
+                }
             }
         }
     }

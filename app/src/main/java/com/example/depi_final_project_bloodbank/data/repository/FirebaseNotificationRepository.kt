@@ -63,7 +63,7 @@ class FirebaseNotificationRepository : NotificationRepository {
     )
 
 
-    override suspend fun getNotification(): List<Notification>  {
+    override suspend fun getNotifications(): List<Notification>  {
         return notifications
     }
 

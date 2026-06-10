@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class NotificationViewModel : ViewModel() {
-    private val repository : NotificationRepository = FirebaseNotificationRepository()
+    private val repository: NotificationRepository = FirebaseNotificationRepository()
     private val _uiState = MutableStateFlow(NotificationUiState())
 
     val uiState = _uiState.asStateFlow()
@@ -18,22 +18,25 @@ class NotificationViewModel : ViewModel() {
         loadNotifications()
     }
 
-    private fun loadNotifications(){
+    private fun loadNotifications() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            val notifications = repository.getNotification()
+            val notifications = repository.getNotifications()
             _uiState.value = _uiState.value.copy(
                 notifications = notifications,
-                isLoading = false)
+                isLoading = false
+            )
         }
     }
-    private fun markAsRead(notificationId: String){
+
+    fun markAsRead(notificationId: String) {
         viewModelScope.launch {
             repository.markAsRead(notificationId)
             loadNotifications()
         }
     }
-    private fun marlAllRead(){
+
+    fun markAllRead() {
         viewModelScope.launch {
             repository.markAllAsRead()
             loadNotifications()

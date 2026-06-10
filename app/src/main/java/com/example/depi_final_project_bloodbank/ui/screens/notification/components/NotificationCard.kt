@@ -21,7 +21,7 @@ import com.example.depi_final_project_bloodbank.domain.model.Notification
 import com.example.depi_final_project_bloodbank.utils.toTimeAgo
 
 @Composable
-fun NotificationCard(notification: Notification, onClick: () -> Unit) {
+fun NotificationCard(notification: Notification,cardColor : Color,onClick: () -> Unit) {
     val lineColor = when (notification.type) {
         NotificationType.URGENT_REQUEST -> MaterialTheme.colorScheme.primaryContainer
         NotificationType.DONATION_SUCCESS ->Color(0xFFC7F5C8)
@@ -34,15 +34,13 @@ fun NotificationCard(notification: Notification, onClick: () -> Unit) {
             .clickable(
                 onClick = onClick,
             ),
-        colors = CardDefaults.cardColors(
-            containerColor =
-                MaterialTheme.colorScheme.surface
-        ),
+        colors = CardDefaults.cardColors(containerColor = cardColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = MaterialTheme.shapes.small
     ) {
         Row(
-            modifier = Modifier.height(IntrinsicSize.Min),
+            modifier = Modifier.height(IntrinsicSize.Min)
+                .background(cardColor),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
