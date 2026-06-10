@@ -50,6 +50,7 @@ import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthSt
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.depi_final_project_bloodbank.ui.screens.auth.components.GovernorateDropdown
 
 @Composable
 fun CompleteProfileScreen(
@@ -62,6 +63,7 @@ fun CompleteProfileScreen(
     var selectedBlood by remember { mutableStateOf("") }
     val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
     val authState by viewModel.authState.collectAsState()
+    var selectedGovernorate by remember { mutableStateOf("") }
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -98,6 +100,13 @@ fun CompleteProfileScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            GovernorateDropdown(
+                selectedGovernorate = selectedGovernorate,
+                onGovernorateSelected = { selectedGovernorate = it }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             // فصيلة الدم
             Box(modifier = Modifier
                 .fillMaxWidth()
@@ -131,19 +140,20 @@ fun CompleteProfileScreen(
 
             BloodLinkButton(
                 text = stringResource(id = R.string.save_and_continue), // "حفظ ومتابعة"
-                onClick = { viewModel.completeProfile(uid, name, phone, selectedBlood) }
+                onClick = { viewModel.completeProfile(uid, name, phone, selectedBlood,selectedGovernorate) }
             )
 
             // Handling Loading/Error/Success
             if (authState is AuthState.Loading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally), color = PrimaryRed)
             }
-            if (authState is AuthState.Error) {
-                Text(text = (authState as AuthState.Error).messageStr ?: "", color = Color.Red, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            if (authState is AuthState.Error) { val error = authState as AuthState.Error
+                val msg = error.messageId?.let { stringResource(it) } ?: error.messageStr ?: ""
+                Text(text = msg, color = Color.Red, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
             }
             if (authState is AuthState.Success) {
                 LaunchedEffect(Unit) {
-                    navController.navigate("home_screen") { popUpTo("complete_profile") { inclusive = true } }
+                    navController.navigate("home") { popUpTo("complete_profile") { inclusive = true } }
                 }
             }
         }
