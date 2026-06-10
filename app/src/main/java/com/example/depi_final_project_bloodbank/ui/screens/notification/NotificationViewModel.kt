@@ -22,6 +22,7 @@ class NotificationViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             val notifications = repository.getNotifications()
+                .sortedByDescending { it.createdAt }
             _uiState.value = _uiState.value.copy(
                 notifications = notifications,
                 isLoading = false
@@ -31,6 +32,15 @@ class NotificationViewModel : ViewModel() {
 
     fun markAsRead(notificationId: String) {
         viewModelScope.launch {
+
+            val notification =
+                _uiState.value.notifications.find {
+                    it.id == notificationId
+                }
+
+            if(notification?.isRead == true) return@launch
+
+
             repository.markAsRead(notificationId)
             loadNotifications()
         }

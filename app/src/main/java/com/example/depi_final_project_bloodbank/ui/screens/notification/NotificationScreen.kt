@@ -2,6 +2,7 @@ package com.example.depi_final_project_bloodbank.ui.screens.notification
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -45,10 +46,24 @@ fun NotificationScreen(modifier: Modifier = Modifier) {
             .fillMaxSize()
     ) {
         NotificationsTopBar(onBackClick = {})
-        NotificationsHeader(count = count, onMarkAllRead = { vm.markAllRead() })
         if(state.isLoading){
-            CircularProgressIndicator()
-        }else {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                CircularProgressIndicator()
+            }
+        }
+        else if(state.notifications.isEmpty()){
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Text("No notifications yet")
+            }
+        }
+        else {
+            NotificationsHeader(count = count, onMarkAllRead = { vm.markAllRead() })
             LazyColumn(
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
