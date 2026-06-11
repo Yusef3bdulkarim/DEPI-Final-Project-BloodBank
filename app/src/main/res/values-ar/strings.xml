@@ -189,5 +189,9 @@
     <string name="you_have_days_left_until_your_next_donation">متبقي %1$d يومًا حتى موعد تبرعك القادم</string>
 
 
-
+    <string name="select_governorate">اختر المحافظة</string>
+    <string name="select_city">اختر المركز/المدينة</string>
+    <string name="fetching_location">جاري سحب الإحداثيات...</string>
+    <string name="location_fetched_success">تم تحديد الموقع بنجاح</string>
+    <string name="fetch_gps_location">📍 تحديد موقعي الحالي (GPS)</string>
 </resources>

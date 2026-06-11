@@ -1,27 +1,22 @@
-package com.example.depi_final_project_bloodbank.data.repository
+package com.example.depi_final_project_bloodbank.domain.repository
 
+import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
-import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.Flow
 
-class RequestRepository {
-    private val firestore = FirebaseFirestore.getInstance()
-
+interface RequestRepository {
+    // --- شغل التيم (عشان شاشاتهم تفضل شغالة) ---
     fun getActiveRequests(
         onSuccess: (List<BloodRequest>) -> Unit,
         onFailure: (Exception) -> Unit
-    ) {
-        firestore.collection("Requests")
-            .whereEqualTo("status", "ACTIVE")
-            .limit(10)
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val requests = snapshot.documents.mapNotNull { doc ->
-                    doc.toObject(BloodRequest::class.java)?.copy(id = doc.id)
-                }
-                onSuccess(requests)
-            }
-            .addOnFailureListener { e ->
-                onFailure(e)
-            }
-    }
+    )
+
+    // --- الشغل بتاعك (Clean Architecture) ---
+    suspend fun createRequest(request: BloodRequest): Result<Boolean>
+    fun getRequestsByCity(city: String): Flow<List<BloodRequest>>
+    suspend fun getRequestById(id: String): Result<BloodRequest?>
+    suspend fun updateRequestStatus(id: String, status: RequestStatus): Result<Boolean>
+    suspend fun incrementReservedUnits(id: String): Result<Boolean>
+    suspend fun incrementConfirmedUnits(id: String): Result<Boolean>
+    fun getAllRequests(): Flow<List<BloodRequest>>
 }
