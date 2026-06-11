@@ -50,7 +50,7 @@ import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthSt
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.depi_final_project_bloodbank.ui.screens.auth.components.GovernorateDropdown
+import com.example.depi_final_project_bloodbank.ui.common_components.GovernorateCitySelector
 
 @Composable
 fun CompleteProfileScreen(
@@ -64,7 +64,7 @@ fun CompleteProfileScreen(
     val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
     val authState by viewModel.authState.collectAsState()
     var selectedGovernorate by remember { mutableStateOf("") }
-
+    var selectedCity by remember { mutableStateOf("") }
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Color.White)) {
@@ -100,9 +100,16 @@ fun CompleteProfileScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            GovernorateDropdown(
+            GovernorateCitySelector(
                 selectedGovernorate = selectedGovernorate,
-                onGovernorateSelected = { selectedGovernorate = it }
+                selectedCity = selectedCity,
+                onGovernorateSelected = { gov ->
+                    selectedGovernorate = gov
+                    selectedCity = ""
+                },
+                onCitySelected = { city ->
+                    selectedCity = city
+                }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -140,7 +147,7 @@ fun CompleteProfileScreen(
 
             BloodLinkButton(
                 text = stringResource(id = R.string.save_and_continue), // "حفظ ومتابعة"
-                onClick = { viewModel.completeProfile(uid, name, phone, selectedBlood,selectedGovernorate) }
+                onClick = { viewModel.completeProfile(uid, name, phone, selectedBlood,selectedGovernorate,selectedCity) }
             )
 
             // Handling Loading/Error/Success
