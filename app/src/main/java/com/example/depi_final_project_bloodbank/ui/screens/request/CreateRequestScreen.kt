@@ -25,8 +25,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.R
-import com.example.depi_final_project_bloodbank.domain.enums.EgyptLocations
 import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
+import com.example.depi_final_project_bloodbank.ui.common_components.GovernorateCitySelector
 import com.google.android.gms.location.LocationServices
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -222,10 +222,6 @@ fun CreateRequestScreen(
                 }
             }
 
-            var expandedGov by remember { mutableStateOf(false) }
-            var expandedCity by remember { mutableStateOf(false) }
-            val availableCities = if (request.governorate.isNotEmpty()) EgyptLocations.governoratesMap[request.governorate] ?: emptyList() else emptyList()
-
             Row(
                 modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -270,68 +266,17 @@ fun CreateRequestScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
 
-                    ExposedDropdownMenuBox(
-                        expanded = expandedGov,
-                        onExpandedChange = { expandedGov = !expandedGov }
-                    ) {
-                        OutlinedTextField(
-                            value = request.governorate,
-                            onValueChange = {},
-                            readOnly = true,
-                            placeholder = { Text(stringResource(R.string.select_governorate), color = Color.Gray) },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedGov) },
-                            modifier = Modifier.fillMaxWidth().menuAnchor(),
-                            shape = shapes.medium,
-                            colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
-                        )
-                        ExposedDropdownMenu(
-                            expanded = expandedGov,
-                            onDismissRequest = { expandedGov = false }
-                        ) {
-                            EgyptLocations.allGovernorates.forEach { gov ->
-                                DropdownMenuItem(
-                                    text = { Text(gov) },
-                                    onClick = {
-                                        viewModel.updateRequest(request.copy(governorate = gov, city = ""))
-                                        expandedGov = false
-                                    }
-                                )
-                            }
+                    // استدعاء الكومبوننت المنفصل بدل كود الدروب داون الزحمة
+                    GovernorateCitySelector(
+                        selectedGovernorate = request.governorate,
+                        selectedCity = request.city,
+                        onGovernorateSelected = { gov ->
+                            viewModel.updateRequest(request.copy(governorate = gov, city = ""))
+                        },
+                        onCitySelected = { city ->
+                            viewModel.updateRequest(request.copy(city = city))
                         }
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    ExposedDropdownMenuBox(
-                        expanded = expandedCity,
-                        onExpandedChange = { if (request.governorate.isNotEmpty()) expandedCity = !expandedCity }
-                    ) {
-                        OutlinedTextField(
-                            value = request.city,
-                            onValueChange = {},
-                            readOnly = true,
-                            placeholder = { Text(stringResource(R.string.select_city), color = Color.Gray) },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCity) },
-                            modifier = Modifier.fillMaxWidth().menuAnchor(),
-                            shape = shapes.medium,
-                            colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray),
-                            enabled = request.governorate.isNotEmpty()
-                        )
-                        ExposedDropdownMenu(
-                            expanded = expandedCity,
-                            onDismissRequest = { expandedCity = false }
-                        ) {
-                            availableCities.forEach { city ->
-                                DropdownMenuItem(
-                                    text = { Text(city) },
-                                    onClick = {
-                                        viewModel.updateRequest(request.copy(city = city))
-                                        expandedCity = false
-                                    }
-                                )
-                            }
-                        }
-                    }
+                    )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
