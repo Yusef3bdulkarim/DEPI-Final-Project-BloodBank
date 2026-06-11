@@ -27,6 +27,24 @@ class RequestRepositoryImpl(
             Result.failure(e)
         }
     }
+    override fun getActiveRequests(
+        onSuccess: (List<com.example.depi_final_project_bloodbank.domain.model.BloodRequest>) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        requestsCollection
+            .whereEqualTo("status", "ACTIVE")
+            .limit(10)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val requests = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(com.example.depi_final_project_bloodbank.domain.model.BloodRequest::class.java)?.copy(id = doc.id)
+                }
+                onSuccess(requests)
+            }
+            .addOnFailureListener { e ->
+                onFailure(e)
+            }
+    }
 
     // الدالة الجديدة لجلب كل الطلبات وتحديثها لحظياً
     override fun getAllRequests(): Flow<List<BloodRequest>> = callbackFlow {
