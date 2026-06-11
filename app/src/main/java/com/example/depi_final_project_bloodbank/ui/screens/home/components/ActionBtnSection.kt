@@ -14,7 +14,8 @@ import com.example.depi_final_project_bloodbank.ui.common_components.BloodAction
 
 @Composable
 fun ActionButtonSection(
-    onRequestBloodClick: () -> Unit
+    onRequestBloodClick: () -> Unit,
+    onDonateNowClick: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -23,10 +24,10 @@ fun ActionButtonSection(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            BloodActionBtn(text = "REQUEST BLOOD ", isPrimary = false, onClick = {onRequestBloodClick()})
+            BloodActionBtn(text = "REQUEST BLOOD ", isPrimary = false, onClick = { onRequestBloodClick() })
         }
         Box(modifier = Modifier.weight(1f)) {
-            BloodActionBtn(text = "DONATE NOW", isPrimary = true, onClick = {})
+            BloodActionBtn(text = "DONATE NOW", isPrimary = true, onClick = { onDonateNowClick() })
         }
     }
 }
