@@ -249,7 +249,7 @@ fun ProfileScreen(
                             showLogoutDialog = false
                         }
                     ) {
-                        Text(stringResource(R.string.cancel))
+                        Text(stringResource(R.string.cancel_btn))
                     }
                 }
             )

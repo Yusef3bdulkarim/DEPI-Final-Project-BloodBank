@@ -2,7 +2,7 @@ package com.example.depi_final_project_bloodbank.ui.screens.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.depi_final_project_bloodbank.data.repository.RequestRepository
+import com.example.depi_final_project_bloodbank.data.repository.RequestRepositoryImpl
 import com.example.depi_final_project_bloodbank.data.repository.UserRepository
 import com.example.depi_final_project_bloodbank.utils.seedBloodRequests
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,7 +60,7 @@ import java.util.Locale
 class HomeViewModel : ViewModel() {
 
     private val userRepository = UserRepository()
-    private val requestRepository = RequestRepository()
+    private val requestRepository = RequestRepositoryImpl()
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -124,10 +124,11 @@ class HomeViewModel : ViewModel() {
 
     private fun loadRequests() {
         requestRepository.getActiveRequests(
-            onSuccess = { requests ->
+            // تم تحديد نوع البيانات هنا صراحة لحل المشكلة
+            onSuccess = { requests: List<com.example.depi_final_project_bloodbank.domain.model.BloodRequest> ->
                 _uiState.update { it.copy(isLoading = false, isRefreshing = false, urgentRequests = requests) }
             },
-            onFailure = { e ->
+            onFailure = { e: Exception ->
                 _uiState.update { it.copy(isLoading = false, isRefreshing = false, error = e.message) }
             }
         )
