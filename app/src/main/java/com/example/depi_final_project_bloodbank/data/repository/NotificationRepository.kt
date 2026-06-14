@@ -1,5 +1,11 @@
 package com.example.depi_final_project_bloodbank.data.repository
 
-class NotificationRepository {
-    // TODO: Notifications Collection operations
+import com.example.depi_final_project_bloodbank.domain.model.Notification
+
+interface NotificationRepository {
+    suspend fun getNotifications(): List<Notification>
+
+    suspend fun markAsRead(notificationId: String)
+
+    suspend fun markAllAsRead()
 }

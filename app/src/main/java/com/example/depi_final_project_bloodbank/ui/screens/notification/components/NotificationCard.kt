@@ -21,12 +21,15 @@ import com.example.depi_final_project_bloodbank.domain.model.Notification
 import com.example.depi_final_project_bloodbank.utils.toTimeAgo
 
 @Composable
-fun NotificationCard(notification: Notification, onClick: () -> Unit) {
+
+fun NotificationCard(notification: Notification,cardColor : Color,onClick: () -> Unit) {
+    val contentAlpha = if (notification.isRead) 0.5f else 1f
     val lineColor = when (notification.type) {
-        NotificationType.URGENT_REQUEST -> MaterialTheme.colorScheme.primaryContainer
-        NotificationType.DONATION_SUCCESS ->Color(0xFFC7F5C8)
-        NotificationType.REMINDER ->Color(0xFFFCE2BD)
+        NotificationType.URGENT_REQUEST -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = contentAlpha)
+        NotificationType.DONATION_SUCCESS ->Color(0xFFC7F5C8).copy(alpha = contentAlpha)
+        NotificationType.REMINDER ->Color(0xFFFCE2BD).copy(alpha = contentAlpha)
     }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,15 +37,13 @@ fun NotificationCard(notification: Notification, onClick: () -> Unit) {
             .clickable(
                 onClick = onClick,
             ),
-        colors = CardDefaults.cardColors(
-            containerColor =
-                MaterialTheme.colorScheme.surface
-        ),
+        colors = CardDefaults.cardColors(containerColor = cardColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = MaterialTheme.shapes.small
     ) {
         Row(
-            modifier = Modifier.height(IntrinsicSize.Min),
+            modifier = Modifier.height(IntrinsicSize.Min)
+                .background(cardColor),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
@@ -65,7 +66,7 @@ fun NotificationCard(notification: Notification, onClick: () -> Unit) {
                         modifier = Modifier.weight(1f),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        NotificationIcon(type = notification.type)
+                        NotificationIcon(type = notification.type , notification.isRead)
                         Column(
                             horizontalAlignment = Alignment.Start,
                             modifier = Modifier
@@ -75,13 +76,13 @@ fun NotificationCard(notification: Notification, onClick: () -> Unit) {
                             Text(
                                 text = notification.title,
                                 style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.secondary
+                                color = MaterialTheme.colorScheme.secondary.copy(alpha = contentAlpha)
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = notification.message,
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = contentAlpha)
                             )
                         }
 
@@ -89,7 +90,7 @@ fun NotificationCard(notification: Notification, onClick: () -> Unit) {
                     Text(
                         text = notification.createdAt.toTimeAgo(),
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = if(notification.isRead) 0.3f else 0.7f)
                     )
                 }
 
@@ -99,24 +100,25 @@ fun NotificationCard(notification: Notification, onClick: () -> Unit) {
 }
 
 @Composable
-fun NotificationIcon(type: NotificationType) {
+fun NotificationIcon(type: NotificationType , isRead: Boolean) {
+    val contentAlpha = if (isRead) 0.5f else 1f
     val (icon, bgColor, iconColor) = when (type) {
         NotificationType.URGENT_REQUEST -> Triple(
             Icons.Default.Favorite,
-            MaterialTheme.colorScheme.primaryContainer,
-            MaterialTheme.colorScheme.primary
+            MaterialTheme.colorScheme.primaryContainer.copy(alpha = contentAlpha),
+            MaterialTheme.colorScheme.primary.copy(alpha = contentAlpha)
         )
 
         NotificationType.DONATION_SUCCESS -> Triple(
             Icons.Default.CheckCircle,
-            Color(0xFFC7F5C8),
-            MaterialTheme.colorScheme.tertiary
+            Color(0xFFC7F5C8).copy(alpha = contentAlpha),
+            MaterialTheme.colorScheme.tertiary.copy(alpha = contentAlpha)
         )
 
         NotificationType.REMINDER -> Triple(
             Icons.Default.DateRange,
-            Color(0xFFFCE2BD),
-            Color(0xFFFF9800),
+            Color(0xFFFCE2BD).copy(alpha = contentAlpha),
+            Color(0xFFFF9800).copy(alpha = contentAlpha),
         )
     }
 
