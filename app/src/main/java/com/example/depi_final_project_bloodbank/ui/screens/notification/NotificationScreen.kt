@@ -34,10 +34,11 @@ import com.example.depi_final_project_bloodbank.ui.screens.notification.componen
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.compositeOver
+import androidx.navigation.NavController
 
 
 @Composable
-fun NotificationScreen(modifier: Modifier = Modifier) {
+fun NotificationScreen(modifier: Modifier = Modifier ,navController: NavController) {
     val vm: NotificationViewModel = viewModel()
     val state by vm.uiState.collectAsState()
     val count = state.unreadCount
@@ -79,10 +80,16 @@ fun NotificationScreen(modifier: Modifier = Modifier) {
                         when (notification.type) {
                             NotificationType.URGENT_REQUEST -> {
                                 // افتح تفاصيل الطلب
+                                navController.navigate("requests"){
+                                    launchSingleTop = true
+                                }
                             }
 
                             NotificationType.DONATION_SUCCESS -> {
                                 // افتح تفاصيل التبرع
+                                navController.navigate("requests"){
+                                    launchSingleTop = true
+                                }
                             }
 
                             NotificationType.REMINDER -> {
