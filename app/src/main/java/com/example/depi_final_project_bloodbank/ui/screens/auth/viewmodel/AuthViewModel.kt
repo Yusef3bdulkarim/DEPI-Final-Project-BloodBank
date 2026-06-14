@@ -116,8 +116,8 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun completeProfile(uid: String, name: String, phone: String, bloodType: String, governorate: String) {
-        if (name.isBlank() || phone.isBlank() || bloodType.isBlank() || governorate.isBlank()) { // ضفنا شرط المحافظة
+    fun completeProfile(uid: String, name: String, phone: String, bloodType: String, governorate: String, city: String) { // ضفنا city
+        if (name.isBlank() || phone.isBlank() || bloodType.isBlank() || governorate.isBlank() || city.isBlank()) { // ضفنا شرط city
             _authState.value = AuthState.Error(messageId = R.string.error_empty_fields)
             return
         }
@@ -131,7 +131,8 @@ class AuthViewModel : ViewModel() {
             email = auth.currentUser?.email ?: "",
             phone = phone.trim(),
             bloodType = bloodType,
-            governorate = governorate
+            governorate = governorate,
+            city = city
         )
 
         // التعديل الأهم: استخدمنا set مع SetOptions.merge()
@@ -149,8 +150,8 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun register(name: String, email: String, phone: String, pass: String, bloodType: String, governorate: String) {
-        if (name.isBlank() || email.isBlank() || phone.isBlank() || pass.isBlank() || bloodType.isBlank() || governorate.isBlank()) { // ضفنا شرط المحافظة
+    fun register(name: String, email: String, phone: String, pass: String, bloodType: String, governorate: String, city: String) { // ضفنا city
+        if (name.isBlank() || email.isBlank() || phone.isBlank() || pass.isBlank() || bloodType.isBlank() || governorate.isBlank() || city.isBlank()) { // ضفنا شرط city
             _authState.value = AuthState.Error(messageId = R.string.error_empty_fields)
             return
         }
@@ -165,7 +166,8 @@ class AuthViewModel : ViewModel() {
                         email = email.trim(),
                         phone = phone.trim(),
                         bloodType = bloodType,
-                        governorate = governorate
+                        governorate = governorate,
+                        city = city
                     )
 
                     firestore.collection("Users").document(uid).set(user)
