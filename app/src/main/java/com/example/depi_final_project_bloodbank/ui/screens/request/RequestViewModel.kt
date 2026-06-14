@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
-import com.example.depi_final_project_bloodbank.domain.repository.RequestRepository
+import com.example.depi_final_project_bloodbank.data.repository.RequestRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource

@@ -202,5 +202,6 @@
     <string name="lang_login">عربي</string>
     <string name="upcoming_appointment">Upcoming appointment</string>
     <string name="you_have_days_left_until_your_next_donation">You have %1$d days left until your next donation</string>
+    <string name="default_web_client_id">id</string>
 
 </resources>

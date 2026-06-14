@@ -1,7 +1,9 @@
 package com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.depi_final_project_bloodbank.R
+import com.example.depi_final_project_bloodbank.data.repository.UserRepository
 import com.example.depi_final_project_bloodbank.domain.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import kotlinx.coroutines.launch
 
 sealed class AuthState {
     object Idle : AuthState()
@@ -25,6 +28,8 @@ sealed class AuthState {
 
 
 class AuthViewModel : ViewModel() {
+    private val repository = UserRepository()
+
 
     private val auth = FirebaseAuth.getInstance()
 
@@ -53,6 +58,7 @@ class AuthViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     if (auth.currentUser?.isEmailVerified == true) {
+                        onUserAuthenticated()
                         _authState.value = AuthState.Success
                     } else {
                         _authState.value = AuthState.NeedsVerification
@@ -93,6 +99,7 @@ class AuthViewModel : ViewModel() {
                         .addOnSuccessListener { document ->
                             if (document.exists() && document.contains("bloodType")) {
                                 // مستخدم قديم وبياناته كاملة -> دخله على الشاشة الرئيسية
+                                onUserAuthenticated()
                                 _authState.value = AuthState.Success
                             } else {
                                 // مستخدم جديد (أو بياناته ناقصة) -> وديه يكمل بياناته
@@ -139,6 +146,7 @@ class AuthViewModel : ViewModel() {
         // عشان لو الملف مش موجود يكريته، ولو موجود يضيف عليه
         firestore.collection("Users").document(uid).set(user)
             .addOnSuccessListener {
+                onUserAuthenticated()
                 _authState.value = AuthState.Success
             }
             .addOnFailureListener { e ->
@@ -173,6 +181,7 @@ class AuthViewModel : ViewModel() {
                     firestore.collection("Users").document(uid).set(user)
                         .addOnSuccessListener {
                             // إرسال إيميل التفعيل وتوجيه المستخدم لشاشة التفعيل
+                            onUserAuthenticated()
                             auth.currentUser?.sendEmailVerification()
                             _authState.value = AuthState.NeedsVerification
                         }
@@ -219,9 +228,14 @@ class AuthViewModel : ViewModel() {
             }
         }
     }
-
-
-
-
+//    updateFcmToken
+    fun updateFcmToken() {
+        viewModelScope.launch {
+            repository.updateFcmToken()
+        }
+    }
+    private fun onUserAuthenticated() {
+        updateFcmToken()
+    }
 
 }

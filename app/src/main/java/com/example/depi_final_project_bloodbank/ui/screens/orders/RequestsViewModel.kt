@@ -3,7 +3,7 @@ package com.example.depi_final_project_bloodbank.ui.screens.orders
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
-import com.example.depi_final_project_bloodbank.domain.repository.RequestRepository
+import com.example.depi_final_project_bloodbank.data.repository.RequestRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
