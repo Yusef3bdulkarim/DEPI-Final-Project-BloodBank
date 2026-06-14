@@ -1,6 +1,5 @@
 package com.example.depi_final_project_bloodbank.ui.common_components
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,7 +17,9 @@ fun GovernorateCitySelector(
     selectedCity: String,
     onGovernorateSelected: (String) -> Unit,
     onCitySelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isGovError: Boolean = false,
+    isCityError: Boolean = false
 ) {
     var expandedGov by remember { mutableStateOf(false) }
     var expandedCity by remember { mutableStateOf(false) }
@@ -35,10 +36,11 @@ fun GovernorateCitySelector(
                 value = selectedGovernorate,
                 onValueChange = {},
                 readOnly = true,
-                placeholder = { Text(stringResource(R.string.select_governorate), color = Color.Gray) },
+                placeholder = { Text(stringResource(R.string.select_governorate), color = if (isGovError) MaterialTheme.colorScheme.error else Color.Gray) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedGov) },
                 modifier = Modifier.fillMaxWidth().menuAnchor(),
                 shape = shapes.medium,
+                isError = isGovError,
                 colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
             )
             ExposedDropdownMenu(
@@ -62,18 +64,20 @@ fun GovernorateCitySelector(
         // دروب داون المدينة
         ExposedDropdownMenuBox(
             expanded = expandedCity,
+            // القائمة مش هتفتح غير لو المحافظة تم اختيارها
             onExpandedChange = { if (selectedGovernorate.isNotEmpty()) expandedCity = !expandedCity }
         ) {
             OutlinedTextField(
                 value = selectedCity,
                 onValueChange = {},
                 readOnly = true,
-                placeholder = { Text(stringResource(R.string.select_city), color = Color.Gray) },
+                placeholder = { Text(stringResource(R.string.select_city), color = if (isCityError) MaterialTheme.colorScheme.error else Color.Gray) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCity) },
                 modifier = Modifier.fillMaxWidth().menuAnchor(),
                 shape = shapes.medium,
-                colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray),
-                enabled = selectedGovernorate.isNotEmpty()
+                isError = isCityError, // دلوقتي هيقبل الإيرور وينور أحمر عادي
+                colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
+                // تم مسح سطر الـ enabled عشان اللون يشتغل
             )
             ExposedDropdownMenu(
                 expanded = expandedCity,
