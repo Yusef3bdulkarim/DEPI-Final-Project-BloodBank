@@ -14,7 +14,8 @@ data class RequestsUiState(
     val selectedTab: RequestStatus = RequestStatus.ACTIVE,
     val searchQuery: String = "",
     val isLoading: Boolean = false,
-    val isRefreshing: Boolean = false
+    val isRefreshing: Boolean = false,
+    val donatingRequestIds: Set<String> = emptySet()
 ) {
     val filteredOrders: List<BloodRequest>
         get() = orders.filter { order ->
