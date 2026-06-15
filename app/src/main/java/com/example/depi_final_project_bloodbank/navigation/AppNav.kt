@@ -145,7 +145,7 @@ fun AppNav() {
             }
 
             composable("notifications") {
-                NotificationScreen()
+                NotificationScreen(navController = navController)
             }
 
             // ==========================================

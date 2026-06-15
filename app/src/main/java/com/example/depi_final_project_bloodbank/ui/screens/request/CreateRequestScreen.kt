@@ -3,6 +3,7 @@ package com.example.depi_final_project_bloodbank.ui.screens.request
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -53,6 +54,16 @@ fun CreateRequestScreen(
 
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+
+    // فحص دقيق لكل حقل لوحده
+    val hasAttemptedSubmit = error != null
+    val isBloodTypeError = hasAttemptedSubmit && (request.bloodType.isBlank() || request.bloodType == "-")
+    val isGovMissing = hasAttemptedSubmit && request.governorate.isBlank()
+    val isCityMissing = hasAttemptedSubmit && request.city.isBlank()
+    val isLocationMissing = isGovMissing || isCityMissing
+    val isHospitalError = hasAttemptedSubmit && request.hospitalName.isBlank()
+    val isPhoneRequiredError = hasAttemptedSubmit && request.contactPhone.isBlank()
+    val isPhoneInvalidError = error == "INVALID_PHONE"
 
     // Navigation Effect
     LaunchedEffect(isSuccess) {
@@ -132,10 +143,17 @@ fun CreateRequestScreen(
             var expandedBloodType by remember { mutableStateOf(false) }
             val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
 
+            // كارت فصيلة الدم
             Card(
                 shape = shapes.medium,
                 colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 4.dp)
+                    .then(
+                        if (isBloodTypeError) Modifier.border(1.5.dp, colorScheme.error, shapes.medium)
+                        else Modifier
+                    )
             ) {
                 ExposedDropdownMenuBox(
                     expanded = expandedBloodType,
@@ -159,7 +177,7 @@ fun CreateRequestScreen(
                                 .padding(horizontal = 12.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                request.bloodType,
+                                request.bloodType.ifBlank { "-" },
                                 style = typography.titleMedium,
                                 color = colorScheme.primary
                             )
@@ -179,6 +197,17 @@ fun CreateRequestScreen(
                         }
                     }
                 }
+            }
+
+            if (isBloodTypeError) {
+                Text(
+                    text = stringResource(R.string.error_required),
+                    color = colorScheme.error,
+                    style = typography.bodySmall,
+                    modifier = Modifier.padding(start = 8.dp, bottom = 16.dp, top = 4.dp)
+                )
+            } else {
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
             Card(
@@ -233,6 +262,7 @@ fun CreateRequestScreen(
                 )
             }
 
+            // زرار الـ GPS
             OutlinedButton(
                 onClick = {
                     locationPermissionLauncher.launch(
@@ -242,7 +272,10 @@ fun CreateRequestScreen(
                         )
                     )
                 },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 4.dp),
+                border = if (isLocationMissing) BorderStroke(1.5.dp, colorScheme.error) else ButtonDefaults.outlinedButtonBorder,
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = colorScheme.primary),
                 shape = shapes.medium
             ) {
@@ -262,11 +295,13 @@ fun CreateRequestScreen(
             Card(
                 shape = shapes.medium,
                 colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, bottom = 4.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
 
-                    // استدعاء الكومبوننت المنفصل بدل كود الدروب داون الزحمة
+                    // استدعاء الكومبوننت وتمرير حالات الإيرور
                     GovernorateCitySelector(
                         selectedGovernorate = request.governorate,
                         selectedCity = request.city,
@@ -275,7 +310,9 @@ fun CreateRequestScreen(
                         },
                         onCitySelected = { city ->
                             viewModel.updateRequest(request.copy(city = city))
-                        }
+                        },
+                        isGovError = isGovMissing,     // تمرير خطأ المحافظة
+                        isCityError = isCityMissing    // تمرير خطأ المدينة
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -286,12 +323,32 @@ fun CreateRequestScreen(
                         placeholder = {
                             Text(stringResource(R.string.hospital_name), style = typography.bodyLarge, color = Color.Gray)
                         },
-                        isError = error == "REQUIRED" && request.hospitalName.isBlank(),
+                        isError = isHospitalError,
                         shape = shapes.medium,
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
                     )
+
+                    if (isHospitalError) {
+                        Text(
+                            text = stringResource(R.string.error_required),
+                            color = colorScheme.error,
+                            style = typography.bodySmall,
+                            modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                        )
+                    }
                 }
+            }
+
+            if (isLocationMissing) {
+                Text(
+                    text = stringResource(R.string.error_required),
+                    color = colorScheme.error,
+                    style = typography.bodySmall,
+                    modifier = Modifier.padding(start = 8.dp, bottom = 16.dp)
+                )
+            } else {
+                Spacer(modifier = Modifier.height(12.dp))
             }
 
             Text(
@@ -360,7 +417,7 @@ fun CreateRequestScreen(
                         onValueChange = { viewModel.updateRequest(request.copy(contactName = it)) },
                         placeholder = {
                             Text(
-                                stringResource(R.string.contact_name),
+                                stringResource(R.string.contact_name) + " (اختياري)",
                                 style = typography.bodyLarge,
                                 color = Color.Gray
                             )
@@ -369,6 +426,7 @@ fun CreateRequestScreen(
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
@@ -381,7 +439,7 @@ fun CreateRequestScreen(
                                 color = Color.Gray
                             )
                         },
-                        isError = (error == "REQUIRED" && request.contactPhone.isBlank()) || error == "INVALID_PHONE",
+                        isError = isPhoneRequiredError || isPhoneInvalidError,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         trailingIcon = {
                             Icon(
@@ -393,24 +451,20 @@ fun CreateRequestScreen(
                         shape = shapes.medium, modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
                     )
+
+                    if (isPhoneRequiredError || isPhoneInvalidError) {
+                        val phoneErrorMsg = if (isPhoneInvalidError) stringResource(R.string.error_phone_invalid) else stringResource(R.string.error_required)
+                        Text(
+                            text = phoneErrorMsg,
+                            color = colorScheme.error,
+                            style = typography.bodySmall,
+                            modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                        )
+                    }
                 }
             }
 
-            if (error != null) {
-                val errorMsg =
-                    if (error == "INVALID_PHONE") stringResource(R.string.error_phone_invalid) else stringResource(
-                        R.string.error_required
-                    )
-                Text(
-                    text = errorMsg,
-                    color = colorScheme.error,
-                    style = typography.titleMedium,
-                    modifier = Modifier
-                        .padding(bottom = 12.dp)
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            }
+            Spacer(modifier = Modifier.height(8.dp))
 
             Button(
                 onClick = { viewModel.publish() },

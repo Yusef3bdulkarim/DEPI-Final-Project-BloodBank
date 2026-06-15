@@ -4,6 +4,7 @@ import com.example.depi_final_project_bloodbank.domain.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import com.google.firebase.messaging.FirebaseMessaging
 
 class UserRepository {
     private val auth = FirebaseAuth.getInstance()
@@ -18,6 +19,22 @@ class UserRepository {
         } catch (e: Exception) {
             e.printStackTrace()
             null
+        }
+    }
+
+    //    update FCM Token
+    suspend fun updateFcmToken() {
+        val uid = auth.currentUser?.uid ?: return
+
+        try {
+            val token = FirebaseMessaging.getInstance().token.await()
+
+            firestore.collection("Users")
+                .document(uid)
+                .update("fcmToken", token)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

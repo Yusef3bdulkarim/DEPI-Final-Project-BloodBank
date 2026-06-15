@@ -28,26 +28,44 @@ import com.example.depi_final_project_bloodbank.ui.screens.orders.components.Req
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RequestsScreen(vm: RequestsViewModel = viewModel()) {
+    // 1. جمع الحالة من الـ ViewModel
     val state by vm.uiState.collectAsState()
+    
+    // 2. الحالات المحلية للشاشة (UI Logic State)
     var isSearchActive by remember { mutableStateOf(false) }
     var selectedRequest by remember { mutableStateOf<BloodRequest?>(null) }
+    
+    // 3. تعريف الـ Scroll State في المستوى الأعلى لضمان استقراره عبر الـ Re-compositions
+    val listState = rememberLazyListState()
 
-    // 🎯 تم تحويل الشاشة لـ Column صافي زي النوتيفيكيشن بالظبط لتوحيد الارتفاع والحجم ومسح الـ Scaffold الداخلي
+    // 4. تصفية الطلبات باستخدام remember لضمان عدم إعادة حساب الفلترة إلا عند تغير الحالة فعلياً
+    // هذا يمنع إنشاء Instance جديد للقائمة في كل Re-composition، مما يمنع الحلقات المفرغة (Infinite Loops)
+    val filteredOrders = remember(state.orders, state.selectedTab, state.searchQuery) {
+        state.filteredOrders
+    }
+
+    // 5. التحكم في السكرول عند تغيير التاب (Side Effect محكوم ولا يسبب كتابة في قاعدة البيانات)
+    LaunchedEffect(state.selectedTab) {
+        if (filteredOrders.isNotEmpty()) {
+            listState.animateScrollToItem(0)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // الهيدر المتطابق بالسنتيمتر مع النوتيفيكيشن
+        // --- الهيدر (Header Section) ---
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* Implement Back Navigation */ }) {
+            IconButton(onClick = { /* Back navigation logic */ }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "back",
-                    tint = MaterialTheme.colorScheme.primary // لون المارون الموحد
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -73,7 +91,7 @@ fun RequestsScreen(vm: RequestsViewModel = viewModel()) {
                     Text(
                         text = "Orders List",
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary // لون المارون الموحد للتايتل
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -90,30 +108,25 @@ fun RequestsScreen(vm: RequestsViewModel = viewModel()) {
             }
         }
 
-        // الـ Tabs تحت الـ Row مباشرة بدون أي فواصل
+        // --- التابات (Filter Tabs Section) ---
         FilterTabs(
             selected = state.selectedTab,
             onSelected = { vm.setTab(it) }
         )
 
-        // سيكشن الـ List والـ PullToRefresh
+        // --- القائمة والـ PullToRefresh ---
+        // يتم العرض فقط ولا توجد أي عمليات كتابة آلية هنا
         PullToRefreshBox(
             isRefreshing = state.isRefreshing,
             onRefresh = { vm.refreshOrders() },
             modifier = Modifier.fillMaxSize()
         ) {
-            val filteredOrders = state.filteredOrders
-
             if (filteredOrders.isEmpty()) {
                 EmptyStateLayout(
                     query = state.searchQuery,
                     modifier = Modifier.fillMaxSize()
                 )
             } else {
-                val listState = rememberLazyListState()
-                LaunchedEffect(state.selectedTab) {
-                    listState.animateScrollToItem(0)
-                }
                 LazyColumn(
                     state = listState,
                     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -123,8 +136,12 @@ fun RequestsScreen(vm: RequestsViewModel = viewModel()) {
                     items(filteredOrders, key = { it.id }) { order ->
                         OrderCard(
                             order = order,
+                            isDonating = state.donatingRequestIds.contains(order.id),
                             onViewDetailsClicked = { selectedRequest = it },
-                            onDonateClicked = { /* Implementation Signal */ }
+                            onDonateClicked = {
+                                // دالة التبرع يتم استدعاؤها فقط عند ضغط المستخدم الفعلي
+                                vm.donateToRequest(order)
+                            }
                         )
                     }
                 }
@@ -132,6 +149,7 @@ fun RequestsScreen(vm: RequestsViewModel = viewModel()) {
         }
     }
 
+    // --- عرض تفاصيل الطلب (BottomSheet) ---
     if (selectedRequest != null) {
         RequestDetailsBottomSheet(
             request = selectedRequest!!,

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
-import com.example.depi_final_project_bloodbank.domain.repository.RequestRepository
+import com.example.depi_final_project_bloodbank.data.repository.RequestRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -66,23 +66,26 @@ class RequestViewModel(
             _locationSuccess.value = false
             _locationLoading.value = false
         }
-    }
-
+    } // <-- القوس ده هو اللي كان طاير ومقفل الكلاس كله!
     fun publish() {
         val current = _request.value
 
-        // التحقق من الموقع الإجباري
+        // 1. التحقق من لقط الموقع الجغرافي (الـ GPS)
         if (!_locationSuccess.value) {
             _error.value = "LOCATION_REQUIRED"
             return
         }
 
-        // التحقق من البيانات
-        if (current.hospitalName.isBlank() || current.city.isBlank() || current.contactPhone.isBlank()) {
+        // 2. التحقق من البيانات بالكامل (ضفنا الـ governorate عشان تطابق الـ UI)
+        if (current.hospitalName.isBlank() ||
+            current.governorate.isBlank() ||
+            current.city.isBlank() ||
+            current.contactPhone.isBlank()) {
             _error.value = "REQUIRED"
             return
         }
 
+        // 3. التحقق من رقم الهاتف
         val isNumeric = current.contactPhone.all { it.isDigit() }
         if (!isNumeric || current.contactPhone.length < 11) {
             _error.value = "INVALID_PHONE"
@@ -92,7 +95,13 @@ class RequestViewModel(
         _error.value = null
         _isLoading.value = true
 
-        val finalRequest = current.copy(createdAt = System.currentTimeMillis())
+        // جلب الـ UID الحالي للمستخدم عشان الحقل الفاضي في الفايربيز
+        val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+        val finalRequest = current.copy(
+            createdBy = currentUserId,
+            createdAt = System.currentTimeMillis()
+        )
 
         viewModelScope.launch {
             val result = repository.createRequest(finalRequest)
