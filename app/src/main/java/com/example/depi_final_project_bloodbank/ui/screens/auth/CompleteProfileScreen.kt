@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.CircularProgressIndicator
@@ -49,6 +50,7 @@ import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.depi_final_project_bloodbank.ui.common_components.GovernorateCitySelector
 
@@ -65,6 +67,28 @@ fun CompleteProfileScreen(
     val authState by viewModel.authState.collectAsState()
     var selectedGovernorate by remember { mutableStateOf("") }
     var selectedCity by remember { mutableStateOf("") }
+
+    var lastDonationDate by remember { mutableStateOf<Long?>(null) }
+    var lastDonationText by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    // تجهيز نافذة التقويم (Calendar)
+    val calendar = java.util.Calendar.getInstance()
+    val datePickerDialog = android.app.DatePickerDialog(
+        context,
+        { _, year, month, dayOfMonth ->
+            val selectedCalendar = java.util.Calendar.getInstance()
+            selectedCalendar.set(year, month, dayOfMonth)
+            lastDonationDate = selectedCalendar.timeInMillis
+            lastDonationText = "$dayOfMonth/${month + 1}/$year" // عرض التاريخ للمستخدم
+        },
+        calendar.get(java.util.Calendar.YEAR),
+        calendar.get(java.util.Calendar.MONTH),
+        calendar.get(java.util.Calendar.DAY_OF_MONTH)
+    )
+    // بنمنعه يختار تاريخ في المستقبل (لأنه أكيد متبرعش في المستقبل)
+    datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+
+
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Color.White)) {
@@ -143,11 +167,35 @@ fun CompleteProfileScreen(
                 }
             }
 
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // مربع تاريخ آخر تبرع
+            // مربع تاريخ آخر تبرع
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { datePickerDialog.show() }
+            ) {
+                BloodLinkTextField(
+                    value = if (lastDonationText.isEmpty()) stringResource(id = R.string.select_date_placeholder) else lastDonationText,
+                    onValueChange = {}, // مش بيعمل حاجة عشان هنغيره من التقويم بس
+                    label = stringResource(id = R.string.last_donation_date_label),
+                    leadingIcon = Icons.Default.DateRange
+                )
+                // طبقة شفافة عشان نمنع الكيبورد إنه يفتح لما يضغط عليه
+                Spacer(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(Color.Transparent)
+                        .clickable { datePickerDialog.show() }
+                )
+            }
+
             Spacer(modifier = Modifier.height(40.dp))
 
             BloodLinkButton(
                 text = stringResource(id = R.string.save_and_continue), // "حفظ ومتابعة"
-                onClick = { viewModel.completeProfile(uid, name, phone, selectedBlood,selectedGovernorate,selectedCity) }
+                onClick = { viewModel.completeProfile(uid, name, phone, selectedBlood,selectedGovernorate,selectedCity,lastDonationDate) }
             )
 
             // Handling Loading/Error/Success

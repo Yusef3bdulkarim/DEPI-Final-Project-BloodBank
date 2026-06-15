@@ -194,4 +194,8 @@
     <string name="fetching_location">جاري سحب الإحداثيات...</string>
     <string name="location_fetched_success">تم تحديد الموقع بنجاح</string>
     <string name="fetch_gps_location">📍 تحديد موقعي الحالي (GPS)</string>
+
+
+    <string name="last_donation_date_label">تاريخ آخر تبرع</string>
+    <string name="select_date_placeholder">اختر التاريخ</string>
 </resources>

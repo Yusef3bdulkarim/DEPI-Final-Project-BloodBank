@@ -203,4 +203,7 @@
     <string name="upcoming_appointment">Upcoming appointment</string>
     <string name="you_have_days_left_until_your_next_donation">You have %1$d days left until your next donation</string>
 
+
+    <string name="last_donation_date_label">Last Donation Date</string>
+    <string name="select_date_placeholder">Select Date</string>
 </resources>
