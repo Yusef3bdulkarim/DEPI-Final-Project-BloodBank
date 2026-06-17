@@ -79,7 +79,7 @@ fun CreateRequestScreen(
         val isGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
                 permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
         if (isGranted) {
-            viewModel.fetchCurrentLocation(fusedLocationClient)
+            viewModel.fetchCurrentLocation(context,fusedLocationClient)
         }
     }
 
