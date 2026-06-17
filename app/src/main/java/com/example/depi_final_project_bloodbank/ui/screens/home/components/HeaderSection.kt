@@ -41,7 +41,7 @@ fun HeaderSection(name: String, type: String) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(1.dp))
+            Spacer(modifier = Modifier.height(1 .dp))
             Text(
                 text = "$name 👋",
                 style = MaterialTheme.typography.titleLarge,
