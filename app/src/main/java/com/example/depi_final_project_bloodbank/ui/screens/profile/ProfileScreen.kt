@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource // استيراد ضروري
@@ -203,6 +204,7 @@ fun ProfileScreen(
         if (showLogoutDialog) {
 
             AlertDialog(
+                containerColor = Color.White,
                 onDismissRequest = {
                     showLogoutDialog = false
                 },
@@ -260,6 +262,7 @@ fun ProfileScreen(
         if (showLanguageDialog) {
 
             AlertDialog(
+                containerColor = Color.White,
                 onDismissRequest = {
                     showLanguageDialog = false
                 },
