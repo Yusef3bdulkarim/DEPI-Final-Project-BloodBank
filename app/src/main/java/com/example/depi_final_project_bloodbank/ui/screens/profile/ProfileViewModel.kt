@@ -2,6 +2,7 @@ package com.example.depi_final_project_bloodbank.ui.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.data.repository.UserRepository
 import com.example.depi_final_project_bloodbank.data.repository.DonationRepository // 1. زيادة سطر الـ Import ده
 import com.google.firebase.auth.FirebaseAuth // 2. زيادة سطر الـ Import ده
@@ -30,7 +31,7 @@ class ProfileViewModel : ViewModel() {
             if (user != null) {
                 _uiState.value = _uiState.value.copy(
                     name = user.name,
-                    location = user.governorate,
+                    location = "${user.governorate} , ${user.city}",
                     bloodType = user.bloodType
                 )
             } else {
@@ -48,9 +49,24 @@ class ProfileViewModel : ViewModel() {
         viewModelScope.launch {
             donationRepository.observeTotalConfirmedDonations(currentUserId).collectLatest { count ->
                 _uiState.value = _uiState.value.copy(
-                    totalDonations = count
+                    totalDonations = count,
+                    badges = calculateBadges(count)
                 )
             }
+        }
+    }
+    private fun calculateBadges(totalDonations: Int): List<Badge> {
+        return buildList {
+
+            if (totalDonations >= 1) {
+                add(Badge(R.string.badge_life_saver, "life"))
+            }
+
+            if (totalDonations >= 10) {
+                add(Badge(R.string.badge_expert, "expert"))
+            }
+
+            add(Badge(R.string.badge_first_year, "star"))
         }
     }
 }
