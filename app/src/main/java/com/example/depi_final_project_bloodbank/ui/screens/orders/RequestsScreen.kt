@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.depi_final_project_bloodbank.R
+import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import com.example.depi_final_project_bloodbank.ui.screens.orders.components.EmptyStateLayout
 import com.example.depi_final_project_bloodbank.ui.screens.orders.components.FilterTabs
 import com.example.depi_final_project_bloodbank.ui.screens.orders.components.OrderCard
@@ -74,20 +75,28 @@ fun RequestsScreen(navController: NavController, vm: RequestsViewModel = viewMod
                         TextField(
                             value = state.searchQuery,
                             onValueChange = { vm.onSearchQueryChanged(it) },
-                            placeholder = { Text(stringResource(R.string.search_placeholder)) },
+                            placeholder = { 
+                                Text(
+                                    text = stringResource(R.string.search_placeholder),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                ) 
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
                             colors = TextFieldDefaults.colors(
                                 focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
                                 unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
                                 disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
+                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                             )
                         )
                     } else {
                         Text(
                             text = stringResource(R.string.orders_list),
                             style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }

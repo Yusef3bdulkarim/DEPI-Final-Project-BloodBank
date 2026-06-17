@@ -111,9 +111,10 @@ class RequestsViewModel(
         val updatedOrders = previousOrders.map { order ->
             if (order.id == request.id) {
                 val newReserved = order.unitsReserved + 1
+                // Strict enforcement: if reserved units reach the goal, mark as COMPLETED locally
                 order.copy(
                     unitsReserved = newReserved,
-                    status = if (order.unitsConfirmed + (newReserved - order.unitsReserved) >= order.unitsNeeded) RequestStatus.COMPLETED else order.status
+                    status = if (newReserved >= order.unitsNeeded) RequestStatus.COMPLETED else order.status
                 )
             } else order
         }

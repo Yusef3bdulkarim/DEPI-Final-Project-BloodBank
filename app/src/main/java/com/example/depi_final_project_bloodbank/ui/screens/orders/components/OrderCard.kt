@@ -33,14 +33,15 @@ fun OrderCard(
     onDonateClicked: (BloodRequest) -> Unit
 ) {
     val order = uiModel.request
-    val appUnifiedBlack = MaterialTheme.colorScheme.secondary
-    val hospitalIconGray = MaterialTheme.colorScheme.onSurface
-    val statusColor = when {
-        order.priority == RequestPriority.URGENT && order.status == RequestStatus.ACTIVE -> MaterialTheme.colorScheme.error
-        order.status == RequestStatus.COMPLETED -> MaterialTheme.colorScheme.tertiary
-        order.status == RequestStatus.CANCELLED -> MaterialTheme.colorScheme.error
-        order.status == RequestStatus.EXPIRED -> MaterialTheme.colorScheme.onSurface
-        else -> MaterialTheme.colorScheme.primary
+    val titleColor = MaterialTheme.colorScheme.primary
+    val secondaryTextColor = MaterialTheme.colorScheme.secondary
+    val iconColor = MaterialTheme.colorScheme.onSurface
+    
+    val statusColor = when (order.status) {
+        RequestStatus.COMPLETED -> MaterialTheme.colorScheme.tertiary
+        RequestStatus.CANCELLED -> MaterialTheme.colorScheme.error
+        RequestStatus.EXPIRED -> MaterialTheme.colorScheme.onSurface
+        else -> if (order.priority == RequestPriority.URGENT) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
     }
 
     Card(
@@ -62,15 +63,12 @@ fun OrderCard(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape)
-                        .background(
-                            if (order.priority == RequestPriority.URGENT) statusColor.copy(alpha = 0.1f)
-                            else MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
-                        ),
+                        .background(MaterialTheme.colorScheme.primaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = order.bloodType,
-                        color = if (order.priority == RequestPriority.URGENT) statusColor else MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -81,7 +79,7 @@ fun OrderCard(
                     text = if (order.priority == RequestPriority.URGENT) stringResource(R.string.urgent_title, order.bloodType)
                     else stringResource(R.string.request_title, order.bloodType),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    color = if (order.priority == RequestPriority.URGENT) statusColor else appUnifiedBlack,
+                    color = if (order.priority == RequestPriority.URGENT) MaterialTheme.colorScheme.error else titleColor,
                     modifier = Modifier.weight(1f),
                     softWrap = true
                 )
@@ -97,13 +95,13 @@ fun OrderCard(
                     imageVector = Icons.Default.LocalHospital,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
-                    tint = hospitalIconGray
+                    tint = iconColor
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = order.hospitalName,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = appUnifiedBlack
+                    color = secondaryTextColor
                 )
             }
 
@@ -117,13 +115,13 @@ fun OrderCard(
                     imageVector = Icons.Default.AccessTime,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
-                    tint = appUnifiedBlack
+                    tint = secondaryTextColor
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = order.createdAt.toFormattedDate(),
                     style = MaterialTheme.typography.labelSmall,
-                    color = appUnifiedBlack
+                    color = secondaryTextColor
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -138,7 +136,7 @@ fun OrderCard(
                 Text(
                     text = "${order.unitsReserved}/${order.unitsNeeded} units",
                     style = MaterialTheme.typography.labelSmall,
-                    color = appUnifiedBlack
+                    color = secondaryTextColor
                 )
             }
 
@@ -166,8 +164,8 @@ fun OrderCard(
                         .weight(1f)
                         .height(3.dp)
                         .clip(CircleShape),
-                    color = statusColor,
-                    trackColor = hospitalIconGray.copy(alpha = 0.2f)
+                    color = if (order.status == RequestStatus.COMPLETED) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
@@ -175,7 +173,7 @@ fun OrderCard(
                 Text(
                     text = "${(progress * 100).toInt()}%",
                     style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                    color = statusColor
+                    color = if (order.status == RequestStatus.COMPLETED) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
                 )
             }
 

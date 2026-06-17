@@ -40,7 +40,7 @@ fun RequestDetailsBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.surface,
         dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
         Column(
@@ -71,7 +71,7 @@ fun RequestDetailsBottomSheet(
                             shape = CircleShape
                         ) {
                             Text(
-                                stringResource(R.string.urgent_urgency),
+                                text = stringResource(R.string.urgent_urgency),
                                 color = MaterialTheme.colorScheme.error,
                                 style = MaterialTheme.typography.labelSmall,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
@@ -81,9 +81,9 @@ fun RequestDetailsBottomSheet(
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                     Text(
-                        stringResource(R.string.blood_type_required_label),
+                        text = stringResource(R.string.blood_type_required_label),
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.secondary
                     )
                     Text(
                         text = request.bloodType,
@@ -132,7 +132,8 @@ fun RequestDetailsBottomSheet(
                         Text(
                             request.hospitalName,
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Button(
@@ -218,7 +219,8 @@ fun RequestDetailsBottomSheet(
                         Text(
                             text = request.contactName,
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = request.contactPhone,
@@ -252,9 +254,9 @@ fun InfoBox(
     value: String,
     modifier: Modifier = Modifier,
     showDot: Boolean = false,
-    dotColor: Color = Color.Transparent
+    dotColor: Color = Color.Unspecified
 ) {
-    val finalDotColor = if (dotColor == Color.Transparent) MaterialTheme.colorScheme.error else dotColor
+    val finalDotColor = if (dotColor == Color.Unspecified) MaterialTheme.colorScheme.error else dotColor
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
@@ -279,7 +281,8 @@ fun InfoBox(
                 Text(
                     value,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }

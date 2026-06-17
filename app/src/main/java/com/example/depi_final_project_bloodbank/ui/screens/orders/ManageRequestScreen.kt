@@ -32,18 +32,32 @@ fun ManageRequestScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("إدارة الطلب", fontWeight = FontWeight.Bold) },
+                title = { 
+                    Text(
+                        text = "إدارة الطلب", 
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    ) 
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack, 
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                )
             )
         }
     ) { padding ->
         if (request == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         } else {
             Column(
@@ -53,37 +67,70 @@ fun ManageRequestScreen(
                     .padding(24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(text = "ضبط الوحدات المطلوبة", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "ضبط الوحدات المطلوبة", 
+                    style = MaterialTheme.typography.titleMedium, 
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
 
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                 ) {
                     Row(
                         modifier = Modifier.padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "الوحدات الحالية", style = MaterialTheme.typography.bodyLarge)
+                        Text(
+                            text = "الوحدات الحالية", 
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             IconButton(onClick = { if (request.unitsNeeded > 1) vm.updateUnitsNeeded(request.id, request.unitsNeeded - 1) }) {
-                                Icon(Icons.Default.Remove, contentDescription = null)
+                                Icon(
+                                    imageVector = Icons.Default.Remove, 
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
                             }
-                            Text(text = request.unitsNeeded.toString(), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                            Text(
+                                text = request.unitsNeeded.toString(), 
+                                style = MaterialTheme.typography.headlineSmall, 
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
                             IconButton(onClick = { vm.updateUnitsNeeded(request.id, request.unitsNeeded + 1) }) {
-                                Icon(Icons.Default.Add, contentDescription = null)
+                                Icon(
+                                    imageVector = Icons.Default.Add, 
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
                             }
                         }
                     }
                 }
 
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+                )
 
-                Text(text = "سجل المتبرعين", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "سجل المتبرعين", 
+                    style = MaterialTheme.typography.titleMedium, 
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
 
                 if (request.donationLog.isEmpty()) {
                     Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        Text(text = "لا توجد عمليات تبرع حالياً", color = MaterialTheme.colorScheme.onSurface)
+                        Text(
+                            text = "لا توجد عمليات تبرع حالياً", 
+                            color = MaterialTheme.colorScheme.secondary
+                        )
                     }
                 } else {
                     LazyColumn(
@@ -102,7 +149,12 @@ fun ManageRequestScreen(
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Column(modifier = Modifier.weight(1f)) {
-                                        Text(text = entry.donorName, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
+                                        Text(
+                                            text = entry.donorName, 
+                                            style = MaterialTheme.typography.bodyLarge, 
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
                                         Text(
                                             text = "${entry.status} • ${entry.timestamp.toFormattedDate()}",
                                             style = MaterialTheme.typography.bodySmall,
@@ -113,6 +165,7 @@ fun ManageRequestScreen(
                                         Button(
                                             onClick = { vm.confirmDonationDelivery(entry.id, request.id) },
                                             shape = MaterialTheme.shapes.small,
+                                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
                                         ) {
                                             Text("تأكيد الاستلام", style = MaterialTheme.typography.labelSmall)
@@ -121,7 +174,7 @@ fun ManageRequestScreen(
                                         val statusColor = when (entry.status) {
                                             DonationStatus.CONFIRMED -> MaterialTheme.colorScheme.tertiary
                                             DonationStatus.CANCELLED -> MaterialTheme.colorScheme.error
-                                            else -> MaterialTheme.colorScheme.primaryContainer
+                                            else -> MaterialTheme.colorScheme.secondary
                                         }
                                         Text(
                                             text = entry.status.name,
@@ -148,7 +201,11 @@ fun ManageRequestScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
                         shape = MaterialTheme.shapes.medium
                     ) {
-                        Text(stringResource(R.string.btn_cancel_request), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimary)
+                        Text(
+                            text = stringResource(R.string.btn_cancel_request), 
+                            fontWeight = FontWeight.Bold, 
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
                     }
                 }
 
