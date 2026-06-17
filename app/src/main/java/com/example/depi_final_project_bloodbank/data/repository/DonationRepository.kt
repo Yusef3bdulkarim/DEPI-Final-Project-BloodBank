@@ -4,7 +4,11 @@ import com.example.depi_final_project_bloodbank.domain.model.Donation
 import com.example.depi_final_project_bloodbank.domain.enums.DonationStatus
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class DonationRepository {
 
@@ -108,4 +112,40 @@ class DonationRepository {
             emptyList()
         }
     }
+
+    // 1. دالة مراقبة العداد لايف لشاشة البروفايل
+    fun observeTotalConfirmedDonations(userId: String): Flow<Int> = callbackFlow {
+        val listener = donationsCollection
+            .whereEqualTo("donorId", userId)
+            .whereEqualTo("status", DonationStatus.CONFIRMED.name) // بنعد فقط التبرعات المقبولة والمكتملة فعلياً
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error) // لو حصل قفلة أو مشكلة في السيرفر
+                    return@addSnapshotListener
+                }
+                // إرسال عدد المستندات (الCounter الحقيقي) لايف للـ Flow
+                val count = snapshot?.size() ?: 0
+                trySend(count)
+            }
+
+        // تنظيف الـ Listener أوتوماتيك لما الـ ViewModel يموت عشان ميسحبش باقة أو رام (Memory Leak)
+        awaitClose { listener.remove() }
+    }
+
+    // 2. دالة مراقبة لستة التبرعات لايف لشاشة السجل (History)
+    fun observeDonationsByUser(userId: String): Flow<List<Donation>> = callbackFlow {
+        val listener = donationsCollection
+            .whereEqualTo("donorId", userId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                val donations = snapshot?.toObjects(Donation::class.java) ?: emptyList()
+                trySend(donations)
+            }
+        awaitClose { listener.remove() }
+    }
+
 }

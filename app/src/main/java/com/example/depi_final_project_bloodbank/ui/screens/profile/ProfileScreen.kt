@@ -163,7 +163,7 @@ fun ProfileScreen(
                         MenuItem(
                             title = stringResource(R.string.donations),
                             icon = R.drawable.recent,
-                            onClick = { }
+                            onClick = { navController.navigate("donation_history") }
                         )
 
                         MenuItem(

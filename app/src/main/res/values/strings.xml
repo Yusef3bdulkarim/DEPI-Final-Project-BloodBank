@@ -207,4 +207,16 @@
 
     <string name="last_donation_date_label">Last Donation Date</string>
     <string name="select_date_placeholder">Select Date</string>
+
+    <string name="btn_cancel_donation">Cancel Donation</string>
+    <string name="btn_cancel_request">Cancel Request</string>
+    <string name="btn_donate_now">Donate Now</string>
+
+    <!-- Feedback Messages -->
+    <string name="operation_success">Operation Successful</string>
+    <string name="incompatible_blood_type">Error: Incompatible Blood Type</string>
+    <string name="request_pending_warning">Action is pending confirmation</string>
+    <string name="error_request_full">Error: Request is already full</string>
+    <string name="donation_success">Donation registered successfully</string>
+    <string name="request_cancelled_success">Request cancelled successfully</string>
 </resources>

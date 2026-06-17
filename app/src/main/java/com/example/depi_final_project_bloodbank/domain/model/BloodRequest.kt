@@ -20,5 +20,7 @@ data class BloodRequest(
     val status: RequestStatus = RequestStatus.ACTIVE,
     val priority: RequestPriority = RequestPriority.NORMAL,
     val createdAt: Long = 0L,
-    val expiresAt: Long? = null
+    val expiresAt: Long? = null,
+    val donorIds: List<String> = emptyList(),
+    val donationLog: List<DonationLogEntry> = emptyList()
 )

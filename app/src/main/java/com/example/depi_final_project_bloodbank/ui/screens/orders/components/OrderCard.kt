@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,22 +23,23 @@ import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
+import com.example.depi_final_project_bloodbank.ui.screens.orders.RequestUiModel
 import com.example.depi_final_project_bloodbank.utils.toFormattedDate
 
 @Composable
 fun OrderCard(
-    order: BloodRequest,
-    isDonating: Boolean = false,
+    uiModel: RequestUiModel,
     onViewDetailsClicked: (BloodRequest) -> Unit,
     onDonateClicked: (BloodRequest) -> Unit
 ) {
+    val order = uiModel.request
     val appUnifiedBlack = MaterialTheme.colorScheme.secondary
     val hospitalIconGray = MaterialTheme.colorScheme.onSurface
     val statusColor = when {
         order.priority == RequestPriority.URGENT && order.status == RequestStatus.ACTIVE -> MaterialTheme.colorScheme.error
         order.status == RequestStatus.COMPLETED -> MaterialTheme.colorScheme.tertiary
-        order.status == RequestStatus.CANCELLED -> Color.Gray
-        order.status == RequestStatus.EXPIRED -> Color.Gray
+        order.status == RequestStatus.CANCELLED -> MaterialTheme.colorScheme.error
+        order.status == RequestStatus.EXPIRED -> MaterialTheme.colorScheme.onSurface
         else -> MaterialTheme.colorScheme.primary
     }
 
@@ -53,7 +53,7 @@ fun OrderCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
-            // 2. Header Section
+            // Header Section
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -88,7 +88,7 @@ fun OrderCard(
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 3. Metadata Section
+            // Metadata Section
             Row(
                 modifier = Modifier.padding(start = 60.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -144,12 +144,16 @@ fun OrderCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 4. Progress Indicator Row (مربوط بالـ unitsReserved المتطابق تماماً مع التكست)
+            // Progress Indicator Row
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                val progress = if (order.unitsNeeded > 0) order.unitsReserved.toFloat() / order.unitsNeeded.toFloat() else 0f
+                val progress = when {
+                    order.status == RequestStatus.COMPLETED -> 1.0f
+                    order.unitsNeeded > 0 -> order.unitsReserved.toFloat() / order.unitsNeeded.toFloat()
+                    else -> 0f
+                }
                 val animatedProgress by animateFloatAsState(
                     targetValue = progress,
                     animationSpec = tween(durationMillis = 1000),
@@ -177,7 +181,7 @@ fun OrderCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 5. Action Row
+            // Action Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -198,45 +202,30 @@ fun OrderCard(
                     modifier = Modifier.wrapContentWidth(),
                     contentAlignment = Alignment.CenterEnd
                 ) {
-                    if (order.status == RequestStatus.ACTIVE) {
-                        Button(
-                            onClick = { onDonateClicked(order) },
-                            // الزرار بيقفل تلقائياً لو لستة السيرفر قالت إن الليميت كمل، أو لو العملية قيد التنفيذ
-                            enabled = !isDonating && order.unitsReserved < order.unitsNeeded,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary,
-                                disabledContainerColor = Color.LightGray
-                            ),
-                            shape = MaterialTheme.shapes.medium,
-                            modifier = Modifier.height(32.dp),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
-                        ) {
-                            if (isDonating) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(16.dp),
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                    strokeWidth = 2.dp
-                                )
-                            } else {
-                                Text(
-                                    text = stringResource(R.string.donate_now),
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                            }
+                    Button(
+                        onClick = { onDonateClicked(order) },
+                        enabled = uiModel.isButtonEnabled,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (uiModel.isOwner) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
+                            contentColor = if (uiModel.isOwner) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onPrimary,
+                            disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier.height(32.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+                    ) {
+                        if (uiModel.isDonating) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text(
+                                text = uiModel.buttonText,
+                                style = MaterialTheme.typography.labelSmall
+                            )
                         }
-                    } else {
-                        Text(
-                            text = when (order.status) {
-                                RequestStatus.COMPLETED -> stringResource(R.string.delivered)
-                                RequestStatus.CANCELLED -> "Cancelled"
-                                RequestStatus.EXPIRED -> "Expired"
-                                else -> stringResource(R.string.processing)
-                            },
-                            color = statusColor,
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.SemiBold
-                        )
                     }
                 }
             }

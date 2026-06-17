@@ -198,4 +198,15 @@
 
     <string name="last_donation_date_label">تاريخ آخر تبرع</string>
     <string name="select_date_placeholder">اختر التاريخ</string>
+
+    <string name="btn_cancel_donation">إلغاء التبرع</string>
+    <string name="btn_cancel_request">إلغاء الطلب</string>
+    <string name="btn_donate_now">تبرع الآن</string>
+
+    <string name="operation_success">تمت العملية بنجاح</string>
+    <string name="incompatible_blood_type">خطأ: فصيلة الدم غير متوافقة</string>
+    <string name="request_pending_warning">العملية قيد الانتظار</string>
+    <string name="error_request_full">خطأ: الطلب مكتمل بالفعل</string>
+    <string name="donation_success">تم التبرع بنجاح</string>
+    <string name="request_cancelled_success">تم إلغاء الطلب بنجاح</string>
 </resources>

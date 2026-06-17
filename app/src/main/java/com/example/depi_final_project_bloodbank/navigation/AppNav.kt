@@ -23,34 +23,32 @@ import com.example.depi_final_project_bloodbank.ui.screens.auth.LoginScreen
 import com.example.depi_final_project_bloodbank.ui.screens.auth.RegisterScreen
 import com.example.depi_final_project_bloodbank.ui.screens.auth.VerifyAccountScreen
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore // <-- عملنا استيراد لفايرستور هنا
-
+import com.google.firebase.firestore.FirebaseFirestore
 import com.example.depi_final_project_bloodbank.ui.screens.home.HomeScreen
 import com.example.depi_final_project_bloodbank.ui.screens.notification.NotificationScreen
-import com.example.depi_final_project_bloodbank.ui.screens.orders.RequestsViewModel
 import com.example.depi_final_project_bloodbank.ui.screens.profile.ProfileScreen
 import com.example.depi_final_project_bloodbank.ui.screens.request.CreateRequestScreen
 import com.example.depi_final_project_bloodbank.ui.screens.request.RequestViewModel
 import com.example.depi_final_project_bloodbank.data.repository.RequestRepositoryImpl
+import com.example.depi_final_project_bloodbank.ui.screens.profile.DonationHistoryScreen
+
+// استيرادات صريحة من حزمة الـ orders
+import com.example.depi_final_project_bloodbank.ui.screens.orders.RequestsScreen
+import com.example.depi_final_project_bloodbank.ui.screens.orders.RequestsViewModel
+import com.example.depi_final_project_bloodbank.ui.screens.orders.ManageRequestScreen
 
 @Composable
 fun AppNav() {
     val navController = rememberNavController()
 
-    // 1. المتغير ده بياخد null في الأول عشان نعرض شاشة تحميل لحد ما الداتا تيجي
     var startDest by remember { mutableStateOf<String?>(null) }
 
-    // 2. الكود ده بيشتغل في الخلفية أول ما التطبيق يفتح
     LaunchedEffect(Unit) {
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser != null) {
-
-            // 1️⃣ الفحص الأول: هل الإيميل متفعل؟ (مهم جداً لحسابات الإيميل والباسورد)
             if (!currentUser.isEmailVerified) {
-                startDest = "verify_account" // مش متفعل، ارميه في شاشة التفعيل فوراً
+                startDest = "verify_account"
             } else {
-
-                // 2️⃣ الفحص الثاني: الإيميل متفعل تمام، نروح بقى نتأكد إن بيانات البروفايل كاملة
                 FirebaseFirestore.getInstance().collection("Users").document(currentUser.uid).get()
                     .addOnSuccessListener { document ->
                         if (document.exists()) {
@@ -60,36 +58,34 @@ fun AppNav() {
                             val gov = document.getString("governorate")
                             val city = document.getString("city")
 
-                            // بنتأكد إن كل الحقول مليانة
                             if (!name.isNullOrBlank() &&
                                 !phone.isNullOrBlank() &&
                                 !bloodType.isNullOrBlank() &&
                                 !gov.isNullOrBlank() &&
                                 !city.isNullOrBlank()
                             ) {
-                                startDest = "home" // كل حاجة تمام، على الشاشة الرئيسية
+                                startDest = "home"
                             } else {
-                                startDest = "complete_profile" // في بيانات ناقصة
+                                startDest = "complete_profile"
                             }
                         } else {
-                            startDest = "complete_profile" // الدوكيومنت مش موجود اصلاً
+                            startDest = "complete_profile"
                         }
                     }
                     .addOnFailureListener {
-                        startDest = "login" // لو حصل مشكلة في النت رجعه للوجين كأمان
+                        startDest = "login"
                     }
             }
         } else {
-            startDest = "login" // مش مسجل دخول أصلاً
+            startDest = "login"
         }
     }
 
-    // 3. طول ما إحنا لسه بنسأل فايربيز (null)، اعرض دايرة تحميل في نص الشاشة
     if (startDest == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
-        return // بنوقف رسم باقي الشاشة لحد ما فايربيز يرد علينا
+        return
     }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -105,12 +101,9 @@ fun AppNav() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = startDest!!, // استخدمنا المتغير هنا بعد ما اتأكدنا إنه جاب الداتا
+            startDestination = startDest!!,
             modifier = Modifier.padding(innerPadding)
         ) {
-            // ==========================================
-            // القسم الأول: شاشات الـ Auth (بدون شريط سفلي)
-            // ==========================================
             composable("login") { LoginScreen(navController) }
             composable("register") { RegisterScreen(navController) }
             composable("forgot_password") { ForgotPasswordScreen(navController) }
@@ -120,9 +113,6 @@ fun AppNav() {
                 CompleteProfileScreen(navController = navController, uid = uid)
             }
 
-            // ==========================================
-            // القسم التاني: شاشات التيم (بالشريط السفلي)
-            // ==========================================
             composable("home") {
                 HomeScreen(
                     onRequestBloodClick = {
@@ -133,9 +123,6 @@ fun AppNav() {
                     },
                     onNotificationsClick = {
                         navController.navigate("notifications")
-                    },
-                    onViewRequest = { request ->
-                        navController.navigate("blood_request_details/${request.id}")
                     }
                 )
             }
@@ -143,14 +130,14 @@ fun AppNav() {
             composable("profile") {
                 ProfileScreen(navController = navController)
             }
+            composable(route = "donation_history") {
+                DonationHistoryScreen(navController = navController)
+            }
 
             composable("notifications") {
                 NotificationScreen(navController = navController)
             }
 
-            // ==========================================
-            // القسم الثالث: شاشاتك إنت (اللوجيك الجديد)
-            // ==========================================
             composable(route = "CreateRequestScreen") {
                 val factory = object : androidx.lifecycle.ViewModelProvider.Factory {
                     override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
@@ -179,17 +166,22 @@ fun AppNav() {
                     }
                 }
                 val vm: RequestsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = factory)
-
-                com.example.depi_final_project_bloodbank.ui.screens.orders.RequestsScreen(vm = vm)
+                RequestsScreen(navController = navController, vm = vm)
             }
 
-            // مسار شاشة التفاصيل بتاع التيم
             composable(
-                route = "blood_request_details/{requestId}",
+                route = "manage_request/{requestId}",
                 arguments = listOf(navArgument("requestId") { type = NavType.StringType })
             ) { backStackEntry ->
                 val requestId = backStackEntry.arguments?.getString("requestId") ?: ""
-                // com.example.depi_final_project_bloodbank.ui.screens.request.UrgentRequestDetailsScreen(...)
+                val factory = object : androidx.lifecycle.ViewModelProvider.Factory {
+                    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                        val repository = RequestRepositoryImpl()
+                        return RequestsViewModel(repository) as T
+                    }
+                }
+                val vm: RequestsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = factory)
+                ManageRequestScreen(requestId = requestId, navController = navController, vm = vm)
             }
         }
     }
