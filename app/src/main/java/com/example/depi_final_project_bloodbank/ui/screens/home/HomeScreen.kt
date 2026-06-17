@@ -58,7 +58,7 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                item { TopLogoBar(onNotificationsClick = onNotificationsClick) }
+                item { TopLogoBar() }
                 item { HeaderSection(state.userName, state.bloodType) }
                 item {
                     AvailabilityToggle(

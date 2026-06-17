@@ -14,6 +14,7 @@ firebaseAuth = "24.0.1"
 appcompat = "1.7.1"
 firebaseCrashlyticsBuildtools = "3.0.7"
 foundation = "1.11.1"
+foundationVersion = "1.11.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +36,7 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundationVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
