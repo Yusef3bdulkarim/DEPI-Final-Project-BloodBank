@@ -11,6 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest // 3. زيادة سطر الـ Import ده
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 
 class ProfileViewModel : ViewModel() {
     private val repository = UserRepository()
@@ -25,6 +29,11 @@ class ProfileViewModel : ViewModel() {
     }
 
     // دالتك القديمة زي ما هي مش بنلمسها
+    // 1. أضف هذه الـ Imports في أعلى الملف
+
+
+// 2. داخل الكلاس ProfileViewModel، قم بتعديل دالة fetchUserData وأضف دالة التنسيق:
+
     private fun fetchUserData() {
         viewModelScope.launch {
             val user = repository.getCurrentUser()
@@ -32,7 +41,10 @@ class ProfileViewModel : ViewModel() {
                 _uiState.value = _uiState.value.copy(
                     name = user.name,
                     location = "${user.governorate} , ${user.city}",
-                    bloodType = user.bloodType
+                    bloodType = user.bloodType,
+                    // أضف هذا السطر لتحديث التاريخ في الـ UI
+                    lastDonationDate = formatTimestamp(user.lastDonationDate),
+                    nextAppointmentDays = calculateRemainingDays(user.lastDonationDate)
                 )
             } else {
                 _uiState.value = _uiState.value.copy(
@@ -41,6 +53,32 @@ class ProfileViewModel : ViewModel() {
             }
         }
     }
+    private fun calculateRemainingDays(lastDonationTimestamp: Long?): Int {
+        if (lastDonationTimestamp == null || lastDonationTimestamp == 0L) return 0
+
+        val ninetyDaysInMillis = 91L * 24 * 60 * 60 * 1000 // تحويل 90 يوم لملي ثانية
+        val nextAvailableDate = lastDonationTimestamp + ninetyDaysInMillis
+        val currentTime = System.currentTimeMillis()
+
+        // إذا مر 90 يوم أو أكثر، الأيام المتبقية هي 0
+        if (currentTime >= nextAvailableDate) return 0
+
+        // حساب الفرق بين الموعد القادم والآن وتحويله لأيام
+        val diffInMillis = nextAvailableDate - currentTime
+        return (diffInMillis / (1000 * 60 * 60 * 24)).toInt()
+    }
+
+    // 3. أضف هذه الدالة المساعدة لتحويل الوقت إلى نص
+    private fun formatTimestamp(timestamp: Long?): String {
+        if (timestamp == null || timestamp == 0L) return ""
+        return try {
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            sdf.format(Date(timestamp))
+        } catch (e: Exception) {
+            ""
+        }
+    }
+
 
     // 6. زيادة الدالة الجديدة دي بالكامل في الآخر
     private fun observeLiveDonationsCount() {

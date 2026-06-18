@@ -267,6 +267,10 @@ class RequestRepositoryImpl(
             val snapshot = requestRef.get().await()
             val bloodRequest = snapshot.toObject(BloodRequest::class.java) ?: throw Exception("Request not found")
 
+            // 1. الحصول على معرف المتبرع من السجل لتحديث بياناته
+            val donorId = bloodRequest.donationLog.find { it.id == donationId }?.donorId
+                ?: throw Exception("Donor not found")
+
             val updatedLog = bloodRequest.donationLog.map { entry ->
                 if (entry.id == donationId) entry.copy(status = DonationStatus.CONFIRMED)
                 else entry
@@ -276,6 +280,8 @@ class RequestRepositoryImpl(
             val currentReserved = updatedLog.count { it.status == DonationStatus.PENDING }
 
             val batch = firestore.batch()
+
+            // 2. تحديث بيانات الطلب (سجل التبرعات والوحدات)
             batch.update(requestRef, "donationLog", updatedLog)
             batch.update(requestRef, "unitsConfirmed", currentConfirmed)
             batch.update(requestRef, "unitsReserved", currentReserved)
@@ -284,13 +290,16 @@ class RequestRepositoryImpl(
                 batch.update(requestRef, "status", RequestStatus.COMPLETED.name)
             }
 
+            // 3. تحديث تاريخ آخر تبرع للمتبرع في مجموعة Users
+            val userRef = firestore.collection("Users").document(donorId)
+            batch.update(userRef, "lastDonationDate", System.currentTimeMillis())
+
             batch.commit().await()
             Result.success(true)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
-
     override suspend fun updateUnitsNeeded(requestId: String, newUnits: Int): Result<Boolean> {
         return try {
             firestore.collection("requests").document(requestId)
