@@ -245,7 +245,7 @@ fun ProfileScreen(
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error,
+                            containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onTertiary
                         ),
                         shape = MaterialTheme.shapes.small
