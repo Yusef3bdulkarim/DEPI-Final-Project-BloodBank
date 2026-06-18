@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
+import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -113,22 +114,25 @@ class DonationRepository {
         }
     }
 
-    // 1. دالة مراقبة العداد لايف لشاشة البروفايل
+
     fun observeTotalConfirmedDonations(userId: String): Flow<Int> = callbackFlow {
-        val listener = donationsCollection
-            .whereEqualTo("donorId", userId)
-            .whereEqualTo("status", DonationStatus.CONFIRMED.name) // بنعد فقط التبرعات المقبولة والمكتملة فعلياً
+        val listener = requestsCollection
+            .whereArrayContains("donorIds", userId) // نبحث عن كل الطلبات التي شارك فيها المستخدم
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    close(error) // لو حصل قفلة أو مشكلة في السيرفر
+                    close(error)
                     return@addSnapshotListener
                 }
-                // إرسال عدد المستندات (الCounter الحقيقي) لايف للـ Flow
-                val count = snapshot?.size() ?: 0
-                trySend(count)
+
+                // نحصل على الطلبات ونقوم بعد التبرعات التي تحمل حالة CONFIRMED وتخص هذا المستخدم
+                val requests = snapshot?.toObjects(BloodRequest::class.java) ?: emptyList()
+                val totalConfirmed = requests.sumOf { request ->
+                    request.donationLog.count { it.donorId == userId && it.status == DonationStatus.CONFIRMED }
+                }
+
+                trySend(totalConfirmed)
             }
 
-        // تنظيف الـ Listener أوتوماتيك لما الـ ViewModel يموت عشان ميسحبش باقة أو رام (Memory Leak)
         awaitClose { listener.remove() }
     }
 
