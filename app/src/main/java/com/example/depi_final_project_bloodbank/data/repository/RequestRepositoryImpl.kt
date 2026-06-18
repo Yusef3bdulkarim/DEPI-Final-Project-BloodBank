@@ -144,6 +144,8 @@ class RequestRepositoryImpl(
         return try {
             val docRef = requestsCollection.document(id)
             val notificationRef = firestore.collection("notifications").document()
+            val statusNotificationRef = firestore.collection("notification_status").document()
+
 
             // 1. Fetch Request Snapshot for pre-checks
             val snapshot = docRef.get().await()
@@ -153,6 +155,14 @@ class RequestRepositoryImpl(
             val currentReserved = snapshot.getLong("unitsReserved") ?: 0L
             val needed = snapshot.getLong("unitsNeeded") ?: 0L
             val userIdOfRequest = snapshot.getString("createdBy") ?: ""
+
+            //  جلب بيانات اليوزر (عشان نجيب fcmToken)
+            val receiverId = snapshot.getString("createdBy") ?: ""
+            val receiverSnapshot = firestore.collection("Users")
+                .document(receiverId)
+                .get()
+                .await()
+            val receiverFcmToken = receiverSnapshot.getString("fcmToken") ?: ""
 
             // 2. Pre-checks (Compatibility & Limit)
             if (!isBloodCompatible(donorBloodType, patientBloodType)) {
@@ -178,6 +188,7 @@ class RequestRepositoryImpl(
             batch.update(docRef, "donationLog", FieldValue.arrayUnion(logEntry))
             batch.update(docRef, "donorIds", FieldValue.arrayUnion(donorId))
 
+
             val receiverIdValue = userIdOfRequest.ifEmpty { "UNKNOWN_USER" }
             val notificationData = mapOf(
                 "id" to notificationRef.id,
@@ -189,6 +200,18 @@ class RequestRepositoryImpl(
                 "requestId" to id
             )
             batch.set(notificationRef, notificationData)
+            batch.set(statusNotificationRef, mapOf(
+                "id" to statusNotificationRef.id,
+                "receiverId" to receiverId,
+                "requestId" to id,
+                "title" to "تبرع جديد! 🩸",
+                "body" to "قام $donorName بالموافقة على التبرع بفصيلة $donorBloodType",
+                "bloodType" to donorBloodType,
+                "donorName" to donorName,
+                "createdAt" to System.currentTimeMillis(),
+                "type" to "DONATION_RECEIVED",
+                "fcmToken" to receiverFcmToken
+            ))
 
             batch.commit().await()
             Result.success(true)
