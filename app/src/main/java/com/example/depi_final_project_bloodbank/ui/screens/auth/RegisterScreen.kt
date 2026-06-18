@@ -197,10 +197,27 @@ fun RegisterScreen(
 
             BloodLinkTextField(
                 value = phone,
-                onValueChange = { phone = it },
+                onValueChange = {
+                    // نمنع المستخدم يكتب أي حاجة غير الأرقام، ونمنعه يكتب أكتر من 11 رقم
+                    if (it.all { char -> char.isDigit() } && it.length <= 11) {
+                        phone = it
+                    }
+                },
                 label = stringResource(id = R.string.phone_label),
                 leadingIcon = Icons.Default.Phone
             )
+
+            // التحذير الأحمر بيظهر بس لو هو كتب أرقام بس لسه مكملش الـ 11
+            if (phone.isNotEmpty() && phone.length < 11) {
+                Text(
+                    text = stringResource(id = R.string.phone_length_error),
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 12.dp, top = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -303,21 +320,35 @@ fun RegisterScreen(
                 )
             }
 
+            // الملحوظة بتاعت الـ 3 شهور
+            Text(
+                text = stringResource(id = R.string.donation_date_note),
+                color = Color.Gray,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp, top = 4.dp, bottom = 8.dp)
+            )
+
+
             Spacer(modifier = Modifier.height(20.dp))
 
             BloodLinkButton(
                 text = stringResource(id = R.string.register_button),
                 onClick = {
-                    viewModel.register(
-                        name = name,
-                        email = email,
-                        phone = phone,
-                        pass = password,
-                        bloodType = selectedBlood,
-                        governorate = selectedGovernorate,
-                        city = selectedCity,
-                        lastDonationDate = lastDonationDate
-                    )
+                    if (phone.length == 11) {
+                        viewModel.register(
+                            name = name,
+                            email = email,
+                            phone = phone,
+                            pass = password,
+                            bloodType = selectedBlood,
+                            governorate = selectedGovernorate,
+                            city = selectedCity,
+                            lastDonationDate = lastDonationDate
+                        )
+
+                    }
                 }
             )
 

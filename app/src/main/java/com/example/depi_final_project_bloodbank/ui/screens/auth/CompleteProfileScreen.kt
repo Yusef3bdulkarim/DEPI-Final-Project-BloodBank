@@ -117,10 +117,28 @@ fun CompleteProfileScreen(
 
             // رقم الهاتف
             BloodLinkTextField(
-                value = phone, onValueChange = { phone = it },
+                value = phone,
+                onValueChange = {
+                    // نمنع المستخدم يكتب أي حاجة غير الأرقام، ونمنعه يكتب أكتر من 11 رقم
+                    if (it.all { char -> char.isDigit() } && it.length <= 11) {
+                        phone = it
+                    }
+                },
                 label = stringResource(id = R.string.phone_label),
                 leadingIcon = Icons.Default.Phone
             )
+
+            // التحذير الأحمر بيظهر بس لو هو كتب أرقام بس لسه مكملش الـ 11
+            if (phone.isNotEmpty() && phone.length < 11) {
+                Text(
+                    text = stringResource(id = R.string.phone_length_error),
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 12.dp, top = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -170,7 +188,6 @@ fun CompleteProfileScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             // مربع تاريخ آخر تبرع
-            // مربع تاريخ آخر تبرع
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -190,12 +207,33 @@ fun CompleteProfileScreen(
                         .clickable { datePickerDialog.show() }
                 )
             }
+            // الملحوظة بتاعت الـ 3 شهور
+            Text(
+                text = stringResource(id = R.string.donation_date_note),
+                color = Color.Gray,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp, top = 4.dp, bottom = 8.dp)
+            )
 
             Spacer(modifier = Modifier.height(40.dp))
 
             BloodLinkButton(
                 text = stringResource(id = R.string.save_and_continue), // "حفظ ومتابعة"
-                onClick = { viewModel.completeProfile(uid, name, phone, selectedBlood,selectedGovernorate,selectedCity,lastDonationDate) }
+                onClick = {
+                    if (phone.length == 11) {
+                        viewModel.completeProfile(
+                            uid,
+                            name,
+                            phone,
+                            selectedBlood,
+                            selectedGovernorate,
+                            selectedCity,
+                            lastDonationDate
+                        )
+                    }
+                }
             )
 
             // Handling Loading/Error/Success

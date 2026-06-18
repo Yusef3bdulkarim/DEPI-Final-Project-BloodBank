@@ -207,4 +207,8 @@
 
     <string name="last_donation_date_label">Last Donation Date</string>
     <string name="select_date_placeholder">Select Date</string>
+
+    <string name="phone_length_error">Phone number must be exactly 11 digits</string>
+    <string name="donation_date_note">Note: You can only donate blood if at least 3 months have passed since your last donation.</string>
+
 </resources>
