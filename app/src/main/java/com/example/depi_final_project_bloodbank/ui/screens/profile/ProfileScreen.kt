@@ -13,16 +13,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource // استيراد ضروري
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLogoBar
 import com.example.depi_final_project_bloodbank.ui.screens.profile.components.*
+import com.example.depi_final_project_bloodbank.ui.theme.UrgentRed
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -163,7 +166,7 @@ fun ProfileScreen(
                         MenuItem(
                             title = stringResource(R.string.donations),
                             icon = R.drawable.recent,
-                            onClick = { }
+                            onClick = { navController.navigate("donation_history") }
                         )
 
                         MenuItem(
@@ -203,53 +206,63 @@ fun ProfileScreen(
         if (showLogoutDialog) {
 
             AlertDialog(
-                onDismissRequest = {
-                    showLogoutDialog = false
-                },
-
+                onDismissRequest = { showLogoutDialog = false },
+                containerColor = MaterialTheme.colorScheme.surface,
+                shape = MaterialTheme.shapes.medium,
                 title = {
-                    Text(stringResource(R.string.logout))
+                    Text(
+                        text = stringResource(R.string.logout),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 },
-
                 text = {
-                    Text(stringResource(R.string.are_you_sure_you_want_to_logout))
+                    Text(
+                        text = stringResource(R.string.are_you_sure_you_want_to_logout),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                 },
-
                 confirmButton = {
-                    TextButton(
+
+                    Button(
                         onClick = {
                             showLogoutDialog = false
 
                             FirebaseAuth.getInstance().signOut()
 
-                            val gso = com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(
-                                com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
-                            ).build()
+                            val gso = com.google.android.gms.auth.api.signin.GoogleSignInOptions
+                                .Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .build()
 
-                            val googleSignInClient = com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(context, gso)
+                            val googleSignInClient =
+                                com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(context, gso)
 
                             googleSignInClient.signOut().addOnCompleteListener {
                                 navController.navigate("login") {
                                     popUpTo(0)
                                 }
                             }
-                        }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary
+                        ),
+                        shape = MaterialTheme.shapes.small
                     ) {
-                        Text(
-                            text =  stringResource(R.string.logout),
-                            color = MaterialTheme.colorScheme.error
-                        )
+                        Text(stringResource(R.string.logout))
                     }
                 },
-
                 dismissButton = {
 
-                    TextButton(
-                        onClick = {
-                            showLogoutDialog = false
-                        }
+                    OutlinedButton(
+                        onClick = { showLogoutDialog = false },
+                        shape = MaterialTheme.shapes.small
                     ) {
-                        Text(stringResource(R.string.cancel_btn))
+                        Text(
+                            text = stringResource(R.string.cancel_btn),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             )
@@ -260,54 +273,81 @@ fun ProfileScreen(
         if (showLanguageDialog) {
 
             AlertDialog(
-                onDismissRequest = {
-                    showLanguageDialog = false
-                },
-
+                onDismissRequest = { showLanguageDialog = false },
+                containerColor = MaterialTheme.colorScheme.surface,
+                shape = MaterialTheme.shapes.medium,
                 title = {
-                    Text(stringResource(R.string.choose_language))
+                    Text(
+                        text = stringResource(R.string.choose_language),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 },
-
                 text = {
 
-                    Column {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
 
-                        TextButton(
+                        LanguageOption(
+                            title = "العربية",
+                            emoji = "🇸🇦",
                             onClick = {
-
+                                sharedPref.edit().putString("lang", "ar").apply()
                                 showLanguageDialog = false
-
-
-                                // Arabic Language Logic
-                                sharedPref.edit()
-                                    .putString("lang", "ar")
-                                    .apply()
-                                activity.recreate()
-
-                            }
-                        ) {
-                            Text("العربية")
-                        }
-
-                        TextButton(
-                            onClick = {
-
-                                showLanguageDialog = false
-
-                                // English Language Logic
-                                sharedPref.edit()
-                                    .putString("lang", "en")
-                                    .apply()
-
                                 activity.recreate()
                             }
-                        ) {
-                            Text("English")
-                        }
+                        )
+
+                        LanguageOption(
+                            title = "English",
+                            emoji = "🇺🇸",
+                            onClick = {
+                                sharedPref.edit().putString("lang", "en").apply()
+                                showLanguageDialog = false
+                                activity.recreate()
+                            }
+                        )
                     }
                 },
-
                 confirmButton = {}
+            )
+        }
+    }
+}
+@Composable
+fun LanguageOption(
+    title: String,
+    emoji: String,
+    onClick: () -> Unit
+) {
+    Card(
+        onClick = onClick,
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Text(
+                text = emoji,
+                fontSize = 22.sp
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

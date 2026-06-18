@@ -36,8 +36,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     onRequestBloodClick: () -> Unit = {},
     onDonateNowClick: () -> Unit = {},
-    onNotificationsClick: () -> Unit = {},
-    onViewRequest: (BloodRequest) -> Unit = {}
+    onNotificationsClick: () -> Unit = {}
 ) {
     // طالما أضفنا الـ getValue فوق، الـ by هنا هتقرأ الـ HomeUiState مباشرة
     val state by viewModel.uiState.collectAsState()
@@ -59,7 +58,7 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                item { TopLogoBar(onNotificationsClick = onNotificationsClick) }
+                item { TopLogoBar() }
                 item { HeaderSection(state.userName, state.bloodType) }
                 item {
                     AvailabilityToggle(
@@ -97,7 +96,6 @@ fun HomeScreen(
                         requests = state.filteredRequests,
                         onViewRequest = { request ->
                             selectedRequest = request
-                            onViewRequest(request)
                         }
                     )
                 }
@@ -105,7 +103,6 @@ fun HomeScreen(
         }
     }
 
-    // عرض الـ BottomSheet خارج الـ PullToRefresh
     if (selectedRequest != null) {
         RequestDetailsBottomSheet(
             request = selectedRequest!!,

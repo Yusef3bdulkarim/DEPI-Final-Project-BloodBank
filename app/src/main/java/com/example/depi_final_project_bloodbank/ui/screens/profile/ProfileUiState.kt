@@ -9,11 +9,7 @@ data class ProfileUiState(
     val bloodType: String = "-",
     val totalDonations: Int = 0,
     val lastDonationDate: String = "",
-    val badges: List<Badge> = listOf(
-        Badge(R.string.badge_expert, "expert"),
-        Badge(R.string.badge_life_saver, "life"),
-        Badge(R.string.badge_first_year, "star")
-    ),
+    val badges: List<Badge> = emptyList(),
     val nextAppointmentDays: Int = 0
 )
 

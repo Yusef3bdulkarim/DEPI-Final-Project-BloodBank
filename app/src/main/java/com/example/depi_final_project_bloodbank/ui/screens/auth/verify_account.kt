@@ -36,6 +36,7 @@ import com.example.depi_final_project_bloodbank.ui.theme.TextDark
 
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthViewModel
+import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLogoBar
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -76,7 +77,8 @@ fun VerifyAccountScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        LogoHeader()
+        TopLogoBar()
+
 
         Column(
             modifier = Modifier
@@ -86,16 +88,10 @@ fun VerifyAccountScreen(
                 .padding(start = 20.dp, end = 20.dp, top = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-            Text(
-                text = stringResource(id = R.string.verify_account_title),
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = PrimaryRed
-            )
 
-            Spacer(modifier = Modifier.height(20.dp))
+
 
             Image(
                 painter = painterResource(id = R.drawable.email),
@@ -104,7 +100,16 @@ fun VerifyAccountScreen(
             )
 
             Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = stringResource(id = R.string.verify_account_title),
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold,
+                color = PrimaryRed,
+                textAlign = TextAlign.Center,
+                lineHeight = 24.sp
 
+
+            )
             Text(
                 text = stringResource(id = R.string.verify_account_desc),
                 textAlign = TextAlign.Center,

@@ -79,7 +79,7 @@ fun CreateRequestScreen(
         val isGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
                 permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
         if (isGranted) {
-            viewModel.fetchCurrentLocation(fusedLocationClient)
+            viewModel.fetchCurrentLocation(context,fusedLocationClient)
         }
     }
 
@@ -130,15 +130,7 @@ fun CreateRequestScreen(
                 .padding(horizontal = 20.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = stringResource(R.string.create_request_title),
-                style = typography.titleLarge,
-                color = colorScheme.onSurface,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp),
-                textAlign = TextAlign.Center
-            )
+
 
             var expandedBloodType by remember { mutableStateOf(false) }
             val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")

@@ -77,7 +77,7 @@ fun ProfileHeader(
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = location,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
         }

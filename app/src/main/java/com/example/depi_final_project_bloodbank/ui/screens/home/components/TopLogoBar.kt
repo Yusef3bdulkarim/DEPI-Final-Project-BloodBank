@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TopLogoBar(onNotificationsClick: () -> Unit = {}) {
+fun TopLogoBar() {
     Box(
         modifier = Modifier
             .fillMaxWidth()

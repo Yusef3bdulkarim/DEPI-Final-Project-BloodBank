@@ -2,6 +2,7 @@ package com.example.depi_final_project_bloodbank.ui.screens.auth
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,15 +33,14 @@ import com.example.depi_final_project_bloodbank.components.BloodLinkButton
 import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
 import com.example.depi_final_project_bloodbank.components.LogoHeader
 import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
-
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.depi_final_project_bloodbank.ui.common_components.GovernorateCitySelector
 import com.example.depi_final_project_bloodbank.ui.theme.TextDark
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState
-
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthViewModel
+import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLogoBar
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -113,26 +113,33 @@ fun RegisterScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        LogoHeader()
+        TopLogoBar()
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .background(Color.White)
-                .padding(start = 20.dp, end = 20.dp, top = 8.dp)
-        ) {
+                .padding(start = 20.dp, end = 20.dp, top = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+
+            ) {
+//            Spacer(modifier = Modifier.height(25.dp))
+//
             Text(
-                text = stringResource(id = R.string.register_title),
-                fontSize = 30.sp,
-                lineHeight = 38.sp,
-                fontWeight = FontWeight.ExtraBold,
+                text = stringResource(id = R.string.signup_title),
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold,
                 color = PrimaryRed,
-                modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(id = R.string.signup_dec),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.W500,
+                color = TextDark,
+                textAlign = TextAlign.Center
+            )
             when (authState) {
                 is AuthState.Loading -> {
                     CircularProgressIndicator(
@@ -175,7 +182,7 @@ fun RegisterScreen(
                 else -> {}
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             BloodLinkTextField(
                 value = name,
@@ -369,37 +376,12 @@ fun RegisterScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
-                Text(
-                    text = stringResource(id = R.string.or_sign_in_with),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = Color.Gray,
-                    fontSize = 14.sp
-                )
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
-            }
+            Spacer(modifier = Modifier.height(50.dp))
 
-            Spacer(modifier = Modifier.height(20.dp))
 
-            Image(
-                painter = painterResource(id = R.drawable.google),
-                contentDescription = "Google Sign In",
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .align(Alignment.CenterHorizontally)
-                    .clickable {
-                        launcher.launch(googleSignInClient.signInIntent)
-                    }
-            )
 
-            Spacer(modifier = Modifier.height(20.dp))
+
         }
     }
 }

@@ -2,18 +2,7 @@ package com.example.depi_final_project_bloodbank.ui.screens.orders.components
 
 import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -21,33 +10,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bloodtype
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
 import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
-import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import com.example.depi_final_project_bloodbank.utils.toFormattedDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,14 +34,13 @@ fun RequestDetailsBottomSheet(
     request: BloodRequest,
     onDismiss: () -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val isUrgent = request.priority == RequestPriority.URGENT
     val context = LocalContext.current
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.background,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = MaterialTheme.colorScheme.surface,
         dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
         Column(
@@ -94,7 +71,7 @@ fun RequestDetailsBottomSheet(
                             shape = CircleShape
                         ) {
                             Text(
-                                "عاجل جداً",
+                                text = stringResource(R.string.urgent_urgency),
                                 color = MaterialTheme.colorScheme.error,
                                 style = MaterialTheme.typography.labelSmall,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
@@ -104,9 +81,9 @@ fun RequestDetailsBottomSheet(
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                     Text(
-                        "فصيلة الدم المطلوبة",
+                        text = stringResource(R.string.blood_type_required_label),
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.secondary
                     )
                     Text(
                         text = request.bloodType,
@@ -125,7 +102,7 @@ fun RequestDetailsBottomSheet(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "${request.unitsReserved}/${request.unitsNeeded} units",
+                            text = "${request.unitsConfirmed}/${request.unitsNeeded} units confirmed",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -133,7 +110,7 @@ fun RequestDetailsBottomSheet(
                 }
             }
 
-            // --- كارد موقع المستشفى (تم تعديل الـ onClick لتشغيل الخرائط) ---
+            // --- كارد موقع المستشفى ---
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
@@ -148,28 +125,26 @@ fun RequestDetailsBottomSheet(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            "موقع المستشفى",
+                            stringResource(R.string.hosp_location_label),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(
                             request.hospitalName,
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Button(
                         onClick = {
-                            // إنشاء الـ URI الخاص بخرائط جوجل وتمرير الإحداثيات واسم المستشفى كـ Label
-                            val mapUri =
-                                "geo:${request.hospitalLat},${request.hospitalLng}?q=${request.hospitalLat},${request.hospitalLng}(${request.hospitalName})".toUri()
+                            val mapUri = "geo:${request.hospitalLat},${request.hospitalLng}?q=${request.hospitalLat},${request.hospitalLng}(${request.hospitalName})".toUri()
                             val mapIntent = Intent(Intent.ACTION_VIEW, mapUri).apply {
                                 setPackage("com.google.android.apps.maps")
                             }
                             try {
                                 context.startActivity(mapIntent)
-                            } catch (e: Exception) {
-                                // حل احتياطي في حال عدم وجود تطبيق الخرائط (يفتح خرائط جوجل عبر المتصفح)
+                            } catch (_: Exception) {
                                 val browserIntent = Intent(
                                     Intent.ACTION_VIEW,
                                     "https://www.google.com/maps/search/?api=1&query=${request.hospitalLat},${request.hospitalLng}".toUri()
@@ -193,26 +168,26 @@ fun RequestDetailsBottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 val (statusText, statusDotColor) = when (request.status) {
-                    RequestStatus.ACTIVE -> "Active" to Color.Green
-                    RequestStatus.COMPLETED -> "Completed" to Color.Blue
-                    RequestStatus.CANCELLED -> "Cancelled" to PrimaryRed
-                    RequestStatus.EXPIRED -> "Expired" to Color.Gray
+                    RequestStatus.ACTIVE -> "Active" to MaterialTheme.colorScheme.primary
+                    RequestStatus.COMPLETED -> "Completed" to MaterialTheme.colorScheme.tertiary
+                    RequestStatus.CANCELLED -> "Cancelled" to MaterialTheme.colorScheme.error
+                    RequestStatus.EXPIRED -> "Expired" to MaterialTheme.colorScheme.onSurface
                 }
                 InfoBox(
-                    label = "حالة الطلب",
+                    label = stringResource(R.string.request_status_label),
                     value = statusText,
                     modifier = Modifier.weight(1f),
                     showDot = true,
                     dotColor = statusDotColor
                 )
                 InfoBox(
-                    label = "تاريخ النشر",
+                    label = stringResource(R.string.publish_date_label),
                     value = request.createdAt.toFormattedDate(),
                     modifier = Modifier.weight(1f)
                 )
             }
 
-            // --- كارد بيانات المتصل والاتصال الحقيقي ---
+            // --- كارد بيانات المتصل ---
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -229,8 +204,7 @@ fun RequestDetailsBottomSheet(
                 ) {
                     IconButton(
                         onClick = {
-                            val intent =
-                                Intent(Intent.ACTION_DIAL, "tel:${request.contactPhone}".toUri())
+                            val intent = Intent(Intent.ACTION_DIAL, "tel:${request.contactPhone}".toUri())
                             context.startActivity(intent)
                         },
                         modifier = Modifier.background(
@@ -245,7 +219,8 @@ fun RequestDetailsBottomSheet(
                         Text(
                             text = request.contactName,
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = request.contactPhone,
@@ -262,12 +237,13 @@ fun RequestDetailsBottomSheet(
                     ) {
                         Text(
                             text = request.contactName.firstOrNull()?.toString() ?: "أ",
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -278,8 +254,9 @@ fun InfoBox(
     value: String,
     modifier: Modifier = Modifier,
     showDot: Boolean = false,
-    dotColor: Color = Color.Red
+    dotColor: Color = Color.Unspecified
 ) {
+    val finalDotColor = if (dotColor == Color.Unspecified) MaterialTheme.colorScheme.error else dotColor
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
@@ -298,13 +275,14 @@ fun InfoBox(
                         modifier = Modifier
                             .size(6.dp)
                             .clip(CircleShape)
-                            .background(dotColor)
+                            .background(finalDotColor)
                     ); Spacer(Modifier.width(6.dp))
                 }
                 Text(
                     value,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }

@@ -4,7 +4,12 @@ import com.example.depi_final_project_bloodbank.domain.model.Donation
 import com.example.depi_final_project_bloodbank.domain.enums.DonationStatus
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
+import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class DonationRepository {
 
@@ -108,4 +113,43 @@ class DonationRepository {
             emptyList()
         }
     }
+
+
+    fun observeTotalConfirmedDonations(userId: String): Flow<Int> = callbackFlow {
+        val listener = requestsCollection
+            .whereArrayContains("donorIds", userId) // نبحث عن كل الطلبات التي شارك فيها المستخدم
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                // نحصل على الطلبات ونقوم بعد التبرعات التي تحمل حالة CONFIRMED وتخص هذا المستخدم
+                val requests = snapshot?.toObjects(BloodRequest::class.java) ?: emptyList()
+                val totalConfirmed = requests.sumOf { request ->
+                    request.donationLog.count { it.donorId == userId && it.status == DonationStatus.CONFIRMED }
+                }
+
+                trySend(totalConfirmed)
+            }
+
+        awaitClose { listener.remove() }
+    }
+
+    // 2. دالة مراقبة لستة التبرعات لايف لشاشة السجل (History)
+    fun observeDonationsByUser(userId: String): Flow<List<Donation>> = callbackFlow {
+        val listener = donationsCollection
+            .whereEqualTo("donorId", userId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                val donations = snapshot?.toObjects(Donation::class.java) ?: emptyList()
+                trySend(donations)
+            }
+        awaitClose { listener.remove() }
+    }
+
 }

@@ -7,14 +7,18 @@
     <string name="back_to_login">العودة لتسجيل الدخول</string>
 
     <!-- Login Screen -->
-    <string name="login_title">تسجيل الدخول</string>
+    <string name="login_title">أهلا بك مجددا</string>
+    <string name= "login_dec">هل أنت مستعد لإنقاذ الأرواح ودعم مجتمعك؟ سجّل الدخول للمتابعة</string>
+    <string name="login_Google_button">متابعة باستخدام Google</string>
+
     <string name="forgot_password_question">هل نسيت كلمة المرور؟</string>
     <string name="login_button">تسجيل الدخول</string>
     <string name="no_account">ليس لديك حساب؟ </string>
     <string name="create_account_link">إنشاء حساب</string>
 
     <!-- Register Screen -->
-    <string name="register_title">إنشاء حساب جديد</string>
+    <string name="signup_title">انضم لمنقذي الحياة!</string>
+    <string name="signup_dec">كُن سبباً في إنقاذ حياة شخص ما اليوم. أنشئ حسابك الآن وابدأ رحلة العطاء الإنساني</string>
     <string name="name_label">الاسم</string>
     <string name="phone_label">رقم الهاتف</string>
     <string name="blood_type_label">فصيلة الدم</string>
@@ -178,7 +182,7 @@
     <string name="blood_type_text">فصيلة الدم</string>
     <string name="badges">الأوسمة</string>
     <string name="donations">التبرعات</string>
-    <string name="settings">الإعدادات</string>
+    <string name="settings">اللغة</string>
     <string name="logout">تسجيل الخروج</string>
     <string name="are_you_sure_you_want_to_logout">هل أنت متأكد من تسجيل الخروج؟</string>
     <string name="cancel">إلغاء</string>
@@ -201,4 +205,15 @@
 
     <string name="phone_length_error">رقم الهاتف يجب أن يتكون من 11 رقماً</string>
     <string name="donation_date_note">ملحوظة: لا يمكنك التبرع بالدم إلا بعد مرور 3 أشهر على الأقل من تاريخ آخر تبرع.</string>
+
+    <string name="btn_cancel_donation">إلغاء التبرع</string>
+    <string name="btn_cancel_request">إلغاء الطلب</string>
+    <string name="btn_donate_now">تبرع الآن</string>
+
+    <string name="operation_success">تمت العملية بنجاح</string>
+    <string name="incompatible_blood_type">خطأ: فصيلة الدم غير متوافقة</string>
+    <string name="request_pending_warning">العملية قيد الانتظار</string>
+    <string name="error_request_full">خطأ: الطلب مكتمل بالفعل</string>
+    <string name="donation_success">تم التبرع بنجاح</string>
+    <string name="request_cancelled_success">تم إلغاء الطلب بنجاح</string>
 </resources>

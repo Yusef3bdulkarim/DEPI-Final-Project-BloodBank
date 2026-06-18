@@ -11,14 +11,18 @@
     <string name="cancel_btn">Cancel</string>
 
     <!-- Login Screen -->
-    <string name="login_title">Login</string>
+    <string name="login_title">WELCOME BACK!</string>
+    <string name= "login_dec">Ready to save lives and support your community? Sign in to continue</string>
     <string name="forgot_password_question">Forgot Password?</string>
     <string name="login_button">Login</string>
+    <string name="login_Google_button">Continue with Google</string>
+
     <string name="no_account">Don\'t have an account? </string>
     <string name="create_account_link">Create Account</string>
 
     <!-- Register Screen -->
-    <string name="register_title">Create a New Account</string>
+    <string name="signup_title">JOIN THE LIFESAVERS!</string>
+    <string name="signup_dec">Be the reason someone smiles today. Create an account to start your donation journey and save lives</string>
     <string name="name_label">Name</string>
     <string name="phone_label">Phone Number</string>
     <string name="blood_type_label">Blood Type</string>
@@ -195,7 +199,7 @@
     <string name="blood_type_text">Blood Type</string>
     <string name="badges">Badges</string>
     <string name="donations">Donations</string>
-    <string name="settings">Settings</string>
+    <string name="settings">Language</string>
     <string name="logout">Logout</string>
     <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
     <string name="choose_language">Choose Language</string>
@@ -211,4 +215,16 @@
     <string name="phone_length_error">Phone number must be exactly 11 digits</string>
     <string name="donation_date_note">Note: You can only donate blood if at least 3 months have passed since your last donation.</string>
 
+
+    <string name="btn_cancel_donation">Cancel Donation</string>
+    <string name="btn_cancel_request">Cancel Request</string>
+    <string name="btn_donate_now">Donate Now</string>
+
+    <!-- Feedback Messages -->
+    <string name="operation_success">Operation Successful</string>
+    <string name="incompatible_blood_type">Error: Incompatible Blood Type</string>
+    <string name="request_pending_warning">Action is pending confirmation</string>
+    <string name="error_request_full">Error: Request is already full</string>
+    <string name="donation_success">Donation registered successfully</string>
+    <string name="request_cancelled_success">Request cancelled successfully</string>
 </resources>

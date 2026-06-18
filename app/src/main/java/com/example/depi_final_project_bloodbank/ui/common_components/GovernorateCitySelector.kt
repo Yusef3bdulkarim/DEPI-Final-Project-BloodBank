@@ -1,5 +1,6 @@
 package com.example.depi_final_project_bloodbank.ui.common_components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -45,7 +46,8 @@ fun GovernorateCitySelector(
             )
             ExposedDropdownMenu(
                 expanded = expandedGov,
-                onDismissRequest = { expandedGov = false }
+                onDismissRequest = { expandedGov = false },
+                modifier = Modifier.background(Color.White)
             ) {
                 EgyptLocations.allGovernorates.forEach { gov ->
                     DropdownMenuItem(
@@ -81,7 +83,9 @@ fun GovernorateCitySelector(
             )
             ExposedDropdownMenu(
                 expanded = expandedCity,
-                onDismissRequest = { expandedCity = false }
+                onDismissRequest = { expandedCity = false },
+                modifier = Modifier.background(Color.White)
+
             ) {
                 availableCities.forEach { city ->
                     DropdownMenuItem(

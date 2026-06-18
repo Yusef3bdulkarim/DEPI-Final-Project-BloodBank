@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,7 +30,7 @@ fun FilterTabs(
         listOf(RequestStatus.ACTIVE, RequestStatus.COMPLETED, RequestStatus.CANCELLED,
             RequestStatus.EXPIRED).forEach { status ->
             val isSelected = selected == status
-            val bgColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+            val bgColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface.copy(alpha = 0f)
             val txtColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
 
             Box(
