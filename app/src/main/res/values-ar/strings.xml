@@ -86,11 +86,11 @@
     <string name="processing">قيد المعالجة</string>
     <string name="searching_donors">جاري البحث عن متبرعين</string>
     <string name="donation_completed">اكتمل التبرع</string>
-    <string name="search_placeholder">بحث باسم المستشفى أو الفصيلة...</string>
+    <string name="search_placeholder">بحث باسم الفصيلة...</string>
     <string name="unit_label">وحدة</string>
     <string name="unit_count">الوحدة: %1$d</string>
     <string name="no_results_title">لا توجد نتائج</string>
-    <string name="no_results_search_sub">لم نجد نتائج للبحث عن \"%s\". جرب البحث عن فصيلة دم أو اسم مستشفى آخر.</string>
+    <string name="no_results_search_sub">لم نجد نتائج للبحث عن \"%s\". جرب البحث عن فصيلة دم أخري.</string>
     <string name="no_results_empty_sub">لا توجد طلبات في هذا القسم حالياً.</string>
 
     <!-- Bottom Sheet Strings -->

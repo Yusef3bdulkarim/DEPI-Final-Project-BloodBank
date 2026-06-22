@@ -19,4 +19,5 @@ interface RequestRepository {
     suspend fun confirmDonation(donationId: String, requestId: String): Result<Boolean>
     suspend fun updateUnitsNeeded(requestId: String, newUnits: Int): Result<Boolean>
     fun getRequestsByDonor(donorId: String): Flow<List<BloodRequest>>
+    suspend fun hasActivePendingDonation(donorId: String): Boolean
 }

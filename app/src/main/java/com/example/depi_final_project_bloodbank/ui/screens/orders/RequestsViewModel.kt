@@ -6,7 +6,6 @@ import com.example.depi_final_project_bloodbank.data.repository.RequestRepositor
 import com.example.depi_final_project_bloodbank.domain.enums.DonationStatus
 import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
-import com.example.depi_final_project_bloodbank.domain.model.DonationLogEntry
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.*
@@ -27,7 +26,8 @@ data class RequestUiModel(
     val isOwner: Boolean,
     val buttonText: String,
     val isButtonEnabled: Boolean,
-    val isDonating: Boolean
+    val isDonating: Boolean,
+    val isDonateButtonEnabled: Boolean = false
 )
 
 data class RequestsUiState(
@@ -39,22 +39,60 @@ data class RequestsUiState(
     val donatingRequestIds: Set<String> = emptySet(),
     val activeActionIds: Set<String> = emptySet(),
     val managingRequest: BloodRequest? = null,
-    val feedback: RequestFeedback = RequestFeedback.None
+    val feedback: RequestFeedback = RequestFeedback.None,
+    val showMyRequests: Boolean = false,
+    val userCity: String = ""
 ) {
     fun getUiModels(currentUserId: String?): List<RequestUiModel> {
-        return orders.filter { order ->
-            val matchesTab = order.status == selectedTab
-            val matchesSearch = if (searchQuery.isBlank()) true 
+        val THREE_DAYS_MS = 3L * 24 * 60 * 60 * 1000
+        val currentTime = System.currentTimeMillis()
+
+        val hasActivePending = orders.any { order ->
+            order.donationLog.any { it.donorId == currentUserId && it.status == DonationStatus.PENDING }
+        }
+
+        return orders.map { order ->
+            // Automatic Expiry Logic
+            if (order.status == RequestStatus.ACTIVE && (currentTime - order.createdAt) > THREE_DAYS_MS) {
+                order.copy(status = RequestStatus.EXPIRED)
+            } else order
+        }.filter { order ->
+            val matchesSearch = if (searchQuery.isBlank()) true
             else order.bloodType.contains(searchQuery, ignoreCase = true)
-            matchesTab && matchesSearch
-        }.map { order ->
+            if (!matchesSearch) return@filter false
+
+            if (!showMyRequests) {
+                // Requests Feed: Only ACTIVE + Same City + Created by others
+                order.createdBy != currentUserId &&
+                order.status == RequestStatus.ACTIVE &&
+                (userCity.isEmpty() || order.city == userCity)
+            } else {
+                // My Activity: Created by current user AND matches tab
+                order.createdBy == currentUserId && order.status == selectedTab
+            }
+        }.sortedByDescending { it.createdAt }.map { order ->
             val isOwner = currentUserId == order.createdBy
+            val hasDonated = order.donorIds.contains(currentUserId)
             val isDonating = donatingRequestIds.contains(order.id)
-            
+            val isFull = order.unitsReserved >= order.unitsNeeded
+            val isRequestCancelled = order.status == RequestStatus.CANCELLED
+            val isRequestCompleted = order.status == RequestStatus.COMPLETED
+            val rawStatus = order.status.name
             val (btnText, btnEnabled) = when {
+                // 1. الأولوية للحالات النهائية (لازم تظهر كدة ومقفولة)
+                isRequestCancelled -> "Request Cancelled" to false
+                isRequestCompleted -> "Request Completed" to false
+
+                // 2. المالك (لو الطلب نشط فقط)
                 isOwner -> "Manage Request" to true
+
+                // 3. حالات التبرع
+                hasDonated -> "Donated" to false
+                hasActivePending -> "Action Locked" to false
+
+                // 4. الحالات الأخرى
                 order.status != RequestStatus.ACTIVE -> order.status.name to false
-                order.unitsConfirmed >= order.unitsNeeded -> "Full" to false
+                isFull -> "Full" to false
                 isDonating -> "..." to false
                 else -> "Donate Now" to true
             }
@@ -87,10 +125,32 @@ class RequestsViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
+            val currentUserUid = auth.currentUser?.uid ?: return@launch
+
+            try {
+                val userSnapshot = FirebaseFirestore.getInstance()
+                    .collection("Users")
+                    .document(currentUserUid)
+                    .get()
+                    .await()
+                val city = userSnapshot.getString("city") ?: ""
+                _uiState.update { it.copy(userCity = city) }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
             requestRepository.getAllRequests()
                 .distinctUntilChanged()
                 .catch { _uiState.update { it.copy(isLoading = false) } }
                 .collect { realOrders ->
+                    realOrders.forEach { order ->
+                        if (order.status == RequestStatus.CANCELLED) {
+                            val myPending = order.donationLog.find { it.donorId == currentUserUid && it.status == DonationStatus.PENDING }
+                            if (myPending != null) {
+                                launch { requestRepository.cancelDonation(myPending.id, order.id) }
+                            }
+                        }
+                    }
                     _uiState.update { it.copy(
                         orders = realOrders,
                         isLoading = false,
@@ -103,35 +163,73 @@ class RequestsViewModel(
     fun donateToRequest(request: BloodRequest) {
         val currentUserUid = auth.currentUser?.uid ?: return
 
+        val isCancelled = request.status == RequestStatus.CANCELLED
+
+        if (isCancelled) {
+            _uiState.update { it.copy(feedback = RequestFeedback.Error("This request has been cancelled by the owner.")) }
+            return
+        }
+
+        val hasPending = _uiState.value.orders.any { order ->
+            order.donationLog.any { it.donorId == currentUserUid && it.status == DonationStatus.PENDING }
+        }
+
+        if (hasPending) {
+            _uiState.update { it.copy(feedback = RequestFeedback.Error("You already have a pending donation!")) }
+            return
+        }
+
+        // 1. Strict One-Unit Rule Check
+        if (request.donorIds.contains(currentUserUid)) {
+            _uiState.update { it.copy(feedback = RequestFeedback.Error("You have already donated to this request.")) }
+            return
+        }
+
         if (_uiState.value.donatingRequestIds.contains(request.id)) return
         if (request.unitsReserved >= request.unitsNeeded) return
 
-        // Optimistic UI Update
-        val previousOrders = _uiState.value.orders
-        val updatedOrders = previousOrders.map { order ->
-            if (order.id == request.id) {
-                val newReserved = order.unitsReserved + 1
-                // Strict enforcement: if reserved units reach the goal, mark as COMPLETED locally
-                order.copy(
-                    unitsReserved = newReserved,
-                    status = if (newReserved >= order.unitsNeeded) RequestStatus.COMPLETED else order.status
-                )
-            } else order
-        }
-        _uiState.update { it.copy(
-            orders = updatedOrders,
-            donatingRequestIds = it.donatingRequestIds + request.id
-        ) }
-
         viewModelScope.launch {
             try {
+                _uiState.update { it.copy(donatingRequestIds = it.donatingRequestIds + request.id) }
+
                 val userSnapshot = FirebaseFirestore.getInstance()
                     .collection("Users")
                     .document(currentUserUid)
                     .get()
                     .await()
 
+                // 2. 90-Day Eligibility Check
+                val lastDonationDate = userSnapshot.getLong("lastDonationDate") ?: 0L
+                val ninetyDaysInMillis = 90L * 24 * 60 * 60 * 1000L
+                if (System.currentTimeMillis() - lastDonationDate < ninetyDaysInMillis) {
+                    _uiState.update { it.copy(feedback = RequestFeedback.Error("You must wait 90 days.")) }
+                    return@launch
+                }
+
+                // 3. Blood Type Validation Check
                 val donorBloodType = userSnapshot.getString("bloodType") ?: ""
+                if (donorBloodType.isEmpty() || !isBloodCompatible(donorBloodType, request.bloodType)) {
+                    _uiState.update { it.copy(feedback = RequestFeedback.WrongBloodType) }
+                    return@launch
+                }
+
+                // Optimistic UI Update (Instant units increment)
+                val previousOrders = _uiState.value.orders
+                val updatedOrders = previousOrders.map { order ->
+                    if (order.id == request.id) {
+                        val newReserved = order.unitsReserved + 1
+                        val newDonorIds = order.donorIds + currentUserUid
+                        order.copy(
+                            unitsReserved = newReserved,
+                            donorIds = newDonorIds,
+                            // Fix Flickering: Keep status consistent with server during donation.
+                            // Global sync (status change) only happens upon owner confirmation.
+                            status = order.status
+                        )
+                    } else order
+                }
+                _uiState.update { it.copy(orders = updatedOrders) }
+
                 val donorName = userSnapshot.getString("name") ?: "Anonymous"
 
                 val result = requestRepository.safeIncrementReservedUnits(
@@ -155,8 +253,7 @@ class RequestsViewModel(
                     _uiState.update { it.copy(feedback = feedback) }
                 }
             } catch (e: Exception) {
-                // Rollback on failure
-                _uiState.update { it.copy(orders = previousOrders, feedback = RequestFeedback.Error(e.message ?: "Network error")) }
+                _uiState.update { it.copy(feedback = RequestFeedback.Error(e.message ?: "Network error")) }
                 e.printStackTrace()
             } finally {
                 _uiState.update { it.copy(donatingRequestIds = _uiState.value.donatingRequestIds - request.id) }
@@ -166,50 +263,6 @@ class RequestsViewModel(
 
     fun clearFeedback() {
         _uiState.update { it.copy(feedback = RequestFeedback.None) }
-    }
-
-    fun cancelDonation(donationId: String, requestId: String) {
-        // 1. Action Locking: Prevent double-clicks
-        if (_uiState.value.activeActionIds.contains(donationId)) return
-        
-        _uiState.update { it.copy(activeActionIds = it.activeActionIds + donationId) }
-
-        // 2. Optimistic UI Update
-        val previousOrders = _uiState.value.orders
-        val updatedOrders = previousOrders.map { order ->
-            if (order.id == requestId) {
-                val updatedLog = order.donationLog.map { entry ->
-                    if (entry.id == donationId) entry.copy(status = DonationStatus.CANCELLED)
-                    else entry
-                }
-                order.copy(
-                    donationLog = updatedLog,
-                    unitsReserved = (order.unitsReserved - 1).coerceAtLeast(0)
-                )
-            } else order
-        }
-        _uiState.update { it.copy(orders = updatedOrders) }
-
-        viewModelScope.launch {
-            try {
-                // 3. Batch Update
-                val result = requestRepository.cancelDonation(donationId, requestId)
-                if (!result.isSuccess) {
-                    // Rollback on failure
-                    _uiState.update { it.copy(orders = previousOrders) }
-                    _uiState.update { it.copy(feedback = RequestFeedback.Error(result.exceptionOrNull()?.message ?: "Failed")) }
-                } else {
-                    _uiState.update { it.copy(feedback = RequestFeedback.Success) }
-                }
-            } catch (e: Exception) {
-                // Rollback on failure
-                _uiState.update { it.copy(orders = previousOrders, feedback = RequestFeedback.Error(e.message ?: "Error")) }
-                e.printStackTrace()
-            } finally {
-                // 4. Release Lock
-                _uiState.update { it.copy(activeActionIds = it.activeActionIds - donationId) }
-            }
-        }
     }
 
     fun openManageRequest(request: BloodRequest) {
@@ -223,7 +276,7 @@ class RequestsViewModel(
     fun confirmDonationDelivery(donationId: String, requestId: String) {
         // Optimistic UI Update
         val previousOrders = _uiState.value.orders
-        
+
         val updatedOrders = previousOrders.map { order ->
             if (order.id == requestId) {
                 val updatedLog = order.donationLog.map { entry ->
@@ -231,14 +284,16 @@ class RequestsViewModel(
                     else entry
                 }
                 val newConfirmed = updatedLog.count { it.status == DonationStatus.CONFIRMED }
+                val newReserved = updatedLog.count { it.status == DonationStatus.PENDING || it.status == DonationStatus.CONFIRMED }
                 order.copy(
                     donationLog = updatedLog,
                     unitsConfirmed = newConfirmed,
+                    unitsReserved = newReserved,
                     status = if (newConfirmed >= order.unitsNeeded) RequestStatus.COMPLETED else order.status
                 )
             } else order
         }
-        
+
         _uiState.update { it.copy(
             orders = updatedOrders,
             managingRequest = updatedOrders.find { o -> o.id == requestId }
@@ -272,11 +327,19 @@ class RequestsViewModel(
     }
 
     fun cancelRequest(requestId: String) {
+        // Atomic Local Update for instant UI response and force switch tab
+        _uiState.update { currentState ->
+            val updatedOrders = currentState.orders.map { order ->
+                if (order.id == requestId) order.copy(status = RequestStatus.CANCELLED) else order
+            }
+            currentState.copy(
+                orders = updatedOrders,
+                selectedTab = RequestStatus.CANCELLED
+            )
+        }
         viewModelScope.launch {
             val result = requestRepository.cancelRequest(requestId)
-            if (result.isSuccess) {
-                _uiState.update { it.copy(feedback = RequestFeedback.Success) }
-            } else {
+            if (!result.isSuccess) {
                 _uiState.update { it.copy(feedback = RequestFeedback.Error("Failed to cancel request")) }
             }
         }
@@ -286,14 +349,47 @@ class RequestsViewModel(
         _uiState.update { it.copy(selectedTab = status) }
     }
 
+    fun toggleShowMyRequests() {
+        _uiState.update { it.copy(showMyRequests = !it.showMyRequests) }
+    }
+
     fun onSearchQueryChanged(query: String) {
         _uiState.update { it.copy(searchQuery = query) }
     }
 
     fun refreshOrders() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isRefreshing = true) }
-            _uiState.update { it.copy(isRefreshing = false) }
+        observeOrders()
+    }
+
+    private fun isBloodCompatible(donor: String, patient: String): Boolean {
+        val d = donor.trim().uppercase()
+        val p = patient.trim().uppercase()
+
+        if (d.isEmpty() || p.isEmpty()) return false
+        if (d == p) return true
+        if (d == "O-") return true
+        if (d == "O+") {
+            return p == "A+" || p == "B+" || p == "AB+"
         }
+        if (d == "A-") {
+            return p == "A+" || p == "AB-" || p == "AB+"
+        }
+        if (d == "A+") {
+            return p == "AB+"
+        }
+        if (d == "B-") {
+            return p == "B+" || p == "AB-" || p == "AB+"
+        }
+        if (d == "B+") {
+            return p == "AB+"
+        }
+        if (d == "AB-") {
+            return p == "AB+"
+        }
+        if (d == "AB+") {
+            return false
+        }
+
+        return false
     }
 }

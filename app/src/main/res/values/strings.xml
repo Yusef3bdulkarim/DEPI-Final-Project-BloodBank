@@ -113,11 +113,11 @@
     <string name="donation_completed">Donation Completed</string>
 
     <!-- Search & Results -->
-    <string name="search_placeholder">Search hospital or blood type…</string>
+    <string name="search_placeholder">Search blood type…</string>
     <string name="unit_label">Unit</string>
     <string name="unit_count">Unit: %1$d</string>
     <string name="no_results_title">No Results Found</string>
-    <string name="no_results_search_sub">We couldn’t find any results for \"%s\". Try searching for a different hospital or blood type.</string>
+    <string name="no_results_search_sub">We couldn’t find any results for \"%s\". Try searching for a different blood type.</string>
     <string name="no_results_empty_sub">There are currently no requests in this section.</string>
 
     <!-- Bottom Sheet Strings -->

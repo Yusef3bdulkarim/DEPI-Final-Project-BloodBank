@@ -1,5 +1,10 @@
 package com.example.depi_final_project_bloodbank.ui.screens.orders
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,6 +32,7 @@ import com.example.depi_final_project_bloodbank.ui.screens.orders.components.Emp
 import com.example.depi_final_project_bloodbank.ui.screens.orders.components.FilterTabs
 import com.example.depi_final_project_bloodbank.ui.screens.orders.components.OrderCard
 import com.example.depi_final_project_bloodbank.ui.screens.orders.components.RequestDetailsBottomSheet
+import com.example.depi_final_project_bloodbank.ui.theme.MaroonPrimary
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,11 +43,12 @@ fun RequestsScreen(navController: NavController, vm: RequestsViewModel = viewMod
     val listState = rememberLazyListState()
     val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
 
-    val uiModels = remember(state.orders, state.selectedTab, state.searchQuery, state.donatingRequestIds) {
+
+    val uiModels = remember(state.orders, state.selectedTab, state.searchQuery, state.showMyRequests, state.donatingRequestIds) {
         state.getUiModels(currentUserId)
     }
 
-    LaunchedEffect(state.selectedTab) {
+    LaunchedEffect(state.selectedTab, state.showMyRequests) {
         if (uiModels.isNotEmpty()) {
             listState.animateScrollToItem(0)
         }
@@ -62,7 +69,7 @@ fun RequestsScreen(navController: NavController, vm: RequestsViewModel = viewMod
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "back",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaroonPrimary
                     )
                 }
 
@@ -84,18 +91,18 @@ fun RequestsScreen(navController: NavController, vm: RequestsViewModel = viewMod
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
                             colors = TextFieldDefaults.colors(
-                                focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
-                                unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
-                                disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
+                                focusedContainerColor = Color.Transparent,
+                                unfocusedContainerColor = Color.Transparent,
+                                disabledContainerColor = Color.Transparent,
                                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
                                 unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                             )
                         )
                     } else {
                         Text(
-                            text = stringResource(R.string.orders_list),
+                            text = if (state.showMyRequests) "My Activity" else "Requests Feed",
                             style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaroonPrimary,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -108,16 +115,54 @@ fun RequestsScreen(navController: NavController, vm: RequestsViewModel = viewMod
                     Icon(
                         imageVector = if (isSearchActive) Icons.Default.SearchOff else Icons.Default.Search,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaroonPrimary
                     )
                 }
             }
 
-            // --- Tabs ---
-            FilterTabs(
-                selected = state.selectedTab,
-                onSelected = { vm.setTab(it) }
-            )
+            // --- Toggle Section (Segmented Button) ---
+            SingleChoiceSegmentedButtonRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                SegmentedButton(
+                    selected = !state.showMyRequests,
+                    onClick = { if (state.showMyRequests) vm.toggleShowMyRequests() },
+                    shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+                    colors = SegmentedButtonDefaults.colors(
+                        activeContainerColor = MaroonPrimary,
+                        activeContentColor = Color.White,
+                        inactiveContainerColor = Color.Transparent,
+                        inactiveContentColor = MaroonPrimary
+                    ),
+                    label = { Text("Requests Feed") }
+                )
+                SegmentedButton(
+                    selected = state.showMyRequests,
+                    onClick = { if (!state.showMyRequests) vm.toggleShowMyRequests() },
+                    shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+                    colors = SegmentedButtonDefaults.colors(
+                        activeContainerColor = MaroonPrimary,
+                        activeContentColor = Color.White,
+                        inactiveContainerColor = Color.Transparent,
+                        inactiveContentColor = MaroonPrimary
+                    ),
+                    label = { Text("My Activity") }
+                )
+            }
+
+            // --- Status Tabs (Only visible in My Activity mode) ---
+            AnimatedVisibility(
+                visible = state.showMyRequests,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
+                FilterTabs(
+                    selected = state.selectedTab,
+                    onSelected = { vm.setTab(it) }
+                )
+            }
 
             // --- List ---
             PullToRefreshBox(
@@ -134,10 +179,13 @@ fun RequestsScreen(navController: NavController, vm: RequestsViewModel = viewMod
                     LazyColumn(
                         state = listState,
                         verticalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(16.dp),
+                        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 12.dp),
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(uiModels, key = { it.request.id }) { uiModel ->
+                        // Strict tab-based filtering
+                        val displayList = uiModels.filter { it.request.status == state.selectedTab }
+
+                        items(displayList, key = { it.request.id }) { uiModel ->
                             OrderCard(
                                 uiModel = uiModel,
                                 onViewDetailsClicked = { vm.openManageRequest(it) },
@@ -155,14 +203,14 @@ fun RequestsScreen(navController: NavController, vm: RequestsViewModel = viewMod
             }
         }
 
-        // --- Custom Feedback Overlay (Professional Feel) ---
+        // --- Custom Feedback Overlay ---
         if (state.feedback != RequestFeedback.None) {
             val (bgColor, textColor, messageId) = when (state.feedback) {
-                is RequestFeedback.Success -> Triple(MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.onTertiary, R.string.donation_success)
-                is RequestFeedback.WrongBloodType -> Triple(MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.onError, R.string.incompatible_blood_type)
-                is RequestFeedback.RequestClosed -> Triple(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer, R.string.error_request_full)
-                is RequestFeedback.ActionPending -> Triple(MaterialTheme.colorScheme.secondary, MaterialTheme.colorScheme.onSecondary, R.string.request_pending_warning)
-                else -> Triple(MaterialTheme.colorScheme.surface.copy(alpha = 0f), MaterialTheme.colorScheme.surface.copy(alpha = 0f), null)
+                is RequestFeedback.Success -> Triple(Color(0xFF4CAF50), Color.White, R.string.donation_success)
+                is RequestFeedback.WrongBloodType -> Triple(MaterialTheme.colorScheme.error, Color.White, R.string.incompatible_blood_type)
+                is RequestFeedback.RequestClosed -> Triple(Color(0xFFFF9800), Color.White, R.string.error_request_full)
+                is RequestFeedback.ActionPending -> Triple(Color(0xFFFBC02D), Color.Black, R.string.request_pending_warning)
+                else -> Triple(Color.Transparent, Color.Transparent, null)
             }
 
             if (messageId != null) {

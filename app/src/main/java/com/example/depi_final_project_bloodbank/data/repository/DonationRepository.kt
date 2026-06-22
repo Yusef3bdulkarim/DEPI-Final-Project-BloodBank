@@ -7,9 +7,12 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
+import com.example.depi_final_project_bloodbank.domain.model.User
+import com.google.firebase.firestore.snapshots
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.map
 
 class DonationRepository {
 
@@ -151,5 +154,35 @@ class DonationRepository {
             }
         awaitClose { listener.remove() }
     }
+
+
+    fun getFilteredRequests(userCity: String): Flow<List<BloodRequest>> {
+        return firestore.collection("blood_requests")
+            .whereEqualTo("city", userCity) // 1. فلترة المحافظة
+            .whereEqualTo("status", "ACTIVE")
+            .snapshots()
+            .map { it.toObjects(BloodRequest::class.java) }
+    }
+
+    suspend fun executeDonation(donation: Donation, user: User): Result<Unit> {
+        val NINETY_DAYS = 90L * 24 * 60 * 60 * 1000
+
+        // 2. شرط الـ 90 يوم
+        user.lastDonationDate?.let {
+
+            if ((System.currentTimeMillis() - it) < NINETY_DAYS) {
+                return Result.failure(Exception("يجب الانتظار 90 يوماً من آخر تبرع."))
+            }
+        }
+
+        // 3. شرط الوحدة الواحدة
+        if (donation.units > 1) {
+            return Result.failure(Exception("مسموح بوحدة واحدة فقط."))
+        }
+
+        // تنفيذ عملية الحفظ في Firebase...
+        return Result.success(Unit)
+    }
+
 
 }

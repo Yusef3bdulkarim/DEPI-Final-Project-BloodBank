@@ -2,6 +2,7 @@ package com.example.depi_final_project_bloodbank.ui.screens.orders.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,6 +26,7 @@ import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
 import com.example.depi_final_project_bloodbank.ui.screens.orders.RequestUiModel
+import com.example.depi_final_project_bloodbank.ui.theme.MaroonPrimary
 import com.example.depi_final_project_bloodbank.utils.toFormattedDate
 
 @Composable
@@ -177,6 +180,22 @@ fun OrderCard(
                 )
             }
 
+            if (order.status == RequestStatus.EXPIRED) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Surface(
+                    color = MaterialTheme.colorScheme.error.copy(alpha = 0.1f),
+                    shape = MaterialTheme.shapes.small
+                ) {
+                    Text(
+                        text = "طلب منتهي الصلاحية",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             // Action Row
@@ -200,30 +219,61 @@ fun OrderCard(
                     modifier = Modifier.wrapContentWidth(),
                     contentAlignment = Alignment.CenterEnd
                 ) {
-                    Button(
-                        onClick = { onDonateClicked(order) },
-                        enabled = uiModel.isButtonEnabled,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (uiModel.isOwner) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
-                            contentColor = if (uiModel.isOwner) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onPrimary,
-                            disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
-                        ),
-                        shape = MaterialTheme.shapes.medium,
-                        modifier = Modifier.height(32.dp),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
-                    ) {
-                        if (uiModel.isDonating) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(16.dp),
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                strokeWidth = 2.dp
-                            )
-                        } else {
+                    if (uiModel.isOwner) {
+                        OutlinedButton(
+                            onClick = { onDonateClicked(order) },
+                            enabled = uiModel.isButtonEnabled,
+                            border = BorderStroke(1.dp, MaroonPrimary),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = MaroonPrimary
+                            ),
+                            shape = MaterialTheme.shapes.medium,
+                            modifier = Modifier.height(32.dp),
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+                        ) {
                             Text(
                                 text = uiModel.buttonText,
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }
+                    } else if (order.status == RequestStatus.ACTIVE) {
+                        Button(
+                            onClick = { onDonateClicked(order) },
+                            enabled = uiModel.isButtonEnabled,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaroonPrimary,
+                                contentColor = Color.White,
+                                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+                            ),
+                            shape = MaterialTheme.shapes.medium,
+                            modifier = Modifier.height(32.dp),
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+                        ) {
+                            if (uiModel.isDonating) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(16.dp),
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    strokeWidth = 2.dp
+                                )
+                            } else {
+                                Text(
+                                    text = uiModel.buttonText,
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                            }
+                        }
+                    } else {
+                        Text(
+                            text = when (order.status) {
+                                RequestStatus.COMPLETED -> stringResource(R.string.delivered)
+                                RequestStatus.CANCELLED -> "Cancelled"
+                                RequestStatus.EXPIRED -> "Expired"
+                                else -> stringResource(R.string.processing)
+                            },
+                            color = statusColor,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     }
                 }
             }

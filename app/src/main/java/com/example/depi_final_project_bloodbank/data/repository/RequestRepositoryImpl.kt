@@ -265,12 +265,15 @@ class RequestRepositoryImpl(
                 else entry
             }
 
-            val currentReserved = updatedLog.count { it.status == DonationStatus.PENDING }
+            // Corrected unitsReserved: Pending + Confirmed
+            val newReserved = updatedLog.count { 
+                it.status == DonationStatus.PENDING || it.status == DonationStatus.CONFIRMED 
+            }
             
             val batch = firestore.batch()
             batch.update(requestRef, "donationLog", updatedLog)
-            batch.update(requestRef, "unitsReserved", currentReserved)
-            
+            batch.update(requestRef, "unitsReserved", newReserved)
+
             // If the user has no more active/pending donations in this request, remove them from donorIds
             val stillDonating = updatedLog.any { it.donorId == donorIdToRemove && it.status != DonationStatus.CANCELLED }
             if (!stillDonating && donorIdToRemove != null) {
@@ -300,11 +303,13 @@ class RequestRepositoryImpl(
             }
 
             val currentConfirmed = updatedLog.count { it.status == DonationStatus.CONFIRMED }
-            val currentReserved = updatedLog.count { it.status == DonationStatus.PENDING }
+            val currentReserved = updatedLog.count { 
+                it.status == DonationStatus.PENDING || it.status == DonationStatus.CONFIRMED 
+            }
 
             val batch = firestore.batch()
 
-            // 2. تحديث بيانات الطلب (سجل التبرعات والوحدات)
+            // 2. Update Request Data (Donation log and units)
             batch.update(requestRef, "donationLog", updatedLog)
             batch.update(requestRef, "unitsConfirmed", currentConfirmed)
             batch.update(requestRef, "unitsReserved", currentReserved)
@@ -357,4 +362,21 @@ class RequestRepositoryImpl(
         }
         awaitClose { listener.remove() }
     }
+    override suspend fun hasActivePendingDonation(donorId: String): Boolean {
+        return try {
+            // بنبحث في الريكويستس عن أي طلب فيه اليوزر ده في الـ donationLog بحالة PENDING
+            val querySnapshot = firestore.collection("requests")
+                .whereArrayContains("donorIds", donorId)
+                .get()
+                .await()
+
+            querySnapshot.any { doc ->
+                val log = doc.get("donationLog") as? List<Map<String, Any>>
+                log?.any { it["donorId"] == donorId && it["status"] == "PENDING" } == true
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
+
 }

@@ -9,6 +9,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -28,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.domain.enums.RequestPriority
 import com.example.depi_final_project_bloodbank.ui.common_components.GovernorateCitySelector
+import com.example.depi_final_project_bloodbank.ui.theme.MaroonPrimary
+import com.example.depi_final_project_bloodbank.ui.theme.UrgentRed
 import com.google.android.gms.location.LocationServices
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -132,62 +136,43 @@ fun CreateRequestScreen(
         ) {
 
 
-            var expandedBloodType by remember { mutableStateOf(false) }
             val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
 
-            // كارت فصيلة الدم
-            Card(
-                shape = shapes.medium,
-                colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
+
+            Text(
+                stringResource(R.string.blood_type),
+                style = typography.titleMedium,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            // Blood Type Selection Chips
+            @OptIn(ExperimentalLayoutApi::class)
+            FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 4.dp)
-                    .then(
-                        if (isBloodTypeError) Modifier.border(1.5.dp, colorScheme.error, shapes.medium)
-                        else Modifier
-                    )
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ExposedDropdownMenuBox(
-                    expanded = expandedBloodType,
-                    onExpandedChange = { expandedBloodType = !expandedBloodType }
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                            .menuAnchor()
-                    ) {
-                        Text(
-                            stringResource(R.string.blood_type),
-                            style = typography.titleMedium,
-                            modifier = Modifier.weight(1f)
+                bloodTypes.forEach { type ->
+                    val isSelected = request.bloodType == type
+                    FilterChip(
+                        selected = isSelected,
+                        onClick = { viewModel.updateRequest(request.copy(bloodType = type)) },
+                        label = { Text(type) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaroonPrimary,
+                            selectedLabelColor = Color.White,
+                            labelColor = MaroonPrimary
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            enabled = true,
+                            selected = isSelected,
+                            borderColor = MaroonPrimary,
+                            selectedBorderColor = MaroonPrimary,
+                            borderWidth = 1.dp
                         )
-                        Box(
-                            modifier = Modifier
-                                .border(1.dp, Color.LightGray, shapes.small)
-                                .padding(horizontal = 12.dp, vertical = 4.dp)
-                        ) {
-                            Text(
-                                request.bloodType.ifBlank { "-" },
-                                style = typography.titleMedium,
-                                color = colorScheme.primary
-                            )
-                        }
-                    }
-                    ExposedDropdownMenu(
-                        expanded = expandedBloodType,
-                        onDismissRequest = { expandedBloodType = false }) {
-                        bloodTypes.forEach { type ->
-                            DropdownMenuItem(
-                                text = { Text(type, style = typography.bodyLarge) },
-                                onClick = {
-                                    viewModel.updateRequest(request.copy(bloodType = type))
-                                    expandedBloodType = false
-                                }
-                            )
-                        }
-                    }
+                    )
                 }
             }
 
@@ -196,10 +181,8 @@ fun CreateRequestScreen(
                     text = stringResource(R.string.error_required),
                     color = colorScheme.error,
                     style = typography.bodySmall,
-                    modifier = Modifier.padding(start = 8.dp, bottom = 16.dp, top = 4.dp)
+                    modifier = Modifier.padding(start = 8.dp, bottom = 16.dp)
                 )
-            } else {
-                Spacer(modifier = Modifier.height(16.dp))
             }
 
             Card(
@@ -373,7 +356,7 @@ fun CreateRequestScreen(
                             onClick = { viewModel.updateRequest(request.copy(priority = RequestPriority.URGENT)) },
                             label = { Text(stringResource(R.string.urgent_urgency)) },
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = colorScheme.primary,
+                                selectedContainerColor = UrgentRed,
                                 selectedLabelColor = colorScheme.onPrimary
                             ),
                             shape = shapes.large
@@ -460,8 +443,8 @@ fun CreateRequestScreen(
 
             Button(
                 onClick = { viewModel.publish() },
-                enabled = !isLoading,
-                colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary),
+                enabled = !isLoading && request.bloodType.isNotBlank() && request.unitsNeeded > 0,
+                colors = ButtonDefaults.buttonColors(containerColor = MaroonPrimary),
                 shape = shapes.large,
                 modifier = Modifier
                     .fillMaxWidth()

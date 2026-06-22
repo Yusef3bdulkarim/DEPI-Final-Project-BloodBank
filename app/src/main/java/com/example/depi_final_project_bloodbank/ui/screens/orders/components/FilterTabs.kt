@@ -10,11 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
+import com.example.depi_final_project_bloodbank.ui.theme.MaroonPrimary
 
 @Composable
 fun FilterTabs(
@@ -22,36 +24,24 @@ fun FilterTabs(
     onSelected: (RequestStatus) -> Unit
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        listOf(RequestStatus.ACTIVE, RequestStatus.COMPLETED, RequestStatus.CANCELLED,
-            RequestStatus.EXPIRED).forEach { status ->
-            val isSelected = selected == status
-            val bgColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface.copy(alpha = 0f)
-            val txtColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
+        val statuses = listOf(RequestStatus.ACTIVE, RequestStatus.COMPLETED, RequestStatus.CANCELLED)
 
+        statuses.forEach { status ->
+            val isSelected = selected == status
             Box(
                 modifier = Modifier
-                    .weight(1f)
                     .clip(CircleShape)
-                    .background(bgColor)
+                    .background(if (isSelected) MaroonPrimary else Color.LightGray.copy(alpha = 0.2f))
                     .clickable { onSelected(status) }
-                    .padding(vertical = 8.dp),
-                contentAlignment = Alignment.Center
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = stringResource(when (status) {
-                        RequestStatus.ACTIVE -> R.string.tab_in_progress
-                        RequestStatus.COMPLETED -> R.string.tab_completed
-                        RequestStatus.EXPIRED -> R.string.tab_expired
-                        else -> R.string.tab_cancelled
-                    }),
-                    color = txtColor,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                    text = status.name, // أو اسم التاب اللي عايزه
+                    color = if (isSelected) Color.White else Color.Black,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
