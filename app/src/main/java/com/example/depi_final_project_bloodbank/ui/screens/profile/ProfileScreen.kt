@@ -55,13 +55,7 @@ fun ProfileScreen(
     }
 
     Scaffold(
-
-        topBar = {
-            TopLogoBar()
-        },
-
         containerColor = MaterialTheme.colorScheme.background
-
     ) { innerPadding ->
 
         LazyColumn(

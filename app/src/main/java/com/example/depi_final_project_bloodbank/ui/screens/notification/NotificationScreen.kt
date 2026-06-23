@@ -46,7 +46,9 @@ fun NotificationScreen(modifier: Modifier = Modifier ,navController: NavControll
         modifier = Modifier
             .fillMaxSize()
     ) {
-        NotificationsTopBar(onBackClick = {})
+        NotificationsTopBar(onBackClick = {
+            navController.popBackStack()
+        })
         if(state.isLoading){
             Box(
                 modifier = Modifier.fillMaxSize(),
