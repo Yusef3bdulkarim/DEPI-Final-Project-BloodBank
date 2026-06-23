@@ -7,12 +7,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,19 +29,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.viewmodel.compose.viewModel // <-- استيراد الـ viewModel
 import androidx.navigation.NavController
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.components.BloodLinkButton
 import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
-import com.example.depi_final_project_bloodbank.components.LogoHeader
 import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import com.example.depi_final_project_bloodbank.ui.theme.TextDark
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState // <-- استيراد الـ AuthState
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthViewModel // <-- استيراد الـ AuthViewModel
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLogoBar
-import com.example.depi_final_project_bloodbank.ui.theme.TextGray
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -97,260 +91,206 @@ fun LoginScreen(
         }
     }
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .verticalScroll(rememberScrollState())
+            .padding(start = 20.dp, end = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 16.dp),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.SpaceBetween
-//        ) {
-//
-//            TextButton(
-//                onClick = {
-//                    val currentLang = sharedPref.getString("lang", "en")
-//                    val newLang = if (currentLang == "en") "ar" else "en"
-//
-//                    sharedPref.edit().putString("lang", newLang).apply()
-//                    activity.recreate()
-//                }
-//            ) {
-//                Text(
-//                    text = stringResource(R.string.lang_login),
-//                    fontSize = 20.sp,
-//                    fontWeight = FontWeight.Bold,
-//                    color = PrimaryRed
-//                )
-//            }
-//
-//            LogoHeader(
-//                modifier = Modifier.size(120.dp)
-//            )
-//        }
-
         TopLogoBar()
-        Column(
+        Text(
+            text = stringResource(id = R.string.login_title),
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = PrimaryRed,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = stringResource(id = R.string.login_dec),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.W500,
+            color = TextDark,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        BloodLinkTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = stringResource(id = R.string.email_label),
+            leadingIcon = Icons.Default.Email
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        BloodLinkTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = stringResource(id = R.string.password_label),
+            leadingIcon = Icons.Default.Lock,
+            isPassword = true,
+            passwordVisible = passwordVisible,
+            onTogglePassword = { passwordVisible = !passwordVisible },
+        )
+
+        Text(
+            text = stringResource(id = R.string.forgot_password_question),
+            color = TextDark,
+            fontSize = 14.sp,
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .background(Color.White)
-                .padding(start = 20.dp, end = 20.dp, top = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-//            Text(
-//                text = stringResource(id = R.string.login_title),
-//                fontSize = 28.sp,
-//                fontWeight = FontWeight.Bold,
-//                color = PrimaryRed,
-//                textAlign = TextAlign.Center
-//            )
-//
-//            Spacer(modifier = Modifier.height(12.dp))
-//
-//            Image(
-//                painter = painterResource(id = R.drawable.avatar),
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .size(160.dp)
-//                    .clip(CircleShape),
-//                contentScale = ContentScale.Crop
-//            )
-
-            Spacer(modifier = Modifier.height(25.dp))
-
-            Text(
-                text = stringResource(id = R.string.login_title),
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = PrimaryRed,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                text = stringResource(id = R.string.login_dec),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.W500,
-                color = TextDark,
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            BloodLinkTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = stringResource(id = R.string.email_label),
-                leadingIcon = Icons.Default.Email
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            BloodLinkTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = stringResource(id = R.string.password_label),
-                leadingIcon = Icons.Default.Lock,
-                isPassword = true,
-                passwordVisible = passwordVisible,
-                onTogglePassword = { passwordVisible = !passwordVisible },
-            )
-
-            Text(
-                text = stringResource(id = R.string.forgot_password_question),
-                color = TextDark,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.End)
-                    .clickable {
-                        viewModel.resetState()
-                        navController.navigate("forgot_password")
-                    }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            BloodLinkButton(
-                text = stringResource(id = R.string.login_button),
-                onClick = {
-                    // <-- استدعاء دالة الـ Login و تمرير البيانات
-                    viewModel.login(email, password)
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.End)
+                .clickable {
+                    viewModel.resetState()
+                    navController.navigate("forgot_password")
                 }
-            )
+        )
 
-            // <-- التعامل مع الحالات المختلفة (تحميل، خطأ، نجاح)
-            Spacer(modifier = Modifier.height(16.dp))
-            when (authState) {
-                is AuthState.Loading -> {
-                    CircularProgressIndicator(color = PrimaryRed)
-                }
+        Spacer(modifier = Modifier.height(20.dp))
 
-                is AuthState.Error -> {
-                    val errorState = authState as AuthState.Error
-                    val errorMessage = errorState.messageId?.let { stringResource(id = it) }
-                        ?: errorState.messageStr ?: ""
+        BloodLinkButton(
+            text = stringResource(id = R.string.login_button),
+            onClick = {
+                // <-- استدعاء دالة الـ Login و تمرير البيانات
+                viewModel.login(email, password)
+            }
+        )
 
-                    Text(
-                        text = errorMessage,
-                        color = Color.Red,
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                is AuthState.Success -> {
-                    LaunchedEffect(Unit) {
-                        navController.navigate("home") {
-                            popUpTo("login") { inclusive = true }
-                        }
-                    }
-                }
-
-                is AuthState.NeedsProfileCompletion -> {
-                    LaunchedEffect(Unit) {
-                        android.widget.Toast.makeText(
-                            context,
-                            "Going to Complete Profile...",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                        navController.navigate("complete_profile") {
-                            popUpTo("login") { inclusive = true }
-                        }
-                    }
-                }
-
-                is AuthState.NeedsVerification -> {
-                    LaunchedEffect(Unit) {
-                        navController.navigate("verify_account") {
-                            // بنمسح الشاشة من الذاكرة عشان ميرجعلهاش بالغلط
-                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                        }
-                    }
-                }
-
-                else -> {}
+        // <-- التعامل مع الحالات المختلفة (تحميل، خطأ، نجاح)
+        Spacer(modifier = Modifier.height(16.dp))
+        when (authState) {
+            is AuthState.Loading -> {
+                CircularProgressIndicator(color = PrimaryRed)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            is AuthState.Error -> {
+                val errorState = authState as AuthState.Error
+                val errorMessage = errorState.messageId?.let { stringResource(id = it) }
+                    ?: errorState.messageStr ?: ""
 
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.no_account), color = TextDark)
                 Text(
-                    text = stringResource(id = R.string.create_account_link),
-                    color = PrimaryRed,
-                    modifier = Modifier.clickable {
-                        navController.navigate("register")
-                        viewModel.resetState() // <-- تصفير الحالة عشان ميظهرش أي أيرور قديم في الشاشة الجديدة
-                    }
+                    text = errorMessage,
+                    color = Color.Red,
+                    textAlign = TextAlign.Center
                 )
             }
 
-            //Spacer(modifier = Modifier.height(8.dp))
-            Spacer(modifier = Modifier.height(24.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
-                Text(
-                    text = stringResource(id = R.string.or_sign_in_with),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = Color.Gray,
-                    fontSize = 14.sp
-                )
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // لوجو جوجل بعد تكبيره
-
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth() // ليأخذ العرض الكامل المتناسق مع باقي الحقول كما في الصورة
-                    .height(56.dp)
-                    .width(100.dp)   // الارتفاع القياسي لحقول الإدخال والأزرار الحديثة (Standard Touch Target)
-                    .clip(RoundedCornerShape(12.dp)) // حواف دائرية ناعمة ومطابقة للتصميم الجديد
-                    .clickable { launcher.launch(googleSignInClient.signInIntent) },
-                shape = RoundedCornerShape(12.dp),
-                color = Color.White, // خلفية بيضاء ناصعة
-                border = BorderStroke(width = 1.dp, color = Color(0xFFE0E0E0)) // حدود رمادية خفيفة وناعمة
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.Center, // لتوسيط العناصر بالكامل داخل الزر
-                    verticalAlignment = Alignment.CenterVertically // لتوسيط العناصر عمودياً
-                ) {
-                    // أيقونة جوجل بأبعاد متناسقة
-                    Image(
-                        painter = painterResource(id = R.drawable.google),
-                        contentDescription = "Google Sign In",
-                        modifier = Modifier.size(24.dp) // حجم مثالي للأيقونة القياسية
-                    )
-
-                    Spacer(modifier = Modifier.width(12.dp)) // مسافة مرنة بين الأيقونة والنص
-
-                    // النص الداخلي للزر
-                    Text(
-                        text = "Continue with Google",
-                        color = Color(0xFF212121), // لون رمادي غامق احترافي وقريب من الأسود
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium // خط متوسط العمق يعطي طابع الـ Expressive الحديث
-                    )
+            is AuthState.Success -> {
+                LaunchedEffect(Unit) {
+                    navController.navigate("home") {
+                        popUpTo("login") { inclusive = true }
+                    }
                 }
             }
 
+            is AuthState.NeedsProfileCompletion -> {
+                LaunchedEffect(Unit) {
+                    android.widget.Toast.makeText(
+                        context,
+                        "Going to Complete Profile...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                    navController.navigate("complete_profile") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+            }
 
-//            Spacer(modifier = Modifier.height(20.dp))
+            is AuthState.NeedsVerification -> {
+                LaunchedEffect(Unit) {
+                    navController.navigate("verify_account") {
+                        // بنمسح الشاشة من الذاكرة عشان ميرجعلهاش بالغلط
+                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                    }
+                }
+            }
+
+            else -> {}
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = stringResource(id = R.string.no_account), color = TextDark)
+            Text(
+                text = stringResource(id = R.string.create_account_link),
+                color = PrimaryRed,
+                modifier = Modifier.clickable {
+                    navController.navigate("register")
+                    viewModel.resetState() // <-- تصفير الحالة عشان ميظهرش أي أيرور قديم في الشاشة الجديدة
+                }
+            )
+        }
+
+        //Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(24.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
+            Text(
+                text = stringResource(id = R.string.or_sign_in_with),
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = Color.Gray,
+                fontSize = 14.sp
+            )
+            HorizontalDivider(modifier = Modifier.weight(1f), color = Color.LightGray)
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // لوجو جوجل بعد تكبيره
+
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth() // ليأخذ العرض الكامل المتناسق مع باقي الحقول كما في الصورة
+                .height(56.dp)
+                .width(100.dp)   // الارتفاع القياسي لحقول الإدخال والأزرار الحديثة (Standard Touch Target)
+                .clip(RoundedCornerShape(12.dp)) // حواف دائرية ناعمة ومطابقة للتصميم الجديد
+                .clickable { launcher.launch(googleSignInClient.signInIntent) },
+            shape = RoundedCornerShape(12.dp),
+            color = Color.White, // خلفية بيضاء ناصعة
+            border = BorderStroke(
+                width = 1.dp,
+                color = Color(0xFFE0E0E0)
+            ) // حدود رمادية خفيفة وناعمة
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Center, // لتوسيط العناصر بالكامل داخل الزر
+                verticalAlignment = Alignment.CenterVertically // لتوسيط العناصر عمودياً
+            ) {
+                // أيقونة جوجل بأبعاد متناسقة
+                Image(
+                    painter = painterResource(id = R.drawable.google),
+                    contentDescription = "Google Sign In",
+                    modifier = Modifier.size(24.dp) // حجم مثالي للأيقونة القياسية
+                )
+
+                Spacer(modifier = Modifier.width(12.dp)) // مسافة مرنة بين الأيقونة والنص
+
+                // النص الداخلي للزر
+                Text(
+                    text = "Continue with Google",
+                    color = Color(0xFF212121), // لون رمادي غامق احترافي وقريب من الأسود
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium // خط متوسط العمق يعطي طابع الـ Expressive الحديث
+                )
+            }
+        }
+
+
     }
 }
+
 
 

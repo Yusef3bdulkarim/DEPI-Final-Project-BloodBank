@@ -16,14 +16,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController) {
+fun SplashScreen() {
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val scale by infiniteTransition.animateFloat(
         initialValue = 0.95f,
@@ -62,7 +59,6 @@ fun SplashScreen(navController: NavController) {
                 modifier = Modifier
                     .size(180.dp)
                     .scale(scale)
-                    .padding(bottom = 8.dp)
                     .alpha(alpha)
             )
             Text(

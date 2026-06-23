@@ -1,8 +1,8 @@
 package com.example.depi_final_project_bloodbank.ui.screens.auth
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -30,13 +30,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.components.BloodLinkButton
 import com.example.depi_final_project_bloodbank.components.BloodLinkOutlinedButton
-import com.example.depi_final_project_bloodbank.components.LogoHeader
 import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import com.example.depi_final_project_bloodbank.ui.theme.TextDark
-
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthViewModel
-import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLogoBar
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -72,71 +69,62 @@ fun VerifyAccountScreen(
     }
 
 
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .verticalScroll(rememberScrollState())
+            .padding(start = 20.dp, end = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        TopLogoBar()
 
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .background(Color.White)
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(30.dp))
+        Image(
+            painter = painterResource(id = R.drawable.email),
+            contentDescription = null,
+            modifier = Modifier.size(140.dp)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = stringResource(id = R.string.verify_account_title),
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            color = PrimaryRed,
+            textAlign = TextAlign.Center,
+            lineHeight = 24.sp
 
 
+        )
+        Text(
+            text = stringResource(id = R.string.verify_account_desc),
+            textAlign = TextAlign.Center,
+            color = TextDark
+        )
 
+        Spacer(modifier = Modifier.height(24.dp))
 
-            Image(
-                painter = painterResource(id = R.drawable.email),
-                contentDescription = null,
-                modifier = Modifier.size(140.dp)
-            )
+        BloodLinkButton(
+            text = stringResource(id = R.string.resend_verification_button),
+            onClick = { viewModel.resendVerificationEmail() } // <-- استدعاء الدالة
+        )
 
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
-                text = stringResource(id = R.string.verify_account_title),
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = PrimaryRed,
-                textAlign = TextAlign.Center,
-                lineHeight = 24.sp
+        Spacer(modifier = Modifier.height(12.dp))
 
+        BloodLinkOutlinedButton(
+            text = stringResource(id = R.string.back_to_login),
+            onClick = {
+                FirebaseAuth.getInstance().signOut() // نسجل خروجه عشان يدخل من جديد
+                navController.navigate("login") { popUpTo(0) }
+            }
+        )
 
-            )
-            Text(
-                text = stringResource(id = R.string.verify_account_desc),
-                textAlign = TextAlign.Center,
-                color = TextDark
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            BloodLinkButton(
-                text = stringResource(id = R.string.resend_verification_button),
-                onClick = { viewModel.resendVerificationEmail() } // <-- استدعاء الدالة
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            BloodLinkOutlinedButton(
-                text = stringResource(id = R.string.back_to_login),
-                onClick = {
-                    FirebaseAuth.getInstance().signOut() // نسجل خروجه عشان يدخل من جديد
-                    navController.navigate("login") { popUpTo(0) }
-                }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

@@ -10,6 +10,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.domain.enums.EgyptLocations
+import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
+import com.example.depi_final_project_bloodbank.ui.theme.TextDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +29,14 @@ fun GovernorateCitySelector(
     val availableCities = if (selectedGovernorate.isNotEmpty()) EgyptLocations.governoratesMap[selectedGovernorate] ?: emptyList() else emptyList()
     val shapes = MaterialTheme.shapes
 
+    val colors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = TextDark,
+        unfocusedTextColor = TextDark,
+        cursorColor = PrimaryRed,
+        focusedBorderColor = PrimaryRed,
+        unfocusedBorderColor = Color.Gray
+    )
+
     Column(modifier = modifier) {
         // دروب داون المحافظة
         ExposedDropdownMenuBox(
@@ -42,7 +52,7 @@ fun GovernorateCitySelector(
                 modifier = Modifier.fillMaxWidth().menuAnchor(),
                 shape = shapes.medium,
                 isError = isGovError,
-                colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
+                colors = colors
             )
             ExposedDropdownMenu(
                 expanded = expandedGov,
@@ -78,7 +88,7 @@ fun GovernorateCitySelector(
                 modifier = Modifier.fillMaxWidth().menuAnchor(),
                 shape = shapes.medium,
                 isError = isCityError, // دلوقتي هيقبل الإيرور وينور أحمر عادي
-                colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
+                colors = colors
                 // تم مسح سطر الـ enabled عشان اللون يشتغل
             )
             ExposedDropdownMenu(

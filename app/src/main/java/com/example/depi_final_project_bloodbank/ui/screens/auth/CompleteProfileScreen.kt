@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -89,169 +90,196 @@ fun CompleteProfileScreen(
     datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
 
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)) {
-        LogoHeader()
 
-        Column(modifier = Modifier
+
+
+    Column(
+        modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(20.dp)) {
-            Text(
-                text = stringResource(id = R.string.complete_profile_title), // "استكمال بيانات الحساب"
-                fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = PrimaryRed,
-                modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center
-            )
+            .padding(20.dp)
+    ) {
+        LogoHeader()
+        Text(
+            text = stringResource(id = R.string.complete_profile_title), // "استكمال بيانات الحساب"
+            fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = PrimaryRed,
+            modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center
+        )
 
-            Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
-            // الاسم (عشان لو حابب يغير الاسم اللي جاي من جوجل)
-            BloodLinkTextField(
-                value = name, onValueChange = { name = it },
-                label = stringResource(id = R.string.name_label),
-                leadingIcon = Icons.Default.Person
-            )
+        // الاسم (عشان لو حابب يغير الاسم اللي جاي من جوجل)
+        BloodLinkTextField(
+            value = name, onValueChange = { name = it },
+            label = stringResource(id = R.string.name_label),
+            leadingIcon = Icons.Default.Person
+        )
 
-            Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
-            // رقم الهاتف
-            BloodLinkTextField(
-                value = phone,
-                onValueChange = {
-                    // نمنع المستخدم يكتب أي حاجة غير الأرقام، ونمنعه يكتب أكتر من 11 رقم
-                    if (it.all { char -> char.isDigit() } && it.length <= 11) {
-                        phone = it
-                    }
-                },
-                label = stringResource(id = R.string.phone_label),
-                leadingIcon = Icons.Default.Phone
-            )
-
-            // التحذير الأحمر بيظهر بس لو هو كتب أرقام بس لسه مكملش الـ 11
-            if (phone.isNotEmpty() && phone.length < 11) {
-                Text(
-                    text = stringResource(id = R.string.phone_length_error),
-                    color = Color.Red,
-                    fontSize = 12.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 12.dp, top = 4.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            GovernorateCitySelector(
-                selectedGovernorate = selectedGovernorate,
-                selectedCity = selectedCity,
-                onGovernorateSelected = { gov ->
-                    selectedGovernorate = gov
-                    selectedCity = ""
-                },
-                onCitySelected = { city ->
-                    selectedCity = city
+        // رقم الهاتف
+        BloodLinkTextField(
+            value = phone,
+            onValueChange = {
+                // نمنع المستخدم يكتب أي حاجة غير الأرقام، ونمنعه يكتب أكتر من 11 رقم
+                if (it.all { char -> char.isDigit() } && it.length <= 11) {
+                    phone = it
                 }
+            },
+            label = stringResource(id = R.string.phone_label),
+            leadingIcon = Icons.Default.Phone
+        )
+
+        // التحذير الأحمر بيظهر بس لو هو كتب أرقام بس لسه مكملش الـ 11
+        if (phone.isNotEmpty() && phone.length < 11) {
+            Text(
+                text = stringResource(id = R.string.phone_length_error),
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp, top = 4.dp)
             )
+        }
 
-            Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-            // فصيلة الدم
-            Box(modifier = Modifier
+        GovernorateCitySelector(
+            selectedGovernorate = selectedGovernorate,
+            selectedCity = selectedCity,
+            onGovernorateSelected = { gov ->
+                selectedGovernorate = gov
+                selectedCity = ""
+            },
+            onCitySelected = { city ->
+                selectedCity = city
+            }
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // فصيلة الدم
+        Box(
+            modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White, RoundedCornerShape(12.dp))
                 .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
-                .padding(12.dp)) {
-                Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Image(painter = painterResource(id = R.drawable.drop), contentDescription = null, modifier = Modifier.size(25.dp))
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = stringResource(id = R.string.blood_type_label), fontWeight = FontWeight.Bold)
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        bloodTypes.forEach { type ->
-                            Box(modifier = Modifier
+                .padding(12.dp)
+        ) {
+            Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.drop),
+                        contentDescription = null,
+                        modifier = Modifier.size(25.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(id = R.string.blood_type_label),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    bloodTypes.forEach { type ->
+                        Box(
+                            modifier = Modifier
                                 .background(
-                                    if (selectedBlood == type) PrimaryRed else Color.LightGray,
+                                    if (selectedBlood == type) PrimaryRed else Color(0xDFF6DCDC),
                                     RoundedCornerShape(8.dp)
                                 )
                                 .clickable { selectedBlood = type }
                                 .padding(horizontal = 10.dp, vertical = 6.dp)) {
-                                Text(text = type, fontSize = 12.sp, color = if (selectedBlood == type) Color.White else Color.Black)
-                            }
+                            Text(
+                                text = type,
+                                fontSize = 12.sp,
+                                color = if (selectedBlood == type) Color.White else Color.Black
+                            )
                         }
                     }
                 }
             }
+        }
 
-            Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-            // مربع تاريخ آخر تبرع
-            Box(
+        // مربع تاريخ آخر تبرع
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { datePickerDialog.show() }
+        ) {
+            BloodLinkTextField(
+                value = if (lastDonationText.isEmpty()) stringResource(id = R.string.select_date_placeholder) else lastDonationText,
+                onValueChange = {}, // مش بيعمل حاجة عشان هنغيره من التقويم بس
+                label = stringResource(id = R.string.last_donation_date_label),
+                leadingIcon = Icons.Default.DateRange
+            )
+            // طبقة شفافة عشان نمنع الكيبورد إنه يفتح لما يضغط عليه
+            Spacer(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .matchParentSize()
+                    .background(Color.Transparent)
                     .clickable { datePickerDialog.show() }
-            ) {
-                BloodLinkTextField(
-                    value = if (lastDonationText.isEmpty()) stringResource(id = R.string.select_date_placeholder) else lastDonationText,
-                    onValueChange = {}, // مش بيعمل حاجة عشان هنغيره من التقويم بس
-                    label = stringResource(id = R.string.last_donation_date_label),
-                    leadingIcon = Icons.Default.DateRange
-                )
-                // طبقة شفافة عشان نمنع الكيبورد إنه يفتح لما يضغط عليه
-                Spacer(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .background(Color.Transparent)
-                        .clickable { datePickerDialog.show() }
-                )
+            )
+        }
+        // الملحوظة بتاعت الـ 3 شهور
+        Text(
+            text = stringResource(id = R.string.donation_date_note),
+            color = Color.Gray,
+            fontSize = 12.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp, top = 4.dp, bottom = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        BloodLinkButton(
+            text = stringResource(id = R.string.save_and_continue), // "حفظ ومتابعة"
+            onClick = {
+                if (phone.length == 11) {
+                    viewModel.completeProfile(
+                        uid,
+                        name,
+                        phone,
+                        selectedBlood,
+                        selectedGovernorate,
+                        selectedCity,
+                        lastDonationDate
+                    )
+                }
             }
-            // الملحوظة بتاعت الـ 3 شهور
+        )
+
+        // Handling Loading/Error/Success
+        if (authState is AuthState.Loading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = PrimaryRed
+            )
+        }
+        if (authState is AuthState.Error) {
+            val error = authState as AuthState.Error
+            val msg = error.messageId?.let { stringResource(it) } ?: error.messageStr ?: ""
             Text(
-                text = stringResource(id = R.string.donation_date_note),
-                color = Color.Gray,
-                fontSize = 12.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 12.dp, top = 4.dp, bottom = 8.dp)
+                text = msg,
+                color = Color.Red,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            BloodLinkButton(
-                text = stringResource(id = R.string.save_and_continue), // "حفظ ومتابعة"
-                onClick = {
-                    if (phone.length == 11) {
-                        viewModel.completeProfile(
-                            uid,
-                            name,
-                            phone,
-                            selectedBlood,
-                            selectedGovernorate,
-                            selectedCity,
-                            lastDonationDate
-                        )
-                    }
-                }
-            )
-
-            // Handling Loading/Error/Success
-            if (authState is AuthState.Loading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally), color = PrimaryRed)
-            }
-            if (authState is AuthState.Error) { val error = authState as AuthState.Error
-                val msg = error.messageId?.let { stringResource(it) } ?: error.messageStr ?: ""
-                Text(text = msg, color = Color.Red, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-            }
-            if (authState is AuthState.Success) {
-                LaunchedEffect(Unit) {
-                    navController.navigate("home") { popUpTo("complete_profile") { inclusive = true } }
-                }
+        }
+        if (authState is AuthState.Success) {
+            LaunchedEffect(Unit) {
+                navController.navigate("home") { popUpTo("complete_profile") { inclusive = true } }
             }
         }
     }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true, locale = "ar")
 @Composable

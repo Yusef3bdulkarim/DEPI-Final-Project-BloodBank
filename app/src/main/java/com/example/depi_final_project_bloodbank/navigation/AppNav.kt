@@ -104,7 +104,7 @@ fun AppNav() {
                 }
 
                 // عرض واجهة الـ SplashScreen الحقيقية للتيم أثناء الفحص في الخلفية
-                SplashScreen(navController)
+                SplashScreen()
             }
 
             // ==========================================

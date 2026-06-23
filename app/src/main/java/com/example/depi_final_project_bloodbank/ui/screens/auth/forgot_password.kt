@@ -1,9 +1,9 @@
 package com.example.depi_final_project_bloodbank.ui.screens.auth
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,7 +24,6 @@ import androidx.navigation.NavController
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.components.BloodLinkButton
 import com.example.depi_final_project_bloodbank.components.BloodLinkTextField
-import com.example.depi_final_project_bloodbank.components.LogoHeader
 import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import com.example.depi_final_project_bloodbank.ui.theme.TextDark
 import com.example.depi_final_project_bloodbank.ui.screens.auth.viewmodel.AuthState
@@ -40,23 +39,15 @@ fun ForgotPasswordScreen(
     var email by remember { mutableStateOf("") }
     val authState by viewModel.authState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-    ) {
-        LogoHeader()
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .background(Color.White)
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp),
+                .padding(start = 20.dp, end = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
-
             Text(
                 text = stringResource(id = R.string.forgot_password_title),
                 fontSize = 26.sp,
@@ -127,4 +118,3 @@ fun ForgotPasswordScreen(
             Spacer(modifier = Modifier.height(20.dp))
         }
     }
-}
