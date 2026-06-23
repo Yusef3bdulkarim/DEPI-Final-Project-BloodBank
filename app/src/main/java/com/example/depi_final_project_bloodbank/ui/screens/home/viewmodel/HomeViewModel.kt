@@ -153,7 +153,7 @@ class HomeViewModel : ViewModel() {
         )
     }
 
-    fun toggleAvailability() {
+    /*fun toggleAvailability() {
         val newValue = !_uiState.value.isAvailableForDonation
         _uiState.update { it.copy(isAvailableForDonation = newValue) }
         userRepository.updateAvailability(
@@ -161,7 +161,7 @@ class HomeViewModel : ViewModel() {
             onSuccess = {},
             onFailure = { _uiState.update { it.copy(isAvailableForDonation = !newValue) } }
         )
-    }
+    }*/
 
     fun onBloodTypeFilterChanged(type: String) {
         _uiState.update { it.copy(selectedBloodTypeFilter = type) }

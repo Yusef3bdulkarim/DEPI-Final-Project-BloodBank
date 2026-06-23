@@ -60,12 +60,12 @@ fun HomeScreen(
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 item { TopLogoBar() }
                 item { HeaderSection(state.userName, state.bloodType) }
-                item {
+                /*item {
                     AvailabilityToggle(
                         isAvailable = state.isAvailableForDonation,
                         onToggle = { viewModel.toggleAvailability() }
                     )
-                }
+                }*/
                 item {
                     if (state.canDonateNow) {
                         DonationStatusBanner()
