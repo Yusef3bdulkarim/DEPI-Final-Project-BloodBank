@@ -19,7 +19,6 @@ class DonationRepository {
     private val firestore = FirebaseFirestore.getInstance()
     private val donationsCollection = firestore.collection("donations")
     private val requestsCollection = firestore.collection("requests")
-    private val notificationsCollection = firestore.collection("notifications")
 
     suspend fun createDonation(donation: Donation): Boolean {
         return try {
@@ -52,18 +51,6 @@ class DonationRepository {
             requestRef.update("unitsReserved", FieldValue.increment(1)).await()
 
             // 4. بناء النوتفيكيشن بـ receiverId مضمون
-            val notificationId = notificationsCollection.document().id
-            val notificationData = mapOf(
-                "id" to notificationId,
-                // حماية: لو الـ createdBy جاي من الريكويست فاضي، بنحط كلمة "UNKNOWN_USER" كـ داتا احتياطية عشان الكود ميكرشش
-                "receiverId" to if (userIdOfRequest.isEmpty()) "UNKNOWN_USER" else userIdOfRequest,
-                "title" to "تبرع جديد! 🩸",
-                "body" to "قام مستخدم بالموافقة على طلب التبرع الخاص بك، وهو في انتظار تأكيدك.",
-                "createdAt" to System.currentTimeMillis(),
-                "type" to "DONATION_RECEIVED",
-                "requestId" to donation.requestId
-            )
-            notificationsCollection.document(notificationId).set(notificationData).await()
 
             true
         } catch (e: Exception) {

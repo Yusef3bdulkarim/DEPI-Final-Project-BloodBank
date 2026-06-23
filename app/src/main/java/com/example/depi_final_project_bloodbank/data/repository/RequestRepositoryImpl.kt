@@ -1,9 +1,11 @@
 package com.example.depi_final_project_bloodbank.data.repository
 
 import com.example.depi_final_project_bloodbank.domain.enums.DonationStatus
+import com.example.depi_final_project_bloodbank.domain.enums.NotificationType
 import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import com.example.depi_final_project_bloodbank.domain.model.DonationLogEntry
+import com.example.depi_final_project_bloodbank.domain.model.Notification
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -143,9 +145,7 @@ class RequestRepositoryImpl(
     override suspend fun safeIncrementReservedUnits(id: String, donorId: String, donorName: String, donorBloodType: String): Result<Boolean> {
         return try {
             val docRef = requestsCollection.document(id)
-            val notificationRef = firestore.collection("notifications").document()
-            val statusNotificationRef = firestore.collection("notification_status").document()
-
+            val notificationRef = firestore.collection("notification").document()
 
             // 1. Fetch Request Snapshot for pre-checks
             val snapshot = docRef.get().await()
@@ -190,28 +190,19 @@ class RequestRepositoryImpl(
 
 
             val receiverIdValue = userIdOfRequest.ifEmpty { "UNKNOWN_USER" }
-            val notificationData = mapOf(
-                "id" to notificationRef.id,
-                "receiverId" to receiverIdValue,
-                "title" to "تبرع جديد! 🩸",
-                "body" to "قام مستخدم بالموافقة على طلب التبرع الخاص بك، وهو في انتظار تأكيدك.",
-                "createdAt" to System.currentTimeMillis(),
-                "type" to "DONATION_RECEIVED",
-                "requestId" to id
+            val notification = Notification(
+                id = notificationRef.id,
+                userId = receiverId,
+                type = NotificationType.DONATION_SUCCESS,
+                title = "متبرع جديد 🩸",
+                message = "أبدى $donorName استعداده للتبرع بفصيلة $donorBloodType لطلبك.",
+                isRead = false,
+                relatedId = id,
+                fcmToken = receiverFcmToken,
+                createdAt = System.currentTimeMillis()
             )
-            batch.set(notificationRef, notificationData)
-            batch.set(statusNotificationRef, mapOf(
-                "id" to statusNotificationRef.id,
-                "receiverId" to receiverId,
-                "requestId" to id,
-                "title" to "تبرع جديد! 🩸",
-                "body" to "قام $donorName بالموافقة على التبرع بفصيلة $donorBloodType",
-                "bloodType" to donorBloodType,
-                "donorName" to donorName,
-                "createdAt" to System.currentTimeMillis(),
-                "type" to "DONATION_RECEIVED",
-                "fcmToken" to receiverFcmToken
-            ))
+
+            batch.set(notificationRef, notification)
 
             batch.commit().await()
             Result.success(true)
@@ -297,19 +288,23 @@ class RequestRepositoryImpl(
             val donorId = bloodRequest.donationLog.find { it.id == donationId }?.donorId
                 ?: throw Exception("Donor not found")
 
+            // جلب بيانات المتبرع للحصول على الـ fcmToken الخاص به لإرسال الإشعار
+            val donorSnapshot = firestore.collection("Users").document(donorId).get().await()
+            val donorFcmToken = donorSnapshot.getString("fcmToken") ?: ""
+
             val updatedLog = bloodRequest.donationLog.map { entry ->
                 if (entry.id == donationId) entry.copy(status = DonationStatus.CONFIRMED)
                 else entry
             }
 
             val currentConfirmed = updatedLog.count { it.status == DonationStatus.CONFIRMED }
-            val currentReserved = updatedLog.count { 
-                it.status == DonationStatus.PENDING || it.status == DonationStatus.CONFIRMED 
+            val currentReserved = updatedLog.count {
+                it.status == DonationStatus.PENDING || it.status == DonationStatus.CONFIRMED
             }
 
             val batch = firestore.batch()
 
-            // 2. Update Request Data (Donation log and units)
+            // 2. تحديث بيانات الطلب (سجل التبرعات والوحدات)
             batch.update(requestRef, "donationLog", updatedLog)
             batch.update(requestRef, "unitsConfirmed", currentConfirmed)
             batch.update(requestRef, "unitsReserved", currentReserved)
@@ -321,6 +316,21 @@ class RequestRepositoryImpl(
             // 3. تحديث تاريخ آخر تبرع للمتبرع في مجموعة Users
             val userRef = firestore.collection("Users").document(donorId)
             batch.update(userRef, "lastDonationDate", System.currentTimeMillis())
+
+            // 4. إضافة إشعار "شكراً لك" للمتبرع في مجموعة notification
+            val notificationRef = firestore.collection("notification").document()
+            val notification = Notification(
+                id = notificationRef.id,
+                userId = donorId, // الإشعار يذهب للمتبرع
+                type = NotificationType.DONATION_SUCCESS,
+                title = "تم قبول تبرعك! ❤️",
+                message = "شكراً لك! تم تأكيد استلام تبرعك بنجاح، وجزاك الله كل خير.",
+                isRead = false,
+                relatedId = requestId,
+                fcmToken = donorFcmToken,
+                createdAt = System.currentTimeMillis()
+            )
+            batch.set(notificationRef, notification)
 
             batch.commit().await()
             Result.success(true)

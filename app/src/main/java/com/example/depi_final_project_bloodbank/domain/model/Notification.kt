@@ -10,5 +10,6 @@ data class Notification(
     val message: String = "",
     val isRead: Boolean = false,
     val relatedId: String = "",
+    val fcmToken: String = "",
     val createdAt: Long = 0L
 )

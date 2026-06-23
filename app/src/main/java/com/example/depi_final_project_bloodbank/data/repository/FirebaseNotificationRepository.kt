@@ -15,11 +15,6 @@ class FirebaseNotificationRepository : NotificationRepository {
 
     override suspend fun getNotifications(): List<Notification>  {
         val uid = auth.currentUser?.uid ?: return emptyList()
-        Log.d("NotifRepo", "Current UID: $uid")
-        if (uid == null) {
-            Log.d("NotifRepo", "UID is null!")
-            return emptyList()
-        }
         return try {
             firestore.collection("notification")
                 .whereEqualTo("userId", uid)
@@ -34,9 +29,12 @@ class FirebaseNotificationRepository : NotificationRepository {
                             type = NotificationType.valueOf(doc.getString("type") ?: "REMINDER"),
                             title = doc.getString("title") ?: "",
                             message = doc.getString("message") ?: "",
-                            isRead = doc.getBoolean("isRead") ?: false,
+                            // تعديل 1: قراءة الحقل باسم read أو isRead لضمان التوافق
+                            isRead = doc.getBoolean("read") ?: doc.getBoolean("isRead") ?: false,
                             relatedId = doc.getString("relatedId") ?: "",
-                            createdAt = doc.getTimestamp("createdAt")?.toDate()?.time ?: 0L
+                            fcmToken = doc.getString("fcmToken") ?: "",
+                            // تعديل 2: قراءة الرقم كـ Long مباشرة لأنك بتسيفه System.currentTimeMillis()
+                            createdAt = doc.getLong("createdAt") ?: 0L
                         )
                     } catch (e: Exception) {
                         Log.e("NotifRepo", "Error parsing doc: ${e.message}")
@@ -49,11 +47,20 @@ class FirebaseNotificationRepository : NotificationRepository {
         }
     }
 
+
     override suspend fun markAsRead(notificationId: String){
-        firestore.collection("notification")
-            .document(notificationId)
-            .update("isRead", true)
-            .await()
+        try {
+            firestore.collection("notification")
+                .document(notificationId)
+                .update("isRead", true)
+                .await()
+        }
+        catch (e: Exception){
+            firestore.collection("notification")
+                .document(notificationId)
+                .update("read", true)
+                .await()
+        }
     }
 
     override suspend fun markAllAsRead() {
@@ -63,6 +70,7 @@ class FirebaseNotificationRepository : NotificationRepository {
         firestore.collection("notification")
             .whereEqualTo("userId", uid)
             .whereEqualTo("isRead", false)
+            .whereEqualTo("read", false)
             .get()
             .await()
             .documents

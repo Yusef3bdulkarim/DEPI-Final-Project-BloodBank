@@ -10,7 +10,6 @@ import com.example.depi_final_project_bloodbank.data.repository.RequestRepositor
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -142,37 +141,10 @@ class RequestViewModel(
 
         viewModelScope.launch {
             val result = repository.createRequest(finalRequest)
-            result.onSuccess { requestId ->
-
-                val notificationId = "notif_${System.currentTimeMillis()}"
-
-                val notification = hashMapOf(
-                    "id" to notificationId,
-                    "title" to "Urgent Blood Request",
-                    "message" to "مطلوب متبرعين لفصيلة ${finalRequest.bloodType} في ${finalRequest.city}",
-                    "type" to "URGENT_REQUEST",
-                    "relatedId" to requestId,
-                    "userId" to currentUserId,
-                    "isRead" to false,
-                    "createdAt" to System.currentTimeMillis(),
-                    "location" to finalRequest.city,
-                    "blood_type" to finalRequest.bloodType
-                )
-
-                FirebaseFirestore.getInstance()
-                    .collection("notification")
-                    .document(notificationId)
-                    .set(notification)
-                    .addOnSuccessListener {
-                        _isLoading.value = false
-                        _isSuccess.value = true
-                    }
-                    .addOnFailureListener { e ->
-                        _isLoading.value = false
-                        _error.value = e.message ?: "Notification Error"
-                    }
-            }
-            .onFailure { exception ->
+            result.onSuccess {
+                _isLoading.value = false
+                _isSuccess.value = true
+            }.onFailure { exception ->
                 _isLoading.value = false
                 _error.value = exception.message ?: "Error"
             }
