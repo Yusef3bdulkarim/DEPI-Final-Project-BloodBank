@@ -30,7 +30,7 @@ fun HeaderSection(name: String, type: String) {
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp , vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -43,7 +43,7 @@ fun HeaderSection(name: String, type: String) {
             )
             Spacer(modifier = Modifier.height(1 .dp))
             Text(
-                text = "$name 👋",
+                text = name,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
