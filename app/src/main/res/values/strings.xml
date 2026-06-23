@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Common (نصوص مشتركة) -->
-    <string name="app_name">BloodBank</string>
+    <string name="app_name">BloodLink</string>
     <string name="email_label">Email</string>
     <string name="password_label">Password</string>
     <string name="back_to_login">Back to Login</string>

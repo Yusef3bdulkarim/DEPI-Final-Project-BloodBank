@@ -24,6 +24,7 @@ import com.example.depi_final_project_bloodbank.ui.screens.orders.ManageRequestS
 import com.example.depi_final_project_bloodbank.ui.screens.splash.SplashScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore // <-- استيراد الفايرستور للتحقق
+import kotlinx.coroutines.delay
 
 @Composable
 fun AppNav() {
@@ -48,6 +49,7 @@ fun AppNav() {
 
             composable("splash") {
                 LaunchedEffect(Unit) {
+                    delay(3000)
                     val currentUser = FirebaseAuth.getInstance().currentUser
                     if (currentUser != null) {
                         // 1️⃣ الفحص الأول: هل الإيميل متفعل؟

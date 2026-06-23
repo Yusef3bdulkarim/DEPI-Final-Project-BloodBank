@@ -4,9 +4,13 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -14,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.depi_final_project_bloodbank.R
+import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
@@ -28,16 +33,14 @@ fun SplashScreen(navController: NavController) {
             repeatMode = RepeatMode.Reverse
         ), label = "pulse"
     )
-
-    LaunchedEffect(Unit) {
-        delay(2500)
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser == null) {
-            navController.navigate("login") { popUpTo("splash") { inclusive = true } }
-        } else {
-            navController.navigate("home") { popUpTo("splash") { inclusive = true } }
-        }
-    }
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.85f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
 
     Box(
         modifier = Modifier
@@ -49,12 +52,27 @@ fun SplashScreen(navController: NavController) {
             ),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.bloodlink),
-            contentDescription = "BloodLink Logo",
-            modifier = Modifier
-                .size(200.dp)
-                .scale(scale)
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.removed),
+                contentDescription = "BloodLink Logo",
+                modifier = Modifier
+                    .size(180.dp)
+                    .scale(scale)
+                    .padding(bottom = 8.dp)
+                    .alpha(alpha)
+            )
+            Text(
+                "BloodLink — Connecting Life",
+                color = PrimaryRed,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .scale(scale)
+                    .alpha(alpha)
+            )
+        }
     }
 }
