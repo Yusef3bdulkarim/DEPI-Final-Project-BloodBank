@@ -48,36 +48,29 @@ class FirebaseNotificationRepository : NotificationRepository {
     }
 
 
-    override suspend fun markAsRead(notificationId: String){
-        try {
-            firestore.collection("notification")
-                .document(notificationId)
-                .update("isRead", true)
-                .await()
-        }
-        catch (e: Exception){
-            firestore.collection("notification")
-                .document(notificationId)
-                .update("read", true)
-                .await()
-        }
+    override suspend fun markAsRead(notificationId: String) {
+        firestore.collection("notification")
+            .document(notificationId)
+            .update(mapOf(
+                "isRead" to true,
+                "read" to true
+            ))
+            .await()
     }
-
     override suspend fun markAllAsRead() {
         val uid = auth.currentUser?.uid ?: return
         val batch = firestore.batch()
-
-        firestore.collection("notification")
+        val docs = firestore.collection("notification")
             .whereEqualTo("userId", uid)
-            .whereEqualTo("isRead", false)
-            .whereEqualTo("read", false)
             .get()
             .await()
             .documents
-            .forEach { doc ->
-                batch.update(doc.reference, "isRead", true)
-            }
-
+        docs.forEach { doc ->
+            batch.update(doc.reference, mapOf(
+                "isRead" to true,
+                "read" to true
+            ))
+        }
         batch.commit().await()
     }
 
