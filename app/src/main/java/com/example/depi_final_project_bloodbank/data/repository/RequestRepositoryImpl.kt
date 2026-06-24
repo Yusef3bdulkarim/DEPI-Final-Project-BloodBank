@@ -68,6 +68,27 @@ class RequestRepositoryImpl(
             .addOnFailureListener { e -> onFailure(e) }
     }
 
+    override fun observeLatestActiveRequests(limit: Int): Flow<List<BloodRequest>> = callbackFlow {
+        val query = requestsCollection
+            .whereEqualTo("status", "ACTIVE")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(limit.toLong())
+
+        val listener = query.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+            if (snapshot != null) {
+                val requests = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(BloodRequest::class.java)?.copy(id = doc.id)
+                }
+                trySend(requests).isSuccess
+            }
+        }
+        awaitClose { listener.remove() }
+    }
+
     override fun getAllRequests(): Flow<List<BloodRequest>> = callbackFlow {
         val query = requestsCollection.orderBy("createdAt", Query.Direction.DESCENDING)
 

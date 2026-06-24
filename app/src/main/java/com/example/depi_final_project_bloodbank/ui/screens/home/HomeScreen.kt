@@ -21,7 +21,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.ActionButtonSection
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.AvailabilityToggle
-import com.example.depi_final_project_bloodbank.ui.screens.home.components.BloodTypeFilterRow
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.DonationCounterBanner
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.DonationStatusBanner
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.DynamicHealthTipsSection
@@ -80,12 +79,6 @@ fun HomeScreen(
                     )
                 }
                 item { SectionTitle(stringResource(R.string.urgent_appeals_title), stringResource(R.string.urgent_appeals_subtitle)) }
-                item {
-                    BloodTypeFilterRow(
-                        selected = state.selectedBloodTypeFilter,
-                        onSelected = { viewModel.onBloodTypeFilterChanged(it) }
-                    )
-                }
                 item {
                     UrgentAppealsList(
                         requests = state.filteredRequests,

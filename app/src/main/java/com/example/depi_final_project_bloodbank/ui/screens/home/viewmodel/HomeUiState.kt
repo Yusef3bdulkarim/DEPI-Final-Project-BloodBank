@@ -12,13 +12,11 @@ data class HomeUiState(
     val lastDonationDate: String = "—",
     val isAvailableForDonation: Boolean = true,
     val urgentRequests: List<BloodRequest> = emptyList(),
-    val selectedBloodTypeFilter: String = "All",
     val error: String? = null
 ) {
     val canDonateNow: Boolean
         get() = lastDonationDate == "—" || (90 - daysElapsed) <= 0
 
     val filteredRequests: List<BloodRequest>
-        get() = if (selectedBloodTypeFilter == "All") urgentRequests
-                else urgentRequests.filter { it.bloodType == selectedBloodTypeFilter }
+        get() = urgentRequests
 }

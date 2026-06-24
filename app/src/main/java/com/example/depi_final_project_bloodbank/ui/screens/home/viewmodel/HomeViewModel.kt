@@ -8,6 +8,9 @@ import com.example.depi_final_project_bloodbank.utils.seedBloodRequests
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -72,6 +75,7 @@ class HomeViewModel : ViewModel() {
         // TEMPORARY — remove after seeding once
         seedBloodRequests()
         loadData()
+        observeRequests()
     }
 
     fun loadData(isRefresh: Boolean = false) {
@@ -111,8 +115,7 @@ class HomeViewModel : ViewModel() {
                     )
                 }
 
-                // تحميل الطلبات بعد النجاح
-                loadRequests()
+                _uiState.update { it.copy(isLoading = false, isRefreshing = false) }
 
             } catch (e: Exception) {
                 _uiState.update {
@@ -122,16 +125,15 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun loadRequests() {
-        requestRepository.getActiveRequests(
-            // تم تحديد نوع البيانات هنا صراحة لحل المشكلة
-            onSuccess = { requests: List<com.example.depi_final_project_bloodbank.domain.model.BloodRequest> ->
-                _uiState.update { it.copy(isLoading = false, isRefreshing = false, urgentRequests = requests) }
-            },
-            onFailure = { e: Exception ->
-                _uiState.update { it.copy(isLoading = false, isRefreshing = false, error = e.message) }
+    private fun observeRequests() {
+        requestRepository.observeLatestActiveRequests(limit = 4)
+            .onEach { requests ->
+                _uiState.update { it.copy(urgentRequests = requests) }
             }
-        )
+            .catch { e ->
+                _uiState.update { it.copy(error = e.message) }
+            }
+            .launchIn(viewModelScope)
     }
 
     fun recordDonation() {
@@ -163,7 +165,4 @@ class HomeViewModel : ViewModel() {
         )
     }*/
 
-    fun onBloodTypeFilterChanged(type: String) {
-        _uiState.update { it.copy(selectedBloodTypeFilter = type) }
-    }
 }

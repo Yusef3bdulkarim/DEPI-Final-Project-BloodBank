@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface RequestRepository {
     suspend fun createRequest(request: BloodRequest): Result<Boolean>
     fun getActiveRequests(onSuccess: (List<BloodRequest>) -> Unit, onFailure: (Exception) -> Unit)
+    fun observeLatestActiveRequests(limit: Int = 4): Flow<List<BloodRequest>>
     fun getAllRequests(): Flow<List<BloodRequest>>
     fun getRequestsByCity(city: String): Flow<List<BloodRequest>>
     suspend fun getRequestById(id: String): Result<BloodRequest?>
