@@ -150,7 +150,7 @@ fun NotificationsHeader(count: Int, onMarkAllRead: () -> Unit) {
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = stringResource(R.string.new_notifications_count, count),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.bodyLarge,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.primary
             )

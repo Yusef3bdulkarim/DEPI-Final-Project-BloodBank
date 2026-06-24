@@ -39,13 +39,11 @@ fun HeaderSection(name: String, type: String) {
                 text = greeting,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                fontWeight = FontWeight.Medium
             )
             Spacer(modifier = Modifier.height(1 .dp))
             Text(
                 text = name,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 letterSpacing = 0.5.sp
             )

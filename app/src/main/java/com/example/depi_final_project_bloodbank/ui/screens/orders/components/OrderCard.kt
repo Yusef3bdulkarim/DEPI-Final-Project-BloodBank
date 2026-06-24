@@ -210,7 +210,7 @@ fun OrderCard(
                 ) {
                 Text(
                     text = stringResource(R.string.view_details),
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary
                 )
             }

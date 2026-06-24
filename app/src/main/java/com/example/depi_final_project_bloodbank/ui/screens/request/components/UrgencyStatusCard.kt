@@ -41,7 +41,7 @@ fun UrgencyStatusCard(
                     FilterChip(
                         selected = priority == RequestPriority.NORMAL,
                         onClick = { onPrioritySelected(RequestPriority.NORMAL) },
-                        label = { Text(stringResource(R.string.routine_urgency)) },
+                        label = { Text(stringResource(R.string.routine_urgency), style = typography.labelSmall) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = colorScheme.tertiary,
                             selectedLabelColor = colorScheme.onTertiary
@@ -51,7 +51,7 @@ fun UrgencyStatusCard(
                     FilterChip(
                         selected = priority == RequestPriority.URGENT,
                         onClick = { onPrioritySelected(RequestPriority.URGENT) },
-                        label = { Text(stringResource(R.string.urgent_urgency)) },
+                        label = { Text(stringResource(R.string.urgent_urgency),style = typography.labelSmall) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = colorScheme.primary,
                             selectedLabelColor = colorScheme.onPrimary

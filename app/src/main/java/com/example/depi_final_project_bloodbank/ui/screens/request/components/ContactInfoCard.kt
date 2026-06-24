@@ -43,7 +43,7 @@ fun ContactInfoCard(
                     onValueChange = onNameChange,
                     placeholder = {
                         Text(
-                            stringResource(R.string.contact_name) + " (اختياري)",
+                            stringResource(R.string.contact_name),
                             style = typography.bodyLarge,
                             color = Color.Gray
                         )

@@ -101,12 +101,11 @@ fun DynamicHealthTipsSection() {
                         Text(
                             text = stringResource(R.string.fact_prefix, stringResource(tip.titleRes)),
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(
                             text = stringResource(tip.descriptionRes),
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = TextUnit(16f, TextUnitType.Sp)
                         )

@@ -59,13 +59,15 @@ fun LocationDetailsCard(
             if (isLoadingLocation) {
                 CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp, color = colorScheme.primary)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(R.string.fetching_location))
+                Text(stringResource(R.string.fetching_location)
+                    , style = typography.bodyLarge)
             } else if (isLocationFetched) {
                 Icon(Icons.Default.Check, contentDescription = null, tint = Color(0xFF4CAF50))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(R.string.location_fetched_success), color = Color(0xFF4CAF50))
+                Text(stringResource(R.string.location_fetched_success), color = Color(0xFF4CAF50),
+                    style = typography.bodyLarge)
             } else {
-                Text(stringResource(R.string.fetch_gps_location))
+                Text(stringResource(R.string.fetch_gps_location), style = typography.bodyLarge)
             }
         }
 

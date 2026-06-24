@@ -23,7 +23,7 @@ val Typography = Typography(
     titleLarge = TextStyle(
         fontFamily = CairoFont,
         fontWeight = FontWeight.Bold,
-        fontSize = 18.sp,
+        fontSize = 20.sp,
         lineHeight = 26.sp,
     ),
 
@@ -43,7 +43,7 @@ val Typography = Typography(
 
     labelSmall = TextStyle(
         fontFamily = CairoFont,
-        fontWeight = FontWeight.Light,
+        fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 16.sp,
     )
