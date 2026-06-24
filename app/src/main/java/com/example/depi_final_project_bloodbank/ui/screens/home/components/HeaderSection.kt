@@ -13,19 +13,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.ui.common_components.BloodTypeChip
 import java.util.Calendar
 
 @Composable
 fun HeaderSection(name: String, type: String) {
-    val greeting = remember {
-        val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        if (hour in 4..15) "Good Morning" else "Good Evening"
-    }
+    val hour = remember { Calendar.getInstance().get(Calendar.HOUR_OF_DAY) }
+    val greeting = if (hour in 4..15) stringResource(R.string.good_morning) else stringResource(R.string.good_evening)
 
     Row(
         modifier = Modifier

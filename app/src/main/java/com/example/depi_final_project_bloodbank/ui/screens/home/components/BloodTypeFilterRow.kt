@@ -9,8 +9,10 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.depi_final_project_bloodbank.R
 
 private val bloodTypes = listOf("All", "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
 
@@ -27,7 +29,7 @@ fun BloodTypeFilterRow(
             FilterChip(
                 selected = selected == type,
                 onClick = { onSelected(type) },
-                label = { Text(type, style = MaterialTheme.typography.labelSmall) },
+                label = { Text(if (type == "All") stringResource(R.string.all_filter) else type, style = MaterialTheme.typography.labelSmall) },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = MaterialTheme.colorScheme.primary,
                     selectedLabelColor = MaterialTheme.colorScheme.onPrimary

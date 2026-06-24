@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -43,42 +44,12 @@ import com.example.depi_final_project_bloodbank.R
 @Composable
 fun DynamicHealthTipsSection() {
     val tips = listOf(
-        // 1. النصيحة الأولى الأصلية
-        HealthTip(
-            title = "SAVES 3 LIVES",
-            description = "تبرع بـ 450 مل ينقذ حياة 3 أشخاص\n(Donate 450ml to save 3 lives)",
-            iconRes = R.drawable.heart_fact,
-        ),
-        // 2. النصيحة الثانية الأصلية (باستخدام الـ Drawable الخاص بك)
-        HealthTip(
-            iconRes = R.drawable.heart_fact,
-            title = "STAY HYDRATED",
-            description = "اشرب الكثير من الماء قبل وبعد التبرع بالدم لضمان سلامتك."
-        ),
-        // 3. النصيحة الثالثة الجديدة: الوجبات الصحية
-        HealthTip(
-            title = "HEALTHY MEAL",
-            description = "تناول وجبة خفيفة غنية بالحديد وتجنب الأطعمة الدهنية قبل التبرع.",
-            iconRes = R.drawable.heart_fact,
-        ),
-        // 4. النصيحة الرابعة الجديدة: فترة الراحة بعد التبرع
-        HealthTip(
-            title = "REST & RECOVER",
-            description = "استرخِ لمدة 10-15 دقيقة بعد التبرع وتجنب المجهود البدني الشاق.",
-            iconRes = R.drawable.heart_fact,
-        ),
-        // 5. النصيحة الخامسة الجديدة: شروط نسبة الهيموجلوبين
-        HealthTip(
-            title = "HEMOGLOBIN CHECK",
-            description = "تأكد من أن نسبة الهيموجلوبين لديك مناسبة قبل البدء في عملية التبرع.",
-            iconRes = R.drawable.heart_fact,
-        ),
-        // 6. النصيحة السادسة الجديدة: تكرار التبرع بالدم
-        HealthTip(
-            title = "DONATION INTERVAL",
-            description = "يمكن للرجال التبرع كل 3 أشهر، وللنساء كل 4 أشهر بأمان تام.",
-            iconRes = R.drawable.heart_fact,
-        )
+        HealthTip(titleRes = R.string.tip_title_1, descriptionRes = R.string.tip_desc_1, iconRes = R.drawable.heart_fact),
+        HealthTip(titleRes = R.string.tip_title_2, descriptionRes = R.string.tip_desc_2, iconRes = R.drawable.heart_fact),
+        HealthTip(titleRes = R.string.tip_title_3, descriptionRes = R.string.tip_desc_3, iconRes = R.drawable.heart_fact),
+        HealthTip(titleRes = R.string.tip_title_4, descriptionRes = R.string.tip_desc_4, iconRes = R.drawable.heart_fact),
+        HealthTip(titleRes = R.string.tip_title_5, descriptionRes = R.string.tip_desc_5, iconRes = R.drawable.heart_fact),
+        HealthTip(titleRes = R.string.tip_title_6, descriptionRes = R.string.tip_desc_6, iconRes = R.drawable.heart_fact),
     )
 
     val pagerState = rememberPagerState(pageCount = { tips.size })
@@ -128,14 +99,13 @@ fun DynamicHealthTipsSection() {
                     Spacer(modifier = Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "FACT: ${tip.title}",
+                            text = stringResource(R.string.fact_prefix, stringResource(tip.titleRes)),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.primary
                         )
-//                        Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = tip.description,
+                            text = stringResource(tip.descriptionRes),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = TextUnit(16f, TextUnitType.Sp)
@@ -169,8 +139,8 @@ fun DynamicHealthTipsSection() {
 
 // تعديل الكلاس ليدعم كلاً من الـ Drawable ID والـ ImageVector بمرونة كاملة
 data class HealthTip(
-    val title: String,
-    val description: String,
+    val titleRes: Int,
+    val descriptionRes: Int,
     val iconRes: Int? = null,
     val iconVector: androidx.compose.ui.graphics.vector.ImageVector? = null
 )

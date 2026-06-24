@@ -102,7 +102,7 @@ fun RequestDetailsBottomSheet(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "${request.unitsConfirmed}/${request.unitsNeeded} units confirmed",
+                            text = stringResource(R.string.units_confirmed, request.unitsConfirmed, request.unitsNeeded),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -157,7 +157,7 @@ fun RequestDetailsBottomSheet(
                     ) {
                         Icon(Icons.Default.LocationOn, null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Go to Hospital", style = MaterialTheme.typography.labelSmall)
+                        Text(stringResource(R.string.go_to_hospital), style = MaterialTheme.typography.labelSmall)
                     }
                 }
             }
@@ -168,10 +168,10 @@ fun RequestDetailsBottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 val (statusText, statusDotColor) = when (request.status) {
-                    RequestStatus.ACTIVE -> "Active" to MaterialTheme.colorScheme.primary
-                    RequestStatus.COMPLETED -> "Completed" to MaterialTheme.colorScheme.tertiary
-                    RequestStatus.CANCELLED -> "Cancelled" to MaterialTheme.colorScheme.error
-                    RequestStatus.EXPIRED -> "Expired" to MaterialTheme.colorScheme.onSurface
+                    RequestStatus.ACTIVE -> stringResource(R.string.status_active_text) to MaterialTheme.colorScheme.primary
+                    RequestStatus.COMPLETED -> stringResource(R.string.status_completed_text) to MaterialTheme.colorScheme.tertiary
+                    RequestStatus.CANCELLED -> stringResource(R.string.status_cancelled_text) to MaterialTheme.colorScheme.error
+                    RequestStatus.EXPIRED -> stringResource(R.string.status_expired_text) to MaterialTheme.colorScheme.onSurface
                 }
                 InfoBox(
                     label = stringResource(R.string.request_status_label),

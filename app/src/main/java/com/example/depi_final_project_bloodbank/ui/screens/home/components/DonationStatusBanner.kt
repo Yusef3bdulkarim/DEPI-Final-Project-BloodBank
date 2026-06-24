@@ -23,10 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.depi_final_project_bloodbank.R
 
 @Composable
 fun DonationStatusBanner(modifier: Modifier = Modifier) {
@@ -61,7 +63,7 @@ fun DonationStatusBanner(modifier: Modifier = Modifier) {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "YOU CAN\nDONATE NOW.",
+                        text = stringResource(R.string.can_donate_now),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.ExtraBold,
                         color = Color(0xFF6A1B1B),
@@ -70,7 +72,7 @@ fun DonationStatusBanner(modifier: Modifier = Modifier) {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Get ready to\nsave lives!",
+                        text = stringResource(R.string.ready_to_save_lives),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF2C2C2C),

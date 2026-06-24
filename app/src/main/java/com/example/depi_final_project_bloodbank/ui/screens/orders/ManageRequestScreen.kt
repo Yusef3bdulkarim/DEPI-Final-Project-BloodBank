@@ -32,9 +32,9 @@ fun ManageRequestScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     Text(
-                        text = "إدارة الطلب", 
+                        text = stringResource(R.string.manage_request_title),
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     ) 
@@ -68,7 +68,7 @@ fun ManageRequestScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "ضبط الوحدات المطلوبة", 
+                    text = stringResource(R.string.adjust_units_needed),
                     style = MaterialTheme.typography.titleMedium, 
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -84,7 +84,7 @@ fun ManageRequestScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "الوحدات الحالية", 
+                            text = stringResource(R.string.current_units),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -119,7 +119,7 @@ fun ManageRequestScreen(
                 )
 
                 Text(
-                    text = "سجل المتبرعين", 
+                    text = stringResource(R.string.donors_log),
                     style = MaterialTheme.typography.titleMedium, 
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -128,7 +128,7 @@ fun ManageRequestScreen(
                 if (request.donationLog.isEmpty()) {
                     Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                         Text(
-                            text = "لا توجد عمليات تبرع حالياً", 
+                            text = stringResource(R.string.no_donations_yet),
                             color = MaterialTheme.colorScheme.secondary
                         )
                     }
@@ -168,7 +168,7 @@ fun ManageRequestScreen(
                                             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
                                         ) {
-                                            Text("تأكيد الاستلام", style = MaterialTheme.typography.labelSmall)
+                                            Text(stringResource(R.string.confirm_delivery), style = MaterialTheme.typography.labelSmall)
                                         }
                                     } else {
                                         val statusColor = when (entry.status) {

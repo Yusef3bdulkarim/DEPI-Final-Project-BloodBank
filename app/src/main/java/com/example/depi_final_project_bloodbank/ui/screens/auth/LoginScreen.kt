@@ -191,7 +191,7 @@ fun LoginScreen(
                 LaunchedEffect(Unit) {
                     android.widget.Toast.makeText(
                         context,
-                        "Going to Complete Profile...",
+                        context.getString(R.string.going_to_complete_profile),
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
                     navController.navigate("complete_profile") {
@@ -280,10 +280,10 @@ fun LoginScreen(
 
                 // النص الداخلي للزر
                 Text(
-                    text = "Continue with Google",
-                    color = Color(0xFF212121), // لون رمادي غامق احترافي وقريب من الأسود
+                    text = stringResource(R.string.continue_with_google),
+                    color = Color(0xFF212121),
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium // خط متوسط العمق يعطي طابع الـ Expressive الحديث
+                    fontWeight = FontWeight.Medium
                 )
             }
         }

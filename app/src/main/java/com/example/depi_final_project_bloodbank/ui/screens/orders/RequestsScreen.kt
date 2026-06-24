@@ -100,7 +100,7 @@ fun RequestsScreen(navController: NavController, vm: RequestsViewModel = viewMod
                         )
                     } else {
                         Text(
-                            text = if (state.showMyRequests) "My Activity" else "Requests Feed",
+                            text = if (state.showMyRequests) stringResource(R.string.my_activity) else stringResource(R.string.requests_feed),
                             style = MaterialTheme.typography.titleLarge,
                             color = MaroonPrimary,
                             fontWeight = FontWeight.Bold
@@ -136,7 +136,7 @@ fun RequestsScreen(navController: NavController, vm: RequestsViewModel = viewMod
                         inactiveContainerColor = Color.Transparent,
                         inactiveContentColor = MaroonPrimary
                     ),
-                    label = { Text("Requests Feed") }
+                    label = { Text(stringResource(R.string.requests_feed)) }
                 )
                 SegmentedButton(
                     selected = state.showMyRequests,
@@ -148,7 +148,7 @@ fun RequestsScreen(navController: NavController, vm: RequestsViewModel = viewMod
                         inactiveContainerColor = Color.Transparent,
                         inactiveContentColor = MaroonPrimary
                     ),
-                    label = { Text("My Activity") }
+                    label = { Text(stringResource(R.string.my_activity)) }
                 )
             }
 

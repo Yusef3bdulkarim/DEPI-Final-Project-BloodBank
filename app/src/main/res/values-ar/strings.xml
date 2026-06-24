@@ -216,4 +216,122 @@
     <string name="error_request_full">خطأ: الطلب مكتمل بالفعل</string>
     <string name="donation_success">تم التبرع بنجاح</string>
     <string name="request_cancelled_success">تم إلغاء الطلب بنجاح</string>
+
+    <!-- ============================================ -->
+    <!-- Localization Phase: New Strings              -->
+    <!-- ============================================ -->
+
+    <!-- Home — Header -->
+    <string name="good_morning">صباح الخير</string>
+    <string name="good_evening">مساء الخير</string>
+
+    <!-- Home — Donation Status Banner -->
+    <string name="can_donate_now">يمكنك التبرع\nالآن.</string>
+    <string name="ready_to_save_lives">استعد لإنقاذ\nالأرواح!</string>
+
+    <!-- Home — Donation Counter Banner -->
+    <string name="next_donation_eligible">التبرع القادم متاح\nخلال %1$d يوم</string>
+    <string name="next_date_label">التاريخ القادم: %s</string>
+    <string name="last_donation_label">آخر تبرع: %s</string>
+
+    <!-- Home — Donation Counter (Circle) -->
+    <string name="days_elapsed_format">%d يوم</string>
+    <string name="elapsed">مضى</string>
+
+    <!-- Home — Health Tips -->
+    <string name="fact_prefix">حقيقة: %s</string>
+    <string name="tip_title_1">ينقذ 3 أرواح</string>
+    <string name="tip_desc_1">تبرع بـ 450 مل لإنقاذ حياة 3 أشخاص</string>
+    <string name="tip_title_2">اشرب الماء</string>
+    <string name="tip_desc_2">اشرب الكثير من الماء قبل وبعد التبرع بالدم لضمان سلامتك.</string>
+    <string name="tip_title_3">وجبة صحية</string>
+    <string name="tip_desc_3">تناول وجبة خفيفة غنية بالحديد وتجنب الأطعمة الدهنية قبل التبرع.</string>
+    <string name="tip_title_4">استرح وتعافَ</string>
+    <string name="tip_desc_4">استرخِ لمدة 10-15 دقيقة بعد التبرع وتجنب المجهود البدني الشاق.</string>
+    <string name="tip_title_5">فحص الهيموجلوبين</string>
+    <string name="tip_desc_5">تأكد من أن نسبة الهيموجلوبين لديك مناسبة قبل البدء في عملية التبرع.</string>
+    <string name="tip_title_6">فترة التبرع</string>
+    <string name="tip_desc_6">يمكن للرجال التبرع كل 3 أشهر، وللنساء كل 4 أشهر بأمان تام.</string>
+
+    <!-- Home — Action Buttons -->
+    <string name="request_blood_btn">طلب دم</string>
+    <string name="donate_now_home_btn">تبرع الآن</string>
+
+    <!-- Home — Urgent Appeals Section -->
+    <string name="urgent_appeals_title">نداءات عاجلة</string>
+    <string name="urgent_appeals_subtitle">نداءات عاجلة بالقرب منك</string>
+    <string name="urgent_label">عاجل:</string>
+    <string name="needs_units">يحتاج %d وحدات</string>
+    <string name="view_label">عرض</string>
+
+    <!-- Home — Blood Type Filter -->
+    <string name="all_filter">الكل</string>
+
+    <!-- Home — Availability Toggle -->
+    <string name="available_to_donate">متاح للتبرع</string>
+    <string name="visible_to_requesters">ظاهر للطالبين</string>
+    <string name="hidden_from_requesters">مخفي عن الطالبين</string>
+    <string name="status_active_toggle">نشط</string>
+    <string name="status_inactive_toggle">غير نشط</string>
+
+    <!-- Notifications Screen -->
+    <string name="no_notifications_yet">لا توجد إشعارات بعد</string>
+    <string name="notifications_title">الإشعارات</string>
+    <string name="new_notifications_count">لديك %d إشعارات جديدة</string>
+    <string name="mark_all_as_read">تحديد الكل كمقروء</string>
+
+    <!-- Requests Screen -->
+    <string name="my_activity">نشاطي</string>
+    <string name="requests_feed">آخر الطلبات</string>
+
+    <!-- Manage Request Screen -->
+    <string name="manage_request_title">إدارة الطلب</string>
+    <string name="adjust_units_needed">ضبط الوحدات المطلوبة</string>
+    <string name="current_units">الوحدات الحالية</string>
+    <string name="donors_log">سجل المتبرعين</string>
+    <string name="no_donations_yet">لا توجد عمليات تبرع حالياً</string>
+    <string name="confirm_delivery">تأكيد الاستلام</string>
+
+    <!-- Order Card -->
+    <string name="units_fraction">%1$d/%2$d وحدة</string>
+    <string name="expired_request_label">طلب منتهي الصلاحية</string>
+    <string name="status_cancelled">ملغي</string>
+    <string name="status_expired">منتهي</string>
+    <string name="status_completed">مكتمل</string>
+
+    <!-- Request Details Bottom Sheet -->
+    <string name="units_confirmed">%1$d/%2$d وحدة مؤكدة</string>
+    <string name="go_to_hospital">الذهاب للمستشفى</string>
+    <string name="status_active_text">نشط</string>
+    <string name="status_completed_text">مكتمل</string>
+    <string name="status_cancelled_text">ملغي</string>
+    <string name="status_expired_text">منتهي</string>
+
+    <!-- Filter Tabs -->
+    <string name="tab_active">نشط</string>
+
+    <!-- Donation History -->
+    <string name="blood_type_display">فصيلة الدم: %s</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">بلود لينك — نربط الحياة</string>
+
+    <!-- Login Screen -->
+    <string name="going_to_complete_profile">جاري استكمال البيانات…</string>
+    <string name="continue_with_google">متابعة باستخدام Google</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_notifications">الإشعارات</string>
+    <string name="nav_requests">الطلبات</string>
+    <string name="nav_profile">حسابي</string>
+
+    <!-- ViewModel Button Texts -->
+    <string name="btn_request_cancelled">الطلب ملغي</string>
+    <string name="btn_request_completed">الطلب مكتمل</string>
+    <string name="btn_manage_request">إدارة الطلب</string>
+    <string name="btn_donated">تم التبرع</string>
+    <string name="btn_action_locked">العملية مقفلة</string>
+    <string name="btn_full">مكتمل</string>
+    <string name="btn_loading">…</string>
 </resources>

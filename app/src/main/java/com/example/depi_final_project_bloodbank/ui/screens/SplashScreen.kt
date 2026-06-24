@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.ui.theme.PrimaryRed
@@ -62,7 +63,7 @@ fun SplashScreen() {
                     .alpha(alpha)
             )
             Text(
-                "BloodLink — Connecting Life",
+                stringResource(R.string.splash_tagline),
                 color = PrimaryRed,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier

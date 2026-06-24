@@ -15,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.depi_final_project_bloodbank.R
 
 @Composable
 fun AvailabilityToggle(
@@ -33,14 +35,14 @@ fun AvailabilityToggle(
     ) {
         Column {
             Text(
-                text = "Available to Donate",
+                text = stringResource(R.string.available_to_donate),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = if (isAvailable) "Visible to requesters" else "Hidden from requesters",
+                text = if (isAvailable) stringResource(R.string.visible_to_requesters) else stringResource(R.string.hidden_from_requesters),
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.Gray
             )
@@ -63,7 +65,7 @@ fun AvailabilityToggle(
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = if (isAvailable) "Active" else "Inactive",
+                text = if (isAvailable) stringResource(R.string.status_active_toggle) else stringResource(R.string.status_inactive_toggle),
                 style = MaterialTheme.typography.labelSmall,
                 color = if (isAvailable) MaterialTheme.colorScheme.primary else Color.Gray,
                 fontWeight = FontWeight.Medium

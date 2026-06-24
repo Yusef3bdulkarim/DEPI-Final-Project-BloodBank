@@ -137,7 +137,7 @@ fun OrderCard(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "${order.unitsReserved}/${order.unitsNeeded} units",
+                    text = stringResource(R.string.units_fraction, order.unitsReserved, order.unitsNeeded),
                     style = MaterialTheme.typography.labelSmall,
                     color = secondaryTextColor
                 )
@@ -187,7 +187,7 @@ fun OrderCard(
                     shape = MaterialTheme.shapes.small
                 ) {
                     Text(
-                        text = "طلب منتهي الصلاحية",
+                        text = stringResource(R.string.expired_request_label),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -232,7 +232,7 @@ fun OrderCard(
                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
                         ) {
                             Text(
-                                text = uiModel.buttonText,
+                                text = stringResource(uiModel.buttonTextRes),
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }
@@ -257,7 +257,7 @@ fun OrderCard(
                                 )
                             } else {
                                 Text(
-                                    text = uiModel.buttonText,
+                                    text = stringResource(uiModel.buttonTextRes),
                                     style = MaterialTheme.typography.labelSmall
                                 )
                             }
@@ -266,8 +266,8 @@ fun OrderCard(
                         Text(
                             text = when (order.status) {
                                 RequestStatus.COMPLETED -> stringResource(R.string.delivered)
-                                RequestStatus.CANCELLED -> "Cancelled"
-                                RequestStatus.EXPIRED -> "Expired"
+                                RequestStatus.CANCELLED -> stringResource(R.string.status_cancelled)
+                                RequestStatus.EXPIRED -> stringResource(R.string.status_expired)
                                 else -> stringResource(R.string.processing)
                             },
                             color = statusColor,

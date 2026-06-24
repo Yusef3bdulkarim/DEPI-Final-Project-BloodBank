@@ -19,8 +19,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.depi_final_project_bloodbank.R
 
 @Composable
 fun DonationCounter(
@@ -89,12 +91,12 @@ fun DonationCounter(
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "$daysElapesed DAYS",
+                text = stringResource(R.string.days_elapsed_format, daysElapesed),
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = "Elapsed",
+                text = stringResource(R.string.elapsed),
                 color =  MaterialTheme.colorScheme.primaryContainer,
                 style = MaterialTheme.typography.labelSmall
             )

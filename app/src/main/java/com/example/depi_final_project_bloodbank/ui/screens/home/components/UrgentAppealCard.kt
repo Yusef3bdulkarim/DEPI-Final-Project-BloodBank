@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,7 +66,7 @@ fun UrgentAppealCard(
                 }
 //                Spacer(modifier = Modifier.width(5.dp))
                 Text(
-                    text = if (isUrgent) "URGENT:" else " ",
+                    text = if (isUrgent) stringResource(R.string.urgent_label) else " ",
                     style = MaterialTheme.typography.titleMedium,
                     color =  if (isUrgent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
@@ -115,13 +116,13 @@ fun UrgentAppealCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Needs $units units",
+                            stringResource(R.string.needs_units, units),
                             style = MaterialTheme.typography.labelSmall,
                             color =MaterialTheme.colorScheme.onSurface,
                         )
 
                         TextButton(onClick = onClickView, modifier = Modifier.padding(0.dp)) {
-                            Text("View",
+                            Text(stringResource(R.string.view_label),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.primary)
                         }

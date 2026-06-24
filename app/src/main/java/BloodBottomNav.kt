@@ -24,6 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.depi_final_project_bloodbank.R
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -52,12 +54,11 @@ fun BloodLinkBottomNav(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // تعريف العناصر مع التأكد من نداء الـ Icons صح
     val items = listOf(
-        NavigationData("Home", Icons.Outlined.Home, Screen.Home.route),
-        NavigationData("Notifications", Icons.Outlined.Notifications, Screen.Notifications.route),
-        NavigationData("Requests", Icons.Outlined.Bloodtype, Screen.Requests.route), // 👈 ضفنا أيقونة قطرة الدم في النص
-        NavigationData("Profile", Icons.Outlined.Person, Screen.Profile.route)
+        NavigationData(stringResource(R.string.nav_home), Icons.Outlined.Home, Screen.Home.route),
+        NavigationData(stringResource(R.string.nav_notifications), Icons.Outlined.Notifications, Screen.Notifications.route),
+        NavigationData(stringResource(R.string.nav_requests), Icons.Outlined.Bloodtype, Screen.Requests.route),
+        NavigationData(stringResource(R.string.nav_profile), Icons.Outlined.Person, Screen.Profile.route)
     )
 
     Box(

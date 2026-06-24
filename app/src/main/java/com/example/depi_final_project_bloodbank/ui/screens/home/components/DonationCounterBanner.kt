@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.depi_final_project_bloodbank.R
 
 @Composable
 fun DonationCounterBanner(daysElapsed: Int, nextDate: String, lastDate: String) {
@@ -35,18 +37,18 @@ fun DonationCounterBanner(daysElapsed: Int, nextDate: String, lastDate: String) 
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    "Next donation eligible\nin $daysRemaining days",
+                    stringResource(R.string.next_donation_eligible, daysRemaining),
                     color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    "Next date: $nextDate",
+                    stringResource(R.string.next_date_label, nextDate),
                     color = MaterialTheme.colorScheme.primaryContainer,
                     style = MaterialTheme.typography.labelSmall
                 )
                 Text(
-                    "Last donation: $lastDate",
+                    stringResource(R.string.last_donation_label, lastDate),
                     color = MaterialTheme.colorScheme.primaryContainer,
                     style = MaterialTheme.typography.labelSmall
                 )

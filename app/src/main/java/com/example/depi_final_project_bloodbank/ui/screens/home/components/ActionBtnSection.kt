@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.depi_final_project_bloodbank.R
 import com.example.depi_final_project_bloodbank.ui.common_components.BloodActionBtn
 
 
@@ -24,10 +26,10 @@ fun ActionButtonSection(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            BloodActionBtn(text = "REQUEST BLOOD ", isPrimary = false, onClick = { onRequestBloodClick() })
+            BloodActionBtn(text = stringResource(R.string.request_blood_btn), isPrimary = false, onClick = { onRequestBloodClick() })
         }
         Box(modifier = Modifier.weight(1f)) {
-            BloodActionBtn(text = "DONATE NOW", isPrimary = true, onClick = { onDonateNowClick() })
+            BloodActionBtn(text = stringResource(R.string.donate_now_home_btn), isPrimary = true, onClick = { onDonateNowClick() })
         }
     }
 }

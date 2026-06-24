@@ -6,6 +6,7 @@ import com.example.depi_final_project_bloodbank.data.repository.RequestRepositor
 import com.example.depi_final_project_bloodbank.domain.enums.DonationStatus
 import com.example.depi_final_project_bloodbank.domain.enums.RequestStatus
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
+import com.example.depi_final_project_bloodbank.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.*
@@ -24,7 +25,7 @@ sealed class RequestFeedback {
 data class RequestUiModel(
     val request: BloodRequest,
     val isOwner: Boolean,
-    val buttonText: String,
+    val buttonTextRes: Int,
     val isButtonEnabled: Boolean,
     val isDonating: Boolean,
     val isDonateButtonEnabled: Boolean = false
@@ -77,30 +78,22 @@ data class RequestsUiState(
             val isFull = order.unitsReserved >= order.unitsNeeded
             val isRequestCancelled = order.status == RequestStatus.CANCELLED
             val isRequestCompleted = order.status == RequestStatus.COMPLETED
-            val rawStatus = order.status.name
-            val (btnText, btnEnabled) = when {
-                // 1. الأولوية للحالات النهائية (لازم تظهر كدة ومقفولة)
-                isRequestCancelled -> "Request Cancelled" to false
-                isRequestCompleted -> "Request Completed" to false
-
-                // 2. المالك (لو الطلب نشط فقط)
-                isOwner -> "Manage Request" to true
-
-                // 3. حالات التبرع
-                hasDonated -> "Donated" to false
-                hasActivePending -> "Action Locked" to false
-
-                // 4. الحالات الأخرى
-                order.status != RequestStatus.ACTIVE -> order.status.name to false
-                isFull -> "Full" to false
-                isDonating -> "..." to false
-                else -> "Donate Now" to true
+            val (btnTextRes, btnEnabled) = when {
+                isRequestCancelled -> R.string.btn_request_cancelled to false
+                isRequestCompleted -> R.string.btn_request_completed to false
+                isOwner -> R.string.btn_manage_request to true
+                hasDonated -> R.string.btn_donated to false
+                hasActivePending -> R.string.btn_action_locked to false
+                order.status != RequestStatus.ACTIVE -> R.string.status_expired to false
+                isFull -> R.string.btn_full to false
+                isDonating -> R.string.btn_loading to false
+                else -> R.string.btn_donate_now to true
             }
 
             RequestUiModel(
                 request = order,
                 isOwner = isOwner,
-                buttonText = btnText,
+                buttonTextRes = btnTextRes,
                 isButtonEnabled = btnEnabled,
                 isDonating = isDonating
             )

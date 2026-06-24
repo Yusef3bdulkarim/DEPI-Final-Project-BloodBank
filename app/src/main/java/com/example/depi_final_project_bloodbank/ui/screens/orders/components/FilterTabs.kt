@@ -23,6 +23,12 @@ fun FilterTabs(
     selected: RequestStatus,
     onSelected: (RequestStatus) -> Unit
 ) {
+    val statusLabels = mapOf(
+        RequestStatus.ACTIVE to R.string.tab_active,
+        RequestStatus.COMPLETED to R.string.tab_completed,
+        RequestStatus.CANCELLED to R.string.tab_cancelled
+    )
+
     Row(
         modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -39,7 +45,7 @@ fun FilterTabs(
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = status.name, // أو اسم التاب اللي عايزه
+                    text = stringResource(statusLabels[status] ?: R.string.tab_active),
                     color = if (isSelected) Color.White else Color.Black,
                     fontWeight = FontWeight.Bold
                 )

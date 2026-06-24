@@ -9,6 +9,8 @@
     <string name="hide">Hide</string>
     <string name="or_sign_in_with">Or continue with</string>
     <string name="cancel_btn">Cancel</string>
+    <string name="cancel">Cancel</string>
+    <string name="units_of_blood">blood units</string>
 
     <!-- Login Screen -->
     <string name="login_title">WELCOME BACK!</string>
@@ -227,4 +229,122 @@
     <string name="error_request_full">Error: Request is already full</string>
     <string name="donation_success">Donation registered successfully</string>
     <string name="request_cancelled_success">Request cancelled successfully</string>
+
+    <!-- ============================================ -->
+    <!-- Localization Phase: New Strings              -->
+    <!-- ============================================ -->
+
+    <!-- Home — Header -->
+    <string name="good_morning">Good Morning</string>
+    <string name="good_evening">Good Evening</string>
+
+    <!-- Home — Donation Status Banner -->
+    <string name="can_donate_now">YOU CAN\nDONATE NOW.</string>
+    <string name="ready_to_save_lives">Get ready to\nsave lives!</string>
+
+    <!-- Home — Donation Counter Banner -->
+    <string name="next_donation_eligible">Next donation eligible\nin %1$d days</string>
+    <string name="next_date_label">Next date: %s</string>
+    <string name="last_donation_label">Last donation: %s</string>
+
+    <!-- Home — Donation Counter (Circle) -->
+    <string name="days_elapsed_format">%d DAYS</string>
+    <string name="elapsed">Elapsed</string>
+
+    <!-- Home — Health Tips -->
+    <string name="fact_prefix">FACT: %s</string>
+    <string name="tip_title_1">SAVES 3 LIVES</string>
+    <string name="tip_desc_1">Donate 450ml to save 3 lives</string>
+    <string name="tip_title_2">STAY HYDRATED</string>
+    <string name="tip_desc_2">Drink plenty of water before and after donating blood to ensure your safety.</string>
+    <string name="tip_title_3">HEALTHY MEAL</string>
+    <string name="tip_desc_3">Eat a light iron-rich meal and avoid fatty foods before donating.</string>
+    <string name="tip_title_4">REST &amp; RECOVER</string>
+    <string name="tip_desc_4">Relax for 10–15 minutes after donating and avoid heavy physical activity.</string>
+    <string name="tip_title_5">HEMOGLOBIN CHECK</string>
+    <string name="tip_desc_5">Make sure your hemoglobin level is suitable before starting the donation process.</string>
+    <string name="tip_title_6">DONATION INTERVAL</string>
+    <string name="tip_desc_6">Men can donate every 3 months, and women every 4 months safely.</string>
+
+    <!-- Home — Action Buttons -->
+    <string name="request_blood_btn">REQUEST BLOOD</string>
+    <string name="donate_now_home_btn">DONATE NOW</string>
+
+    <!-- Home — Urgent Appeals Section -->
+    <string name="urgent_appeals_title">URGENT APPEALS</string>
+    <string name="urgent_appeals_subtitle">Urgent Appeals Near You</string>
+    <string name="urgent_label">URGENT:</string>
+    <string name="needs_units">Needs %d units</string>
+    <string name="view_label">View</string>
+
+    <!-- Home — Blood Type Filter -->
+    <string name="all_filter">All</string>
+
+    <!-- Home — Availability Toggle -->
+    <string name="available_to_donate">Available to Donate</string>
+    <string name="visible_to_requesters">Visible to requesters</string>
+    <string name="hidden_from_requesters">Hidden from requesters</string>
+    <string name="status_active_toggle">Active</string>
+    <string name="status_inactive_toggle">Inactive</string>
+
+    <!-- Notifications Screen -->
+    <string name="no_notifications_yet">No notifications yet</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="new_notifications_count">You have %d new notifications</string>
+    <string name="mark_all_as_read">Mark all as read</string>
+
+    <!-- Requests Screen -->
+    <string name="my_activity">My Activity</string>
+    <string name="requests_feed">Requests Feed</string>
+
+    <!-- Manage Request Screen -->
+    <string name="manage_request_title">Manage Request</string>
+    <string name="adjust_units_needed">Adjust Units Needed</string>
+    <string name="current_units">Current Units</string>
+    <string name="donors_log">Donors Log</string>
+    <string name="no_donations_yet">No donations yet</string>
+    <string name="confirm_delivery">Confirm Delivery</string>
+
+    <!-- Order Card -->
+    <string name="units_fraction">%1$d/%2$d units</string>
+    <string name="expired_request_label">Expired Request</string>
+    <string name="status_cancelled">Cancelled</string>
+    <string name="status_expired">Expired</string>
+    <string name="status_completed">Completed</string>
+
+    <!-- Request Details Bottom Sheet -->
+    <string name="units_confirmed">%1$d/%2$d units confirmed</string>
+    <string name="go_to_hospital">Go to Hospital</string>
+    <string name="status_active_text">Active</string>
+    <string name="status_completed_text">Completed</string>
+    <string name="status_cancelled_text">Cancelled</string>
+    <string name="status_expired_text">Expired</string>
+
+    <!-- Filter Tabs -->
+    <string name="tab_active">Active</string>
+
+    <!-- Donation History -->
+    <string name="blood_type_display">Blood Type: %s</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">BloodLink — Connecting Life</string>
+
+    <!-- Login Screen -->
+    <string name="going_to_complete_profile">Going to Complete Profile…</string>
+    <string name="continue_with_google">Continue with Google</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_notifications">Notifications</string>
+    <string name="nav_requests">Requests</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- ViewModel Button Texts -->
+    <string name="btn_request_cancelled">Request Cancelled</string>
+    <string name="btn_request_completed">Request Completed</string>
+    <string name="btn_manage_request">Manage Request</string>
+    <string name="btn_donated">Donated</string>
+    <string name="btn_action_locked">Action Locked</string>
+    <string name="btn_full">Full</string>
+    <string name="btn_loading">…</string>
 </resources>

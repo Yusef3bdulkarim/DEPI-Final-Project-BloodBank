@@ -14,7 +14,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue  // 👈 وإمبورت الـ setter للـ selectedRequest
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.depi_final_project_bloodbank.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.depi_final_project_bloodbank.domain.model.BloodRequest
 import com.example.depi_final_project_bloodbank.ui.screens.home.components.ActionButtonSection
@@ -77,7 +79,7 @@ fun HomeScreen(
                         onDonateNowClick = onDonateNowClick
                     )
                 }
-                item { SectionTitle("URGENT APPEALS", "Urgent Appeals Near You") }
+                item { SectionTitle(stringResource(R.string.urgent_appeals_title), stringResource(R.string.urgent_appeals_subtitle)) }
                 item {
                     BloodTypeFilterRow(
                         selected = state.selectedBloodTypeFilter,

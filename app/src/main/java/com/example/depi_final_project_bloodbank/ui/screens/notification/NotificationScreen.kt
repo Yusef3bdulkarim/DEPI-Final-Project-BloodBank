@@ -34,7 +34,9 @@ import com.example.depi_final_project_bloodbank.ui.screens.notification.componen
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.example.depi_final_project_bloodbank.R
 
 
 @Composable
@@ -62,7 +64,7 @@ fun NotificationScreen(modifier: Modifier = Modifier ,navController: NavControll
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ){
-                Text("No notifications yet")
+                Text(stringResource(R.string.no_notifications_yet))
             }
         }
         else {
@@ -122,7 +124,7 @@ fun NotificationsTopBar(onBackClick: () -> Unit) {
         }
 
         Text(
-            text = "Notifications",
+            text = stringResource(R.string.notifications_title),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary,
         )
@@ -147,14 +149,14 @@ fun NotificationsHeader(count: Int, onMarkAllRead: () -> Unit) {
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "You have $count new notifications",
+                text = stringResource(R.string.new_notifications_count, count),
                 style = MaterialTheme.typography.labelSmall,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.primary
             )
         }
         Text(
-            text = "Mark all as read",
+            text = stringResource(R.string.mark_all_as_read),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.clickable { onMarkAllRead() }

@@ -106,7 +106,7 @@ fun DonationHistoryScreen(
                                         )
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Text(
-                                            text = "Blood Type: ${request.bloodType}",
+                                            text = stringResource(R.string.blood_type_display, request.bloodType),
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
