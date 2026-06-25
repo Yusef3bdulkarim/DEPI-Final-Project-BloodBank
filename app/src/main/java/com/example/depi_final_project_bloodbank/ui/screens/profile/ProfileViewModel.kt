@@ -16,10 +16,11 @@ import java.util.Date
 import java.util.Locale
 
 
-class ProfileViewModel : ViewModel() {
-    private val repository = UserRepository()
-    private val donationRepository = DonationRepository() // 4. زيادة السطر ده هنا
-
+class ProfileViewModel(
+    private val repository: UserRepository = UserRepository(),
+    private val donationRepository: DonationRepository = DonationRepository()
+) : ViewModel() {
+   
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
