@@ -72,4 +72,18 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.firebase:firebase-messaging")
+
+    // --- Unit Testing (Local) ---
+    testImplementation("junit:junit:4.13.2")
+    // مكتبة MockK العظيمة لعمل Mocking في الكوتلن
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+    // --- Instrumented Testing (UI / Compose) ---
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // مكاتب اختبار الـ Jetpack Compose
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01")) // اتأكد من إصدار الـ BOM بتاعك
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
