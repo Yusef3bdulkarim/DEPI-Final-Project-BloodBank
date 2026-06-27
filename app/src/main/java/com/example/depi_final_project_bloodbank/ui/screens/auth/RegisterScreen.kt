@@ -39,6 +39,13 @@ import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLo
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
+import android.net.Uri
+import coil.compose.AsyncImage
 
 @Composable
 fun RegisterScreen(
@@ -59,6 +66,25 @@ fun RegisterScreen(
     var lastDonationDate by remember { mutableStateOf<Long?>(null) }
     var lastDonationText by remember { mutableStateOf("") }
     val context = LocalContext.current
+
+    var proofImage by remember { mutableStateOf<Any?>(null) }
+
+    var showImageSourceDialog by remember { mutableStateOf(false) }
+
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap: Bitmap? ->
+        if (bitmap != null) proofImage = bitmap
+    }
+
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) proofImage = uri
+    }
+
     // تجهيز نافذة التقويم (Calendar)
     val calendar = java.util.Calendar.getInstance()
     val datePickerDialog = android.app.DatePickerDialog(
@@ -289,6 +315,78 @@ fun RegisterScreen(
             }
         }
 
+        if (showImageSourceDialog) {
+            AlertDialog(
+                onDismissRequest = { showImageSourceDialog = false },
+                title = { Text(text = stringResource(id = R.string.choose_image_source)) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        showImageSourceDialog = false
+                        cameraLauncher.launch(null) // يفتح الكاميرا
+                    }) {
+                        Text(text = stringResource(id = R.string.camera), color = PrimaryRed)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showImageSourceDialog = false
+                        galleryLauncher.launch("image/*") // يفتح المعرض
+                    }) {
+                        Text(text = stringResource(id = R.string.gallery), color = PrimaryRed)
+                    }
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White, RoundedCornerShape(12.dp))
+                .border(
+                    width = 1.dp,
+                    color = if (proofImage != null) Color(0xFF006400) else Color.Gray,
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .clickable { showImageSourceDialog = true } // بيظهر النافذة
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (proofImage != null) {
+                    // مكتبة Coil هتعرض الصورة أوتوماتيك سواء كانت Uri أو Bitmap
+                    AsyncImage(
+                        model = proofImage,
+                        contentDescription = "Proof Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = stringResource(id = R.string.proof_attached_success) + " ✅",
+                        color = Color(0xFF006400),
+                        fontWeight = FontWeight.Bold
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Image,
+                        contentDescription = null,
+                        tint = PrimaryRed
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = stringResource(id = R.string.upload_proof_instruction),
+                        color = TextDark,
+                        fontSize = 14.sp
+                    )
+                }
+            }
+        }
+
         Spacer(modifier = Modifier.height(12.dp))
 
         // مربع تاريخ آخر تبرع
@@ -328,7 +426,20 @@ fun RegisterScreen(
         BloodLinkButton(
             text = stringResource(id = R.string.register_button),
             onClick = {
-                if (phone.length == 11) {
+                if (phone.length == 11 && proofImage != null) {
+                    // تحويل الصورة لـ مصفوفة بايتات (ByteArray) عشان نعرف نرفعها
+                    val proofImageBytes: ByteArray? = when (proofImage) {
+                        is Bitmap -> {
+                            val stream = java.io.ByteArrayOutputStream()
+                            (proofImage as Bitmap).compress(Bitmap.CompressFormat.JPEG, 80, stream)
+                            stream.toByteArray()
+                        }
+                        is Uri -> {
+                            context.contentResolver.openInputStream(proofImage as Uri)?.use { it.readBytes() }
+                        }
+                        else -> null
+                    }
+
                     viewModel.register(
                         name = name,
                         email = email,
@@ -337,9 +448,9 @@ fun RegisterScreen(
                         bloodType = selectedBlood,
                         governorate = selectedGovernorate,
                         city = selectedCity,
-                        lastDonationDate = lastDonationDate
+                        lastDonationDate = lastDonationDate,
+                        proofImageBytes = proofImageBytes
                     )
-
                 }
             }
         )

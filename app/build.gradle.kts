@@ -93,5 +93,5 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.8") // مكتبة سحرية للمحاكاة
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // لاختبار الكوروتنز
     testImplementation("app.cash.turbine:turbine:1.0.0") // لاختبار الـ StateFlow بسهولة
-
+    implementation("com.google.firebase:firebase-storage")
 }

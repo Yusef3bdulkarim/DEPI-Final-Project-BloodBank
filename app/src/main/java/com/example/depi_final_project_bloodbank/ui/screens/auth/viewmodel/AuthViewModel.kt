@@ -14,6 +14,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 sealed class AuthState {
     object Idle : AuthState()
@@ -123,7 +124,7 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun completeProfile(uid: String, name: String, phone: String, bloodType: String, governorate: String, city: String, lastDonationDate: Long?) {
+    fun completeProfile(uid: String, name: String, phone: String, bloodType: String, governorate: String, city: String, lastDonationDate: Long?, proofImageBytes: ByteArray?) {
         if (name.isBlank() || phone.isBlank() || bloodType.isBlank() || governorate.isBlank() || city.isBlank()) {
             _authState.value = AuthState.Error(messageId = R.string.error_empty_fields)
             return
@@ -131,70 +132,89 @@ class AuthViewModel : ViewModel() {
 
         _authState.value = AuthState.Loading
 
-        // التعديل هنا: ضفنا الإيميل والـ uid عشان الملف يتكريت كامل
-        val user = User(
-            uid = uid,
-            name = name.trim(),
-            email = auth.currentUser?.email ?: "",
-            phone = phone.trim(),
-            bloodType = bloodType,
-            governorate = governorate,
-            city = city,
-            lastDonationDate = lastDonationDate
-        )
+        viewModelScope.launch {
+            try {
+                var proofUrl = ""
+                // لو المستخدم أرفق صورة، نرفعها الأول للـ Storage
+                if (proofImageBytes != null) {
+                    val storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().reference.child("blood_proofs/$uid.jpg")
+                    storageRef.putBytes(proofImageBytes).await()
+                    proofUrl = storageRef.downloadUrl.await().toString() // نجيب لينك الصورة بعد الرفع
+                }
 
-        // التعديل الأهم: استخدمنا set مع SetOptions.merge()
-        // عشان لو الملف مش موجود يكريته، ولو موجود يضيف عليه
-        firestore.collection("Users").document(uid).set(user)
-            .addOnSuccessListener {
+                val user = User(
+                    uid = uid,
+                    name = name.trim(),
+                    email = auth.currentUser?.email ?: "",
+                    phone = phone.trim(),
+                    bloodType = bloodType,
+                    governorate = governorate,
+                    city = city,
+                    lastDonationDate = lastDonationDate,
+                    proofImageUrl = proofUrl // نحفظ اللينك هنا
+                )
+
+                firestore.collection("Users").document(uid).set(user)
+                    .await() // استخدمنا await بدل addOnSuccessListener عشان الكود يبقى أنظف
+
                 onUserAuthenticated()
                 _authState.value = AuthState.Success
-            }
-            .addOnFailureListener { e ->
+
+            } catch (e: Exception) {
                 _authState.value = AuthState.Error(
                     messageId = R.string.error_saving_data,
                     messageStr = e.localizedMessage
                 )
             }
+        }
     }
 
 
-    fun register(name: String, email: String, phone: String, pass: String, bloodType: String, governorate: String, city: String, lastDonationDate: Long?) {
+    fun register(name: String, email: String, phone: String, pass: String, bloodType: String, governorate: String, city: String, lastDonationDate: Long?, proofImageBytes: ByteArray?) {
         if (name.isBlank() || email.isBlank() || phone.isBlank() || pass.isBlank() || bloodType.isBlank() || governorate.isBlank() || city.isBlank()) {
             _authState.value = AuthState.Error(messageId = R.string.error_empty_fields)
             return
         }
         _authState.value = AuthState.Loading
-        auth.createUserWithEmailAndPassword(email.trim(), pass.trim())
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val uid = task.result?.user?.uid ?: ""
-                    val user = User(
-                        uid = uid,
-                        name = name.trim(),
-                        email = email.trim(),
-                        phone = phone.trim(),
-                        bloodType = bloodType,
-                        governorate = governorate,
-                        city = city,
-                        lastDonationDate = lastDonationDate
-                    )
 
-                    firestore.collection("Users").document(uid).set(user)
-                        .addOnSuccessListener {
-                            // إرسال إيميل التفعيل وتوجيه المستخدم لشاشة التفعيل
-                            onUserAuthenticated()
-                            auth.currentUser?.sendEmailVerification()
-                            _authState.value = AuthState.NeedsVerification
-                        }
-                        .addOnFailureListener { e ->
-                            _authState.value = AuthState.Error(messageStr = e.localizedMessage)
-                        }
-                } else {
-                    // نعرض رسالة فايربيز الحقيقية (زي: الإيميل مستخدم من قبل)
-                    _authState.value = AuthState.Error(messageStr = task.exception?.localizedMessage)
+        viewModelScope.launch {
+            try {
+                // 1. إنشاء الحساب
+                val authResult = auth.createUserWithEmailAndPassword(email.trim(), pass.trim()).await()
+                val uid = authResult.user?.uid ?: ""
+
+                var proofUrl = ""
+                // 2. رفع الصورة لو موجودة
+                if (proofImageBytes != null) {
+                    val storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().reference.child("blood_proofs/$uid.jpg")
+                    storageRef.putBytes(proofImageBytes).await()
+                    proofUrl = storageRef.downloadUrl.await().toString()
                 }
+
+                // 3. تجهيز بيانات اليوزر
+                val user = User(
+                    uid = uid,
+                    name = name.trim(),
+                    email = email.trim(),
+                    phone = phone.trim(),
+                    bloodType = bloodType,
+                    governorate = governorate,
+                    city = city,
+                    lastDonationDate = lastDonationDate,
+                    proofImageUrl = proofUrl // حفظ اللينك
+                )
+
+                // 4. الحفظ في فايرستور
+                firestore.collection("Users").document(uid).set(user).await()
+
+                onUserAuthenticated()
+                auth.currentUser?.sendEmailVerification()
+                _authState.value = AuthState.NeedsVerification
+
+            } catch (e: Exception) {
+                _authState.value = AuthState.Error(messageStr = e.localizedMessage)
             }
+        }
     }
 
     fun resetPassword(email: String) {
