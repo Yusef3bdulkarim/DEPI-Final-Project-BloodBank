@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.foundation)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -86,4 +87,11 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01")) // اتأكد من إصدار الـ BOM بتاعك
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // مكتبات الـ Unit Testing
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.mockk:mockk:1.13.8") // مكتبة سحرية للمحاكاة
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // لاختبار الكوروتنز
+    testImplementation("app.cash.turbine:turbine:1.0.0") // لاختبار الـ StateFlow بسهولة
+
 }
