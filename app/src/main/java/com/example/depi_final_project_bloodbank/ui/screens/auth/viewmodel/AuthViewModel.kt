@@ -13,6 +13,11 @@ import kotlinx.coroutines.flow.StateFlow
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.example.depi_final_project_bloodbank.data.repository.BloodScannerRepository
+import com.example.depi_final_project_bloodbank.data.repository.BloodScannerRepositoryImpl
+import com.example.depi_final_project_bloodbank.domain.model.BloodScanResult
+import android.graphics.Bitmap
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -31,6 +36,16 @@ sealed class AuthState {
 class AuthViewModel : ViewModel() {
     private val repository = UserRepository()
 
+    // 1. إضافة الـ Repository المسؤول عن تحليل الصور باستخدام ML Kit و Groq AI
+    private val bloodScannerRepository: BloodScannerRepository = BloodScannerRepositoryImpl()
+
+    // 2. حالة (State) لحفظ نتيجة تحليل الصورة ومراقبتها في الـ UI
+    private val _scanResult = MutableStateFlow<BloodScanResult?>(null)
+    val scanResult: StateFlow<BloodScanResult?> = _scanResult.asStateFlow()
+
+    // 5. حالة لمراقبة عملية التحليل (هل هي جارية الآن؟) لإظهار مؤشر تحميل للمستخدم
+    private val _isScanning = MutableStateFlow(false)
+    val isScanning: StateFlow<Boolean> = _isScanning.asStateFlow()
 
     private val auth = FirebaseAuth.getInstance()
 
@@ -258,6 +273,27 @@ class AuthViewModel : ViewModel() {
     }
     private fun onUserAuthenticated() {
         updateFcmToken()
+    }
+
+    // 3. دالة لبدء عملية تحليل فصيلة الدم من الصورة (Bitmap)
+    fun scanBloodType(bitmap: Bitmap) {
+        viewModelScope.launch {
+            // تفعيل حالة التحميل قبل البدء في التحليل
+            _isScanning.value = true
+            try {
+                // نرسل الصورة للـ Repository ونحدث الحالة بالنتيجة (سواء نجاح أو فشل)
+                val result = bloodScannerRepository.scanBloodType(bitmap)
+                _scanResult.value = result
+            } finally {
+                // إيقاف حالة التحميل بعد انتهاء العملية (سواء نجحت أو فشلت)
+                _isScanning.value = false
+            }
+        }
+    }
+
+    // 4. دالة لتصفير نتيجة التحليل عند الحاجة (مثلاً عند الخروج من الشاشة)
+    fun clearScanResult() {
+        _scanResult.value = null
     }
 
 }

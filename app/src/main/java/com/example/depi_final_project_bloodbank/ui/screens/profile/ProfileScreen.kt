@@ -27,6 +27,7 @@ import com.example.depi_final_project_bloodbank.ui.screens.home.components.TopLo
 import com.example.depi_final_project_bloodbank.ui.screens.profile.components.*
 import com.example.depi_final_project_bloodbank.ui.theme.UrgentRed
 import com.google.firebase.auth.FirebaseAuth
+import androidx.core.content.edit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -287,7 +288,7 @@ fun ProfileScreen(
                             title = "العربية",
                             emoji = "🇸🇦",
                             onClick = {
-                                sharedPref.edit().putString("lang", "ar").apply()
+                                sharedPref.edit {putString("lang", "ar")}
                                 showLanguageDialog = false
                                 activity.recreate()
                             }
@@ -297,7 +298,7 @@ fun ProfileScreen(
                             title = "English",
                             emoji = "🇺🇸",
                             onClick = {
-                                sharedPref.edit().putString("lang", "en").apply()
+                                sharedPref.edit { putString("lang", "en") }
                                 showLanguageDialog = false
                                 activity.recreate()
                             }

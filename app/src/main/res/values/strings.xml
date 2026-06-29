@@ -353,5 +353,8 @@
     <string name="choose_image_source">Choose image source</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
+    <string name="blood_type_detected">Blood type detected: %s</string>
+    <string name="error_scanning_failed">Scanning failed, please try again</string>
+    <string name="scanning_image">Analyzing image...</string>
 
 </resources>

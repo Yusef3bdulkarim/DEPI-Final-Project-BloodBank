@@ -1,5 +1,6 @@
 package com.example.depi_final_project_bloodbank.ui.screens.auth
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -47,6 +48,10 @@ import androidx.compose.foundation.Image
 import android.net.Uri
 import coil.compose.AsyncImage
 
+import com.example.depi_final_project_bloodbank.utils.ImageUtils
+import android.widget.Toast
+
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 fun RegisterScreen(
     navController: NavController,
@@ -61,6 +66,10 @@ fun RegisterScreen(
     var selectedBlood by remember { mutableStateOf("") }
     val bloodTypes = listOf("A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
     val authState by viewModel.authState.collectAsState()
+    // 2. مراقبة حالة نتيجة تحليل فصيلة الدم من الـ ViewModel
+    val scanResult by viewModel.scanResult.collectAsState()
+    // 6. مراقبة حالة عملية التحليل لإظهار مؤشر تحميل (Loading State)
+    val isScanning by viewModel.isScanning.collectAsState()
     var selectedGovernorate by remember { mutableStateOf("") }
     var selectedCity by remember { mutableStateOf("") }
     var lastDonationDate by remember { mutableStateOf<Long?>(null) }
@@ -72,17 +81,40 @@ fun RegisterScreen(
     var showImageSourceDialog by remember { mutableStateOf(false) }
 
 
+    // 3. تأثير جانبي (LaunchedEffect) لتحديث فصيلة الدم المختارة تلقائياً بمجرد نجاح التحليل
+    LaunchedEffect(scanResult) {
+        scanResult?.let { result ->
+            if (result.isSuccessful && result.bloodType != null) {
+                selectedBlood = result.bloodType
+                // استخدام نص مترجم لعرض النتيجة
+                Toast.makeText(context, context.getString(R.string.blood_type_detected, result.bloodType), Toast.LENGTH_SHORT).show()
+            } else if (!result.isSuccessful && result.errorMessage != null) {
+                Toast.makeText(context, result.errorMessage, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
     ) { bitmap: Bitmap? ->
-        if (bitmap != null) proofImage = bitmap
+        if (bitmap != null) {
+            proofImage = bitmap
+            // 4. إرسال الصورة المأخوذة من الكاميرا للـ ViewModel لتحليلها
+            viewModel.scanBloodType(bitmap)
+        }
     }
 
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        if (uri != null) proofImage = uri
+        if (uri != null) {
+            proofImage = uri
+            // 5. تحويل الصورة المختارة من المعرض إلى Bitmap ثم إرسالها للتحليل
+            val bitmap = ImageUtils.compressAndOptimize(context, uri)
+            bitmap?.let { viewModel.scanBloodType(it) }
+        }
     }
 
     // تجهيز نافذة التقويم (Calendar)
@@ -350,39 +382,57 @@ fun RegisterScreen(
                     color = if (proofImage != null) Color(0xFF006400) else Color.Gray,
                     shape = RoundedCornerShape(12.dp)
                 )
-                .clickable { showImageSourceDialog = true } // بيظهر النافذة
+                // 7. تعطيل الضغط على الزر أثناء عملية التحليل لمنع التداخل
+                .clickable(enabled = !isScanning) { showImageSourceDialog = true }
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (proofImage != null) {
-                    // مكتبة Coil هتعرض الصورة أوتوماتيك سواء كانت Uri أو Bitmap
-                    AsyncImage(
-                        model = proofImage,
-                        contentDescription = "Proof Image",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(RoundedCornerShape(8.dp))
+            // 8. عرض مؤشر تحميل (CircularProgressIndicator) إذا كانت عملية التحليل جارية
+            if (isScanning) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = PrimaryRed,
+                        strokeWidth = 2.dp
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = stringResource(id = R.string.proof_attached_success) + " ✅",
-                        color = Color(0xFF006400),
-                        fontWeight = FontWeight.Bold
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Image,
-                        contentDescription = null,
-                        tint = PrimaryRed
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = stringResource(id = R.string.upload_proof_instruction),
+                        text = stringResource(id = R.string.scanning_image),
                         color = TextDark,
                         fontSize = 14.sp
                     )
+                }
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (proofImage != null) {
+                        // مكتبة Coil هتعرض الصورة أوتوماتيك سواء كانت Uri أو Bitmap
+                        AsyncImage(
+                            model = proofImage,
+                            contentDescription = "Proof Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(id = R.string.proof_attached_success) + " ✅",
+                            color = Color(0xFF006400),
+                            fontWeight = FontWeight.Bold
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Image,
+                            contentDescription = null,
+                            tint = PrimaryRed
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(id = R.string.upload_proof_instruction),
+                            color = TextDark,
+                            fontSize = 14.sp
+                        )
+                    }
                 }
             }
         }

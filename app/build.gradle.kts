@@ -74,6 +74,16 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.firebase:firebase-messaging")
 
+//    coil
+    implementation("io.coil-kt:coil-compose:2.7.0")
+//    retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+
+    // ML Kit
+    implementation("com.google.mlkit:text-recognition:16.0.1")
     // --- Unit Testing (Local) ---
     testImplementation("junit:junit:4.13.2")
     // مكتبة MockK العظيمة لعمل Mocking في الكوتلن
