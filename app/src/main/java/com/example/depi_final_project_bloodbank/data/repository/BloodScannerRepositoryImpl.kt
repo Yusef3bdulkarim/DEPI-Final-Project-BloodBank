@@ -46,17 +46,17 @@ class BloodScannerRepositoryImpl : BloodScannerRepository {
             val text = result.text
 
             if (text.isBlank()) {
-                BloodScanResult(null, "", false, "الصورة غير واضحة.")
+                BloodScanResult(null, "", false, "Image not clear.")
             } else {
                 val bloodType = extractBloodTypeWithAi(text)
                 if (bloodType != null && bloodType != "None") {
-                    BloodScanResult(bloodType, text, true)
+                    BloodScanResult(bloodType, text, true, "Blood type found Successfully.")
                 } else {
-                    BloodScanResult(null, text, false, "لم يتم العثور على فصيلة دم.")
+                    BloodScanResult(null, text, false, "Blood type not found.")
                 }
             }
         } catch (e: Exception) {
-            BloodScanResult(null, "", false, "حدث خطأ: ${e.message}")
+            BloodScanResult(null, "", false, " error: ${e.message}")
         }
     }
 

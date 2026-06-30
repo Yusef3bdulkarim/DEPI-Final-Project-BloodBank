@@ -86,10 +86,6 @@ fun RegisterScreen(
         scanResult?.let { result ->
             if (result.isSuccessful && result.bloodType != null) {
                 selectedBlood = result.bloodType
-                // استخدام نص مترجم لعرض النتيجة
-                Toast.makeText(context, context.getString(R.string.blood_type_detected, result.bloodType), Toast.LENGTH_SHORT).show()
-            } else if (!result.isSuccessful && result.errorMessage != null) {
-                Toast.makeText(context, result.errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -415,11 +411,17 @@ fun RegisterScreen(
                                 .clip(RoundedCornerShape(8.dp))
                         )
                         Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            text = stringResource(id = R.string.proof_attached_success) + " ✅",
-                            color = Color(0xFF006400),
-                            fontWeight = FontWeight.Bold
-                        )
+                        scanResult?.errorMessage?.let {
+                            Text(
+                                text = it,
+                                color = if (scanResult!!.isSuccessful) {
+                                    Color(0xFF006400)
+                                } else {
+                                    Color(0xFF8B0000)
+                                },
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     } else {
                         Icon(
                             imageVector = Icons.Default.Image,
