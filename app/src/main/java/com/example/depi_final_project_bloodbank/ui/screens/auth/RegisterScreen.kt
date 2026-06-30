@@ -375,7 +375,7 @@ fun RegisterScreen(
                 .background(Color.White, RoundedCornerShape(12.dp))
                 .border(
                     width = 1.dp,
-                    color = if (proofImage != null) Color(0xFF006400) else Color.Gray,
+                    color = Color.Gray,
                     shape = RoundedCornerShape(12.dp)
                 )
                 // 7. تعطيل الضغط على الزر أثناء عملية التحليل لمنع التداخل
