@@ -64,6 +64,7 @@ class BloodScannerRepositoryImpl : BloodScannerRepository {
         return try {
             val prompt = """
                 Extract the blood type from the following text. 
+                If multiple blood types are found, return 'None'. 
                 Return ONLY the blood type (e.g., A+, O-, AB+) and nothing else. 
                 If no blood type is found, return 'None'. 
                 Text: $text
