@@ -477,18 +477,6 @@ fun RegisterScreen(
             text = stringResource(id = R.string.register_button),
             onClick = {
                 if (phone.length == 11 && proofImage != null) {
-                    // تحويل الصورة لـ مصفوفة بايتات (ByteArray) عشان نعرف نرفعها
-                    val proofImageBytes: ByteArray? = when (proofImage) {
-                        is Bitmap -> {
-                            val stream = java.io.ByteArrayOutputStream()
-                            (proofImage as Bitmap).compress(Bitmap.CompressFormat.JPEG, 80, stream)
-                            stream.toByteArray()
-                        }
-                        is Uri -> {
-                            context.contentResolver.openInputStream(proofImage as Uri)?.use { it.readBytes() }
-                        }
-                        else -> null
-                    }
 
                     viewModel.register(
                         name = name,
@@ -498,8 +486,7 @@ fun RegisterScreen(
                         bloodType = selectedBlood,
                         governorate = selectedGovernorate,
                         city = selectedCity,
-                        lastDonationDate = lastDonationDate,
-                        proofImageBytes = proofImageBytes
+                        lastDonationDate = lastDonationDate
                     )
                 }
             }

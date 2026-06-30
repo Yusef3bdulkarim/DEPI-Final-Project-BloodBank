@@ -139,7 +139,7 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun completeProfile(uid: String, name: String, phone: String, bloodType: String, governorate: String, city: String, lastDonationDate: Long?, proofImageBytes: ByteArray?) {
+    fun completeProfile(uid: String, name: String, phone: String, bloodType: String, governorate: String, city: String, lastDonationDate: Long?) { // شلنا proofImageBytes
         if (name.isBlank() || phone.isBlank() || bloodType.isBlank() || governorate.isBlank() || city.isBlank()) {
             _authState.value = AuthState.Error(messageId = R.string.error_empty_fields)
             return
@@ -149,13 +149,6 @@ class AuthViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                var proofUrl = ""
-                // لو المستخدم أرفق صورة، نرفعها الأول للـ Storage
-                if (proofImageBytes != null) {
-                    val storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().reference.child("blood_proofs/$uid.jpg")
-                    storageRef.putBytes(proofImageBytes).await()
-                    proofUrl = storageRef.downloadUrl.await().toString() // نجيب لينك الصورة بعد الرفع
-                }
 
                 val user = User(
                     uid = uid,
@@ -166,11 +159,10 @@ class AuthViewModel : ViewModel() {
                     governorate = governorate,
                     city = city,
                     lastDonationDate = lastDonationDate,
-                    proofImageUrl = proofUrl // نحفظ اللينك هنا
+                    proofImageUrl = "" // بنسيبها فاضية
                 )
 
-                firestore.collection("Users").document(uid).set(user)
-                    .await() // استخدمنا await بدل addOnSuccessListener عشان الكود يبقى أنظف
+                firestore.collection("Users").document(uid).set(user).await()
 
                 onUserAuthenticated()
                 _authState.value = AuthState.Success
@@ -185,7 +177,7 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun register(name: String, email: String, phone: String, pass: String, bloodType: String, governorate: String, city: String, lastDonationDate: Long?, proofImageBytes: ByteArray?) {
+    fun register(name: String, email: String, phone: String, pass: String, bloodType: String, governorate: String, city: String, lastDonationDate: Long?) { // شلنا proofImageBytes
         if (name.isBlank() || email.isBlank() || phone.isBlank() || pass.isBlank() || bloodType.isBlank() || governorate.isBlank() || city.isBlank()) {
             _authState.value = AuthState.Error(messageId = R.string.error_empty_fields)
             return
@@ -194,19 +186,10 @@ class AuthViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                // 1. إنشاء الحساب
+
                 val authResult = auth.createUserWithEmailAndPassword(email.trim(), pass.trim()).await()
                 val uid = authResult.user?.uid ?: ""
 
-                var proofUrl = ""
-                // 2. رفع الصورة لو موجودة
-                if (proofImageBytes != null) {
-                    val storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().reference.child("blood_proofs/$uid.jpg")
-                    storageRef.putBytes(proofImageBytes).await()
-                    proofUrl = storageRef.downloadUrl.await().toString()
-                }
-
-                // 3. تجهيز بيانات اليوزر
                 val user = User(
                     uid = uid,
                     name = name.trim(),
@@ -216,10 +199,9 @@ class AuthViewModel : ViewModel() {
                     governorate = governorate,
                     city = city,
                     lastDonationDate = lastDonationDate,
-                    proofImageUrl = proofUrl // حفظ اللينك
+                    proofImageUrl = "" // بنسيبها فاضية
                 )
 
-                // 4. الحفظ في فايرستور
                 firestore.collection("Users").document(uid).set(user).await()
 
                 onUserAuthenticated()
