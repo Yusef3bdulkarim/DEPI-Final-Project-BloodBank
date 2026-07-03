@@ -141,23 +141,21 @@ app/src/main/java/com/example/depi_final_project_bloodbank/
 
 ## Screenshots
 
-> Add your screenshots to `assets/screenshots/` and update the paths below.
+| Login | Register | Home |
+|-------|----------|------|
+| <img src="assets/screenshots/login.jpg" width="200"/> | <img src="assets/screenshots/register.jpg" width="200"/> | <img src="assets/screenshots/home.jpg" width="200"/> |
 
-| Splash | Login | Home |
-|--------|-------|------|
-| <img src="assets/screenshots/splash.png" width="200"/> | <img src="assets/screenshots/login.png" width="200"/> | <img src="assets/screenshots/home.png" width="200"/> |
+| Notifications | Requests Feed | My Activity |
+|----------------|---------------|-------------|
+| <img src="assets/screenshots/notifications.jpg" width="200"/> | <img src="assets/screenshots/requests_feed.jpg" width="200"/> | <img src="assets/screenshots/my_activity.jpg" width="200"/> |
 
-| Notifications | Requests Feed | Create Request |
-|---------------|---------------|----------------|
-| <img src="assets/screenshots/notifications.png" width="200"/> | <img src="assets/screenshots/requests_feed.png" width="200"/> | <img src="assets/screenshots/create_request.png" width="200"/> |
+| Create Request | Manage Request | Request Details |
+|-----------------|-----------------|------------------|
+| <img src="assets/screenshots/create_request.jpg" width="200"/> | <img src="assets/screenshots/manage_request.jpg" width="200"/> | <img src="assets/screenshots/request_details.jpg" width="200"/> |
 
-| Manage Request | Request Details | Profile |
-|----------------|-----------------|---------|
-| <img src="assets/screenshots/manage_request.png" width="200"/> | <img src="assets/screenshots/request_details.png" width="200"/> | <img src="assets/screenshots/profile.png" width="200"/> |
-
-| Donation History | Arabic Home | Arabic Requests |
-|------------------|-------------|-----------------|
-| <img src="assets/screenshots/donation_history.png" width="200"/> | <img src="assets/screenshots/home_ar.png" width="200"/> | <img src="assets/screenshots/requests_ar.png" width="200"/> |
+| Profile | Donation History |
+|---------|-------------------|
+| <img src="assets/screenshots/profile.jpg" width="200"/> | <img src="assets/screenshots/donation_history.jpg" width="200"/> |
 
 ---
 
