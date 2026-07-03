@@ -1,41 +1,360 @@
 <resources>
-    <string name="app_name">DEPI-Final-Project-BloodBank</string>
+
+    <!-- Common (نصوص مشتركة) -->
+    <string name="app_name">BloodLink</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="back_to_login">Back to Login</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
+    <string name="or_sign_in_with">Or continue with</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name="cancel">Cancel</string>
+    <string name="units_of_blood">blood units</string>
+
+    <!-- Login Screen -->
+    <string name="login_title">WELCOME BACK!</string>
+    <string name= "login_dec">Ready to save lives and support your community? Sign in to continue</string>
+    <string name="forgot_password_question">Forgot Password?</string>
+    <string name="login_button">Login</string>
+    <string name="login_Google_button">Continue with Google</string>
+
+    <string name="no_account">Don\'t have an account? </string>
+    <string name="create_account_link">Create Account</string>
+
+    <!-- Register Screen -->
+    <string name="signup_title">JOIN THE LIFESAVERS!</string>
+    <string name="signup_dec">Be the reason someone smiles today. Create an account to start your donation journey and save lives</string>
+    <string name="name_label">Name</string>
+    <string name="phone_label">Phone Number</string>
+    <string name="blood_type_label">Blood Type</string>
+    <string name="register_button">Create Account</string>
+    <string name="have_account">Already have an account? </string>
+    <string name="login_link">Login</string>
+    <string name="complete_profile_title">Complete your Profile</string>
+    <string name="save_and_continue">Save and continue</string>
+
+    <!-- Forgot Password Screen -->
+    <string name="forgot_password_title">Forgot Password?</string>
+    <string name="forgot_password_desc">Please enter your email below. We will send a link to reset your password.</string>
+    <string name="send_reset_link_button">Send Password Reset Link</string>
+    <string name="resent_email">A password recovery link was sent to your email.</string>
+
+    <!-- Verify Account Screen -->
+    <string name="verify_account_title">Account Verification Required</string>
+    <string name="verify_account_desc">You must verify your account through the link sent to your email.</string>
+    <string name="resend_verification_button">Resend Verification Link</string>
+    <string name="check_verification_status">I have verified</string>
+
+    <!-- Errors -->
+    <string name="error_general_login">An error occurred during login</string>
+    <string name="error_empty_fields">Please enter all details</string>
+    <string name="error_saving_data">An error occurred while saving your data</string>
+    <string name="error_creating_account">An error occurred while creating the account</string>
+    <string name="error_google_login">An error occurred during Google sign in</string>
+    <string name="error_fetching_data">An error occurred while checking data</string>
+    <string name="error_invalid_credentials">Invalid email or password</string>
+    <string name="error_required">This field is required!</string>
+    <string name="error_phone_invalid">Phone number must be at least 11 digits (numbers only).</string>
+
+    <!-- Activities & ViewModels -->
     <string name="title_activity_home_screen">HomeScreen</string>
     <string name="title_activity_home_view_model">HomeViewModel</string>
 
+    <!-- Create Request Screen & Location Details -->
+    <string name="create_request_title">Create Blood Request</string>
+    <string name="blood_type">Requested Blood Type</string>
+    <string name="units_required">Units Required</string>
+    <string name="location_details">Location Details</string>
+    <string name="hospital_name">Hospital/Clinic Name</string>
+    <string name="city_area">City/Area</string>
 
-        <string name="hospital_name">Hospital/Clinic Name</string>
-        <string name="city_area">City/Area</string>
-        <string name="contact_phone">Contact Phone</string>
-        <string name="error_required">This field is required!</string>
+    <!-- Dropdowns & GPS (النصوص الجديدة) -->
+    <string name="select_governorate">Select Governorate</string>
+    <string name="select_city">Select Center/City</string>
+    <string name="fetching_location">Fetching coordinates…</string>
+    <string name="location_fetched_success">Location fetched successfully</string>
+    <string name="fetch_gps_location">📍 Use My Current Location (GPS)</string>
 
-        <string name="location_details">Location Details</string>
-        <string name="urgency_status">Urgency Status</string>
-        <string name="contact_name">Contact Name (optional)</string>
-        <string name="cancel_btn">Cancel</string>
-        <string name="routine_urgency">Routine</string>
-        <string name="urgent_urgency">Urgent</string>
-        <string name="very_urgent_urgency">Very Urgent</string>
-        <string name="units_of_blood">units of blood</string>
-        <string name="active_now">Active Now</string>
-        <string name="just_now">Just now</string>
-        <string name="patient_representative">Patient Representative</string>
+    <!-- Urgency Status -->
+    <string name="urgency_status">Urgency Status</string>
+    <string name="routine_urgency">Routine</string>
+    <string name="urgent_urgency">Urgent</string>
+    <string name="very_urgent_urgency">Very Urgent</string>
+    <string name="urgency_instruction">The urgency status should be selected based on the attending doctor\'s evaluation.</string>
+    <string name="note">Note</string>
 
-        <string name="error_phone_invalid">Phone number must be at least 11 digits (numbers only).</string>
+    <!-- Contact Info -->
+    <string name="contact_info">Contact Information</string>
+    <string name="contact_name">Contact Name (optional)</string>
+    <string name="contact_phone">Contact Phone</string>
+    <string name="patient_representative">Patient Representative</string>
 
-        <string name="create_request_title">Create Blood Request</string>
-        <string name="request_details_title">Request Details</string>
-        <string name="blood_type">Requested Blood Type</string>
-        <string name="units_required">Units Required</string>
-        <string name="hospital_location">Hospital Location</string>
-        <string name="request_status">Request Status</string>
-        <string name="post_date">Post Date</string>
-        <string name="note">Note</string>
-        <string name="contact_info">Contact Information</string>
-        <string name="post_request_btn">Post Request</string>
-        <string name="fulfill_request_btn">Fulfill Request Now</string>
-        <string name="urgency_instruction"> The urgency status should be selected based on the attending doctor\'s evaluation.</string>
+    <!-- Request Status & Details -->
+    <string name="request_details_title">Request Details</string>
+    <string name="hospital_location">Hospital Location</string>
+    <string name="request_status">Request Status</string>
+    <string name="post_date">Post Date</string>
+    <string name="post_request_btn">Post Request</string>
+    <string name="fulfill_request_btn">Fulfill Request Now</string>
+    <string name="orders_list">Orders List</string>
+    <string name="request_title">Blood Donation Request (%s)</string>
+    <string name="urgent_title">Urgent Request (%s)</string>
+    <string name="view_details">View Details</string>
+    <string name="donate_now">Donate Now</string>
+
+    <!-- Tabs & Progress -->
+    <string name="tab_in_progress">In Progress</string>
+    <string name="tab_completed">Completed</string>
+    <string name="tab_expired">Expired</string>
+    <string name="tab_cancelled">Cancelled</string>
+    <string name="active_now">Active Now</string>
+    <string name="delivered">Delivered</string>
+    <string name="processing">Processing</string>
+    <string name="searching_donors">Searching for donors…</string>
+    <string name="donation_completed">Donation Completed</string>
+
+    <!-- Search & Results -->
+    <string name="search_placeholder">Search blood type…</string>
+    <string name="unit_label">Unit</string>
+    <string name="unit_count">Unit: %1$d</string>
+    <string name="no_results_title">No Results Found</string>
+    <string name="no_results_search_sub">We couldn’t find any results for \"%s\". Try searching for a different blood type.</string>
+    <string name="no_results_empty_sub">There are currently no requests in this section.</string>
+
+    <!-- Bottom Sheet Strings -->
+    <string name="hosp_location_label">Hospital Location</string>
+    <string name="hosp_location_placeholder">Al-Khobar, Aqrabiyah District</string>
+    <string name="request_status_label">Request Status</string>
+    <string name="publish_date_label">Publish Date</string>
+    <string name="status_active">Active Now</string>
+    <string name="doctor_note_label">Doctor Note</string>
+    <string name="doctor_note_placeholder">The patient is in critical condition and needs urgent heart surgery tomorrow morning. We request donors to contact us as soon as possible. Jazakum Allah Khayran.</string>
+    <string name="contact_info_label">Contact Information</string>
+    <string name="contact_person_name">Ahmed Mohammed Al-Ali</string>
+    <string name="blood_type_required_label">Required Blood Type</string>
+
+    <!-- Hospital Names -->
+    <string name="hosp_king_fahd">King Fahd Hospital</string>
+    <string name="hosp_king_saud">King Saud Medical City</string>
+    <string name="hosp_al_habib">Al Habib Hospital</string>
+    <string name="hosp_king_abdulaziz">King Abdulaziz Medical City</string>
+    <string name="hosp_dallah">Dallah Hospital</string>
+    <string name="hosp_care">Care Hospital</string>
+    <string name="hosp_military">Military Hospital</string>
+    <string name="hosp_mouwasat">Mouwasat Hospital</string>
+
+    <!-- Times -->
+    <string name="just_now">Just now</string>
+    <string name="time_30_mins">30 mins ago</string>
+    <string name="time_1_hour">1 hour ago</string>
+    <string name="time_today_10am">Today, 10:00 AM</string>
+    <string name="time_yesterday_9pm">Yesterday, 09:15 PM</string>
+    <string name="time_may_22">May 22, 2024</string>
+    <string name="time_may_20">May 20, 2024</string>
+    <string name="time_may_18">May 18, 2024</string>
+    <string name="time_may_15">May 15, 2024</string>
+
+    <!-- ========================================== -->
+    <!-- Profile & Additional Data (تم إضافتها من النسخة السابقة) -->
+    <!-- ========================================== -->
+    <string name="governorate">Governorate</string>
+    <string name="lastDonationDate">غير متوفر</string>
+
+    <string-array name="governorates_array">
+        <item>Cairo</item>
+        <item>Giza</item>
+        <item>Alexandria</item>
+        <item>Dakahlia</item>
+        <item>Red Sea</item>
+        <item>Beheira</item>
+        <item>Fayoum</item>
+        <item>Gharbia</item>
+        <item>Ismailia</item>
+        <item>Monufia</item>
+        <item>Minya</item>
+        <item>Qalyubia</item>
+        <item>New Valley</item>
+        <item>Suez</item>
+        <item>Aswan</item>
+        <item>Asyut</item>
+        <item>Beni Suef</item>
+        <item>Port Said</item>
+        <item>Damietta</item>
+        <item>Al Sharqia</item>
+        <item>South Sinai</item>
+        <item>Kafr El Sheikh</item>
+        <item>Matrouh</item>
+        <item>Luxor</item>
+        <item>Qena</item>
+        <item>North Sinai</item>
+        <item>Sohag</item>
+    </string-array>
+
+    <string name="loading">Loading...</string>
+    <string name="not_available">Not Available</string>
+    <string name="badge_expert">Expert</string>
+    <string name="badge_life_saver">Life Saver</string>
+    <string name="badge_first_year">First Year</string>
+    <string name="total_donation">Total Donation</string>
+    <string name="last_donate">Last Donate</string>
+    <string name="blood_type_text">Blood Type</string>
+    <string name="badges">Badges</string>
+    <string name="donations">Donations</string>
+    <string name="settings">Language</string>
+    <string name="logout">Logout</string>
+    <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="lang_login">عربي</string>
+    <string name="upcoming_appointment">Upcoming appointment</string>
+    <string name="you_have_days_left_until_your_next_donation">You have %1$d days left until your next donation</string>
+    <string name="default_web_client_id">id</string>
 
 
+    <string name="last_donation_date_label">Last Donation Date</string>
+    <string name="select_date_placeholder">Select Date</string>
+
+    <string name="phone_length_error">Phone number must be exactly 11 digits</string>
+    <string name="donation_date_note">Note: You can only donate blood if at least 3 months have passed since your last donation.</string>
+
+
+    <string name="btn_cancel_donation">Cancel Donation</string>
+    <string name="btn_cancel_request">Cancel Request</string>
+    <string name="btn_donate_now">Donate Now</string>
+
+    <!-- Feedback Messages -->
+    <string name="operation_success">Operation Successful</string>
+    <string name="incompatible_blood_type">Error: Incompatible Blood Type</string>
+    <string name="request_pending_warning">Action is pending confirmation</string>
+    <string name="error_request_full">Error: Request is already full</string>
+    <string name="donation_success">Donation registered successfully</string>
+    <string name="request_cancelled_success">Request cancelled successfully</string>
+
+    <!-- ============================================ -->
+    <!-- Localization Phase: New Strings              -->
+    <!-- ============================================ -->
+
+    <!-- Home — Header -->
+    <string name="good_morning">Good Morning</string>
+    <string name="good_evening">Good Evening</string>
+
+    <!-- Home — Donation Status Banner -->
+    <string name="can_donate_now">YOU CAN\nDONATE NOW.</string>
+    <string name="ready_to_save_lives">Get ready to\nsave lives!</string>
+
+    <!-- Home — Donation Counter Banner -->
+    <string name="next_donation_eligible">Next donation eligible\nin %1$d days</string>
+    <string name="next_date_label">Next date: %s</string>
+    <string name="last_donation_label">Last donation: %s</string>
+
+    <!-- Home — Donation Counter (Circle) -->
+    <string name="days_elapsed_format">%d DAYS</string>
+    <string name="elapsed">Elapsed</string>
+
+    <!-- Home — Health Tips -->
+    <string name="fact_prefix">FACT: %s</string>
+    <string name="tip_title_1">SAVES 3 LIVES</string>
+    <string name="tip_desc_1">Donate 450ml to save 3 lives</string>
+    <string name="tip_title_2">STAY HYDRATED</string>
+    <string name="tip_desc_2">Drink plenty of water before and after donating blood to ensure your safety.</string>
+    <string name="tip_title_3">HEALTHY MEAL</string>
+    <string name="tip_desc_3">Eat a light iron-rich meal and avoid fatty foods before donating.</string>
+    <string name="tip_title_4">REST &amp; RECOVER</string>
+    <string name="tip_desc_4">Relax for 10–15 minutes after donating and avoid heavy physical activity.</string>
+    <string name="tip_title_5">HEMOGLOBIN CHECK</string>
+    <string name="tip_desc_5">Make sure your hemoglobin level is suitable before starting the donation process.</string>
+    <string name="tip_title_6">DONATION INTERVAL</string>
+    <string name="tip_desc_6">Men can donate every 3 months, and women every 4 months safely.</string>
+
+    <!-- Home — Action Buttons -->
+    <string name="request_blood_btn">REQUEST BLOOD</string>
+    <string name="donate_now_home_btn">DONATE NOW</string>
+
+    <!-- Home — Urgent Appeals Section -->
+    <string name="urgent_appeals_title">URGENT APPEALS</string>
+    <string name="urgent_appeals_subtitle">Urgent Appeals Near You</string>
+    <string name="urgent_label">URGENT:</string>
+    <string name="needs_units">Needs %d units</string>
+    <string name="view_label">View</string>
+
+    <!-- Home — Blood Type Filter -->
+    <string name="all_filter">All</string>
+
+    <!-- Home — Availability Toggle -->
+    <string name="available_to_donate">Available to Donate</string>
+    <string name="visible_to_requesters">Visible to requesters</string>
+    <string name="hidden_from_requesters">Hidden from requesters</string>
+    <string name="status_active_toggle">Active</string>
+    <string name="status_inactive_toggle">Inactive</string>
+
+    <!-- Notifications Screen -->
+    <string name="no_notifications_yet">No notifications yet</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="new_notifications_count">You have %d new notifications</string>
+    <string name="mark_all_as_read">Mark all as read</string>
+
+    <!-- Requests Screen -->
+    <string name="my_activity">My Activity</string>
+    <string name="requests_feed">Requests Feed</string>
+
+    <!-- Manage Request Screen -->
+    <string name="manage_request_title">Manage Request</string>
+    <string name="adjust_units_needed">Adjust Units Needed</string>
+    <string name="current_units">Current Units</string>
+    <string name="donors_log">Donors Log</string>
+    <string name="no_donations_yet">No donations yet</string>
+    <string name="confirm_delivery">Confirm Delivery</string>
+
+    <!-- Order Card -->
+    <string name="units_fraction">%1$d/%2$d units</string>
+    <string name="expired_request_label">Expired Request</string>
+    <string name="status_cancelled">Cancelled</string>
+    <string name="status_expired">Expired</string>
+    <string name="status_completed">Completed</string>
+
+    <!-- Request Details Bottom Sheet -->
+    <string name="units_confirmed">%1$d/%2$d units confirmed</string>
+    <string name="go_to_hospital">Go to Hospital</string>
+    <string name="status_active_text">Active</string>
+    <string name="status_completed_text">Completed</string>
+    <string name="status_cancelled_text">Cancelled</string>
+    <string name="status_expired_text">Expired</string>
+
+    <!-- Filter Tabs -->
+    <string name="tab_active">Active</string>
+
+    <!-- Donation History -->
+    <string name="blood_type_display">Blood Type: %s</string>
+
+    <!-- Splash Screen -->
+    <string name="splash_tagline">BloodLink — Connecting Life</string>
+
+    <!-- Login Screen -->
+    <string name="going_to_complete_profile">Going to Complete Profile…</string>
+    <string name="continue_with_google">Continue with Google</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_notifications">Notifications</string>
+    <string name="nav_requests">Requests</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- ViewModel Button Texts -->
+    <string name="btn_request_cancelled">Request Cancelled</string>
+    <string name="btn_request_completed">Request Completed</string>
+    <string name="btn_manage_request">Manage Request</string>
+    <string name="btn_donated">Donated</string>
+    <string name="btn_action_locked">Action Locked</string>
+    <string name="btn_full">Full</string>
+    <string name="btn_loading">…</string>
+
+    <string name="proof_attached_success">Proof attached successfully</string>
+    <string name="upload_proof_instruction">Upload a photo of your blood type proof (ID/lab report)</string>
+    <string name="choose_image_source">Choose image source</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="blood_type_detected">Blood type detected: %s</string>
+    <string name="error_scanning_failed">Scanning failed, please try again</string>
+    <string name="scanning_image">Analyzing image...</string>
 
 </resources>

@@ -14,11 +14,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.depi_final_project_bloodbank.R
 
 @Composable
 fun DonationCounterBanner(daysElapsed: Int, nextDate: String, lastDate: String) {
+    val daysRemaining = (90 - daysElapsed).coerceAtLeast(0)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,26 +37,26 @@ fun DonationCounterBanner(daysElapsed: Int, nextDate: String, lastDate: String) 
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    "Next donation eligible\nin 28 days",
+                    stringResource(R.string.next_donation_eligible, daysRemaining),
                     color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    "Next date: $nextDate",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodySmall
+                    stringResource(R.string.next_date_label, nextDate),
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    style = MaterialTheme.typography.labelSmall
                 )
                 Text(
-                    "Last donation: $lastDate",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodySmall
+                    stringResource(R.string.last_donation_label, lastDate),
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
             DonationCounter(daysElapesed = daysElapsed)
         }
-        }
-        }
+    }
+}
 
 
 @Preview(showBackground = true)

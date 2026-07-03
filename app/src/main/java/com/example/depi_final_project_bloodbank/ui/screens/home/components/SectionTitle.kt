@@ -15,13 +15,13 @@ fun SectionTitle(title: String,location: String) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
             text = title,
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.ExtraBold,
             color = MaterialTheme.colorScheme.secondary
         )
         Text(
             text = location,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurface
         )
     }

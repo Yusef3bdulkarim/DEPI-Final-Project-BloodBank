@@ -8,38 +8,42 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.depi_final_project_bloodbank.R
 
-val NotoSansArabic = FontFamily(
-    Font(R.font.noto_regular, FontWeight.Normal),
-    Font(R.font.noto_bold, FontWeight.Bold),
-    Font(R.font.noto_semibold, FontWeight.SemiBold),
-    Font(R.font.noto_light, FontWeight.Light)
+val CairoFont = FontFamily(
+    Font(R.font.cairo_light, FontWeight.Light),
+    Font(R.font.cairo_regular, FontWeight.Normal),
+    Font(R.font.cairo_medium, FontWeight.Medium),
+    Font(R.font.cairo_semibold, FontWeight.SemiBold),
+    Font(R.font.cairo_bold, FontWeight.Bold),
+    Font(R.font.cairo_extrabold, FontWeight.ExtraBold),
+    Font(R.font.cairo_black, FontWeight.Black)
 )
+
 val Typography = Typography(
-    // العناوين الكبيرة - طلب تبرع عاجل، تم تبرعك
+
     titleLarge = TextStyle(
-        fontFamily = NotoSansArabic,
+        fontFamily = CairoFont,
         fontWeight = FontWeight.Bold,
-        fontSize = 18.sp,
+        fontSize = 20.sp,
         lineHeight = 26.sp,
     ),
-    // عناوين متوسطة - التنبيهات، قائمة الطلبات
+
     titleMedium = TextStyle(
-        fontFamily = NotoSansArabic,
+        fontFamily = CairoFont,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
         lineHeight = 24.sp,
     ),
-    // النصوص العادية - الرسائل، التفاصيل
+
     bodyLarge = TextStyle(
-        fontFamily = NotoSansArabic,
+        fontFamily = CairoFont,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        lineHeight = 22.sp,
+        lineHeight = 18.sp,
     ),
-    // النصوص الصغيرة - الوقت، الحالة
+
     labelSmall = TextStyle(
-        fontFamily = NotoSansArabic,
-        fontWeight = FontWeight.Light,
+        fontFamily = CairoFont,
+        fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 16.sp,
     )

@@ -1,0 +1,56 @@
+package com.example.depi_final_project_bloodbank.ui.screens.notification
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.depi_final_project_bloodbank.data.repository.FirebaseNotificationRepository
+import com.example.depi_final_project_bloodbank.data.repository.NotificationRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+class NotificationViewModel(
+    private val repository: NotificationRepository = FirebaseNotificationRepository()
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(NotificationUiState())
+
+    val uiState = _uiState.asStateFlow()
+
+    init {
+        loadNotifications()
+    }
+
+    private fun loadNotifications() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            val notifications = repository.getNotifications()
+                .sortedByDescending { it.createdAt }
+            _uiState.value = _uiState.value.copy(
+                notifications = notifications,
+                isLoading = false
+            )
+        }
+    }
+
+    fun markAsRead(notificationId: String) {
+        viewModelScope.launch {
+
+            val notification =
+                _uiState.value.notifications.find {
+                    it.id == notificationId
+                }
+
+            if(notification?.isRead == true) return@launch
+
+
+            repository.markAsRead(notificationId)
+            loadNotifications()
+        }
+    }
+
+    fun markAllRead() {
+        viewModelScope.launch {
+            repository.markAllAsRead()
+            loadNotifications()
+        }
+    }
+}

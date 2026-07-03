@@ -2,7 +2,8 @@ import org.gradle.kotlin.dsl.implementation
 
 plugins {
     alias(libs.plugins.android.application)
-    alias { libs.plugins.kotlin.compose }
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -42,6 +43,7 @@ android {
 }
 
 dependencies {
+    implementation("io.coil-kt:coil-compose:2.6.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -50,14 +52,56 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.runtime)
+    implementation("androidx.navigation:navigation-compose:2.9.8")
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.firebase.crashlytics.buildtools)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.foundation)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-    implementation("androidx.navigation:navigation-compose:2.9.8")
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("com.google.firebase:firebase-messaging")
+
+//    coil
+    implementation("io.coil-kt:coil-compose:2.7.0")
+//    retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+
+    // ML Kit
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+    // --- Unit Testing (Local) ---
+    testImplementation("junit:junit:4.13.2")
+    // مكتبة MockK العظيمة لعمل Mocking في الكوتلن
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+    // --- Instrumented Testing (UI / Compose) ---
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // مكاتب اختبار الـ Jetpack Compose
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01")) // اتأكد من إصدار الـ BOM بتاعك
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // مكتبات الـ Unit Testing
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.mockk:mockk:1.13.8") // مكتبة سحرية للمحاكاة
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // لاختبار الكوروتنز
+    testImplementation("app.cash.turbine:turbine:1.0.0") // لاختبار الـ StateFlow بسهولة
+    implementation("com.google.firebase:firebase-storage")
 }
