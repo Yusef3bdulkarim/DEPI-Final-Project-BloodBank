@@ -15,6 +15,8 @@ appcompat = "1.7.1"
 firebaseCrashlyticsBuildtools = "3.0.7"
 foundation = "1.11.1"
 foundationVersion = "1.11.2"
+junitJunit = "4.12"
+firebaseStorageKtx = "22.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +39,8 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundationVersion" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

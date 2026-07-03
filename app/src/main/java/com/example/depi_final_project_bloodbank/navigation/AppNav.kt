@@ -143,7 +143,7 @@ fun AppNav() {
                 CreateRequestScreen(
                     viewModel = screenViewModel,
                     onNavigateToDetails = {
-                        navController.navigate(route = "notifications") {
+                        navController.navigate(route = "home") {
                             popUpTo(route = "CreateRequestScreen") { inclusive = true }
                         }
                     },

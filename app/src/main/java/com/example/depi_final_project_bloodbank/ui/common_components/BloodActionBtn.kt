@@ -42,7 +42,7 @@ fun BloodActionBtn(
             contentColor = contentColor
         ),
         border=border,
-        shape= RoundedCornerShape(25.dp),
+        shape = MaterialTheme.shapes.medium,
         elevation=if(isPrimary) ButtonDefaults.buttonElevation(defaultElevation = 2.dp)else null
     ){
         Row(
@@ -55,7 +55,7 @@ fun BloodActionBtn(
             }
             Text(
                 text=text.uppercase(),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
         }

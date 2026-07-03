@@ -64,8 +64,7 @@ fun DonationStatusBanner(modifier: Modifier = Modifier) {
                 ) {
                     Text(
                         text = stringResource(R.string.can_donate_now),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.ExtraBold,
+                        style = MaterialTheme.typography.titleLarge,
                         color = Color(0xFF6A1B1B),
                         lineHeight = 28.sp,
                         letterSpacing = 0.5.sp

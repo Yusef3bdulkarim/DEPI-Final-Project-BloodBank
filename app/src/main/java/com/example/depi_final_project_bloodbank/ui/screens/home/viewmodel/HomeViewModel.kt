@@ -60,10 +60,11 @@ import java.util.Locale
 //        }
 //    }
 //}
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    private val userRepository: UserRepository = UserRepository(),
+    private val requestRepository: RequestRepositoryImpl = RequestRepositoryImpl()
+) : ViewModel() {
 
-    private val userRepository = UserRepository()
-    private val requestRepository = RequestRepositoryImpl()
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -73,7 +74,7 @@ class HomeViewModel : ViewModel() {
 
     init {
         // TEMPORARY — remove after seeding once
-        seedBloodRequests()
+        //seedBloodRequests()
         loadData()
         observeRequests()
     }

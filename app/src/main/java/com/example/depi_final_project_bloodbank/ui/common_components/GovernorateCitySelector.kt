@@ -3,6 +3,7 @@ package com.example.depi_final_project_bloodbank.ui.common_components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,7 +62,7 @@ fun GovernorateCitySelector(
             ) {
                 EgyptLocations.allGovernorates.forEach { gov ->
                     DropdownMenuItem(
-                        text = { Text(gov) },
+                        text = { Text(gov, style = typography.bodyLarge) },
                         onClick = {
                             onGovernorateSelected(gov)
                             expandedGov = false
@@ -99,7 +100,7 @@ fun GovernorateCitySelector(
             ) {
                 availableCities.forEach { city ->
                     DropdownMenuItem(
-                        text = { Text(city) },
+                        text = { Text(city, style = typography.bodyLarge) },
                         onClick = {
                             onCitySelected(city)
                             expandedCity = false

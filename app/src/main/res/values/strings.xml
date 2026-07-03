@@ -347,4 +347,14 @@
     <string name="btn_action_locked">Action Locked</string>
     <string name="btn_full">Full</string>
     <string name="btn_loading">…</string>
+
+    <string name="proof_attached_success">Proof attached successfully</string>
+    <string name="upload_proof_instruction">Upload a photo of your blood type proof (ID/lab report)</string>
+    <string name="choose_image_source">Choose image source</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="blood_type_detected">Blood type detected: %s</string>
+    <string name="error_scanning_failed">Scanning failed, please try again</string>
+    <string name="scanning_image">Analyzing image...</string>
+
 </resources>

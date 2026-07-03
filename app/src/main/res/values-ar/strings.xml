@@ -334,4 +334,14 @@
     <string name="btn_action_locked">العملية مقفلة</string>
     <string name="btn_full">مكتمل</string>
     <string name="btn_loading">…</string>
+
+    <string name="proof_attached_success">تم إرفاق الإثبات بنجاح</string>
+    <string name="upload_proof_instruction">أرفق صورة إثبات فصيلة الدم (رخصة/تحليل)</string>
+    <string name="choose_image_source">اختر مصدر الصورة</string>
+    <string name="camera">الكاميرا</string>
+    <string name="gallery">المعرض</string>
+    <string name="blood_type_detected">تم التعرف على فصيلة الدم: %s</string>
+    <string name="error_scanning_failed">فشل التحليل، يرجى المحاولة مرة أخرى</string>
+    <string name="scanning_image">جاري تحليل الصورة...</string>
+
 </resources>

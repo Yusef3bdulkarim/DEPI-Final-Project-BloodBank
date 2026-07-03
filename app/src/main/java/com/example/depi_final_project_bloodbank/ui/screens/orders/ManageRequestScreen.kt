@@ -32,17 +32,18 @@ fun ManageRequestScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                windowInsets = WindowInsets(0, 0, 0, 0),
                 title = {
                     Text(
                         text = stringResource(R.string.manage_request_title),
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
-                    ) 
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack, 
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -69,7 +70,7 @@ fun ManageRequestScreen(
             ) {
                 Text(
                     text = stringResource(R.string.adjust_units_needed),
-                    style = MaterialTheme.typography.titleMedium, 
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -91,20 +92,20 @@ fun ManageRequestScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             IconButton(onClick = { if (request.unitsNeeded > 1) vm.updateUnitsNeeded(request.id, request.unitsNeeded - 1) }) {
                                 Icon(
-                                    imageVector = Icons.Default.Remove, 
+                                    imageVector = Icons.Default.Remove,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                             }
                             Text(
-                                text = request.unitsNeeded.toString(), 
-                                style = MaterialTheme.typography.headlineSmall, 
+                                text = request.unitsNeeded.toString(),
+                                style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
                             )
                             IconButton(onClick = { vm.updateUnitsNeeded(request.id, request.unitsNeeded + 1) }) {
                                 Icon(
-                                    imageVector = Icons.Default.Add, 
+                                    imageVector = Icons.Default.Add,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.primary
                                 )
@@ -120,7 +121,7 @@ fun ManageRequestScreen(
 
                 Text(
                     text = stringResource(R.string.donors_log),
-                    style = MaterialTheme.typography.titleMedium, 
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -150,8 +151,8 @@ fun ManageRequestScreen(
                                 ) {
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(
-                                            text = entry.donorName, 
-                                            style = MaterialTheme.typography.bodyLarge, 
+                                            text = entry.donorName,
+                                            style = MaterialTheme.typography.bodyLarge,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurface
                                         )
@@ -202,8 +203,8 @@ fun ManageRequestScreen(
                         shape = MaterialTheme.shapes.medium
                     ) {
                         Text(
-                            text = stringResource(R.string.btn_cancel_request), 
-                            fontWeight = FontWeight.Bold, 
+                            text = stringResource(R.string.btn_cancel_request),
+                            fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimary
                         )
                     }

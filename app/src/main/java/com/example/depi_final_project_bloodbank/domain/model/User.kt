@@ -11,5 +11,6 @@ data class User(
     val fcmToken: String = "",
     val lastDonationDate: Long? = null,
     val isAvailableForDonation: Boolean = true,
-    val createdAt: Long = 0L
+    val createdAt: Long = 0L,
+    val proofImageUrl: String = ""
 )

@@ -7,49 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:939854154487:android:b456526678d803f2fa61f2",
-        "android_client_info": {
-          "package_name": "com.example.bloodlink"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "939854154487-euor20vtu6ch6o7srt3k0qjsgpp7tnco.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.bloodlink",
-            "certificate_hash": "9eed90d4b23b4d73d288dbe476f4a7e587dbf6d3"
-          }
-        },
-        {
-          "client_id": "939854154487-emtqh0gdm45tf5455u7r26pfoekeo657.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC4egsxpWH8gdmW2B7IxxhYdMDm3-VmEuE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "939854154487-emtqh0gdm45tf5455u7r26pfoekeo657.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:939854154487:android:e523bec01902dd90fa61f2",
         "android_client_info": {
           "package_name": "com.example.depi_final_project_bloodbank"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "939854154487-j49mnf5si6u26rkf05stj09ss8n46c3n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.depi_final_project_bloodbank",
+            "certificate_hash": "9eed90d4b23b4d73d288dbe476f4a7e587dbf6d3"
+          }
+        },
         {
           "client_id": "939854154487-emtqh0gdm45tf5455u7r26pfoekeo657.apps.googleusercontent.com",
           "client_type": 3

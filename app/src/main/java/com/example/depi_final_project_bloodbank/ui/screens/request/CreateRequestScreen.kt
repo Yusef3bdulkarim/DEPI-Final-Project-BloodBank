@@ -63,13 +63,13 @@ fun CreateRequestScreen(
 
     Column(modifier = Modifier.fillMaxSize().background(colorScheme.background)) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 24.dp)) {
-            IconButton(onClick = onBackClick) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = colorScheme.onSurface)
-            }
-            Spacer(modifier = Modifier.weight(1f))
+            //IconButton(onClick = onBackClick) {
+            //    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = colorScheme.onSurface)
+            //}
+            //Spacer(modifier = Modifier.weight(1f))
             Text(stringResource(R.string.create_request_title), color = colorScheme.primary, style = typography.titleLarge)
-            Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.width(48.dp))
+            //Spacer(modifier = Modifier.weight(1f))
+            //Spacer(modifier = Modifier.width(48.dp))
         }
 
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp).verticalScroll(rememberScrollState())) {
@@ -101,10 +101,10 @@ fun CreateRequestScreen(
                         request.contactPhone.length >= 11 &&
                         request.contactName.isNotBlank(),
                 colors = ButtonDefaults.buttonColors(containerColor = MaroonPrimary),
-                shape = shapes.large,
+                shape = shapes.medium,
                 modifier = Modifier.fillMaxWidth().height(56.dp)
             ) {
-                if (isLoading) CircularProgressIndicator(color = colorScheme.onPrimary, modifier = Modifier.size(28.dp)) else Text(stringResource(R.string.post_request_btn), color = colorScheme.onPrimary)
+                if (isLoading) CircularProgressIndicator(color = colorScheme.onPrimary, modifier = Modifier.size(28.dp)) else Text(stringResource(R.string.post_request_btn), color = colorScheme.onPrimary, style = MaterialTheme.typography.titleMedium)
             }
             Spacer(modifier = Modifier.height(24.dp))
         }
