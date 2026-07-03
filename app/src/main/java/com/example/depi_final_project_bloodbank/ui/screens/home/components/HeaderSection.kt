@@ -40,6 +40,7 @@ fun HeaderSection(name: String, type: String) {
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 fontWeight = FontWeight.Medium
+
             )
             Spacer(modifier = Modifier.height(1 .dp))
             Text(
